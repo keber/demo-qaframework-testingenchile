@@ -10,22 +10,22 @@
 
 | Module | Submodule | TCs Total | TCs Automated | Plan | ADO Suite | Status | Last Run |
 |---|---|---|---|---|---|---|---|
-| HOME | navegacion (NAV) | 14 | 0 | ⬜ | - | ⚠️ Specs (etapas 1-2) | - |
-| HOME | portada (POR) | 9 | 0 | ⬜ | - | ⚠️ Specs (etapas 1-2) | - |
-| CAP | catalogo (CAT) | 9 | 0 | ⬜ | - | ⚠️ Specs (etapas 1-2) | - |
-| CAP | detalle-curso (CUR) | 10 | 0 | ⬜ | - | ⚠️ Specs (etapas 1-2) | - |
-| CAP | bootcamp (BTC) | 8 | 0 | ⬜ | - | ⚠️ Specs (etapas 1-2) | - |
-| EVT | testing-day (TDY) | 12 | 0 | ⬜ | - | ⚠️ Specs (etapas 1-2) | - |
-| EVT | ediciones (EDI) | 9 | 0 | ⬜ | - | ⚠️ Specs (etapas 1-2) | - |
-| CON | formulario-contacto (FCO) | 8 | 0 | ⬜ | - | ⚠️ Specs (etapas 1-2) | - |
-| CON | contacto-empresa (EMP) | 12 | 0 | ⬜ | - | ⚠️ Specs (etapas 1-2) | - |
-| LEG | legales (LGL) | 8 | 0 | ⬜ | - | ⚠️ Specs (etapas 1-2) | - |
-| LEG | blog (BLG) | 9 | 0 | ⬜ | - | ⚠️ Specs (etapas 1-2) | - |
-| LEG | galeria (GAL) | 8 | 0 | ⬜ | - | ⚠️ Specs (etapas 1-2) | - |
+| HOME | navegacion (NAV) | 14 | 0 | ✅ | - | ⚠️ Plan (etapas 3-4) | - |
+| HOME | portada (POR) | 9 | 0 | ✅ | - | ⚠️ Plan (etapas 3-4) | - |
+| CAP | catalogo (CAT) | 9 | 0 | ✅ | - | ⚠️ Plan (etapas 3-4) | - |
+| CAP | detalle-curso (CUR) | 10 | 0 | ✅ | - | ⚠️ Plan (etapas 3-4) | - |
+| CAP | bootcamp (BTC) | 8 | 0 | ✅ | - | ⚠️ Plan (etapas 3-4) | - |
+| EVT | testing-day (TDY) | 12 | 0 | ✅ | - | ⚠️ Plan (etapas 3-4) | - |
+| EVT | ediciones (EDI) | 9 | 0 | ✅ | - | ⚠️ Plan (etapas 3-4) | - |
+| CON | formulario-contacto (FCO) | 8 | 0 | ✅ | - | ⚠️ Plan (etapas 3-4) | - |
+| CON | contacto-empresa (EMP) | 12 | 0 | ✅ | - | ⚠️ Plan (etapas 3-4) | - |
+| LEG | legales (LGL) | 8 | 0 | ✅ | - | ⚠️ Plan (etapas 3-4) | - |
+| LEG | blog (BLG) | 9 | 0 | ✅ | - | ⚠️ Plan (etapas 3-4) | - |
+| LEG | galeria (GAL) | 8 | 0 | ✅ | - | ⚠️ Plan (etapas 3-4) | - |
 
 **Legend**: ✅ Done · ⚠️ Partial · 🔲 Not started · ⛔ Blocked
 
-> Etapas 1 y 2 completadas el 2026-11-21: 116 TCs en 12 submódulos. Resumen y hallazgos candidatos: `qa/01-specifications/ANALISIS-DE-PRUEBAS.md`. Siguiente etapa: plan de pruebas (`/qa-test-plan`).
+> Etapas 1-4 completadas el 2026-11-21: 116 TCs en 12 submódulos (84 Automatizar, 2 Manual, 30 Pendiente), 5 defectos y 18 recomendaciones. Plan maestro: `qa/02-test-plans/Plan-Maestro-de-Pruebas-testingenchile.md`; planes por módulo en `qa/02-test-plans/sprints/Sprint-1/`. Siguiente etapa: automatización (`/qa-automation`).
 
 ---
 
@@ -104,6 +104,21 @@ Checklist (completed):
 - [x] {Task 1}
 - [x] {Task 2}
 -->
+
+### Etapa 3-4 - Plan de pruebas y expansión de pasos (2026-11-21)
+
+**Submódulos**: los 12 (HOME, CAP, EVT, CON, LEG)
+**TCs planificados**: 116 (84 Automatizar, 2 Manual, 30 Pendiente); 0 automatizados
+**Plan**: `qa/02-test-plans/Plan-Maestro-de-Pruebas-testingenchile.md` y `qa/02-test-plans/sprints/Sprint-1/Plan-de-Pruebas-testingenchile-Sprint-1-{HOME,CAP,EVT,CON,LEG}.md`
+**Hallazgos**: 5 defectos (`qa/06-defects/open/DEF-TCH-001` a `005`) y 18 recomendaciones (`qa/06-defects/recommendations/REC-TCH-001` a `018`)
+
+Checklist (completado):
+- [x] Generar el plan de pruebas por módulo en `qa/02-test-plans/` (plan maestro + 5 planes del Sprint 1)
+- [x] Expandir los pasos de los 116 casos (etapa 4) en la tabla de cada plan
+- [x] Clasificar HC-01 a HC-22 según la regla 8 (DEF para reglas confirmadas; REC para reglas pendientes, editoriales o inexistentes)
+- [ ] Revisión humana de `ANALISIS-DE-PRUEBAS.md` y respuesta a las preguntas abiertas: traspasada a la etapa 5 (sección 13 del plan maestro)
+- [ ] Confirmar o descartar las reglas `PENDIENTE-CONFIRMACIÓN`: traspasado a la etapa 5
+- [ ] Revisar manualmente `qa/07-automation/e2e/.env.example`: traspasado a la etapa 5
 
 ### Etapa 0-2 - Configuración, análisis y especificaciones (2026-11-21)
 
