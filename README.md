@@ -41,6 +41,10 @@ finales.
 Incluye en el readme snapshots de los informes PDF.
 ```
 
+> Nota: el prompt pedía el nombre `demo-qaframework-saucedemo`, pero ese repositorio ya
+> existía con otra demo (saucedemo.com). Para no sobrescribirlo, este se publicó como
+> `demo-qaframework-testingenchile`. Fue la única intervención humana: elegir el nombre.
+
 ---
 
 ## Resultados en cifras
