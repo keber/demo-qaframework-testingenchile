@@ -1,0 +1,292 @@
+{
+  "run": "DEFECTS_DIAG=1",
+  "command": "DEFECTS_DIAG=1 npx playwright test --retries=0 --grep <9 TCs con expectOpenDefect>",
+  "startTime": "2026-11-21T17:36:24.582Z",
+  "wallClockMs": 67516,
+  "playwrightStats": {
+    "startTime": "2026-11-21T17:36:24.582Z",
+    "duration": 67515.63600000001,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 9,
+    "flaky": 0
+  },
+  "totals": {
+    "total": 9,
+    "passed": 0,
+    "expected-fail": 0,
+    "failed": 9,
+    "flaky": 0,
+    "skipped": 0,
+    "durationMs": 89924
+  },
+  "byModule": {
+    "CAP": {
+      "total": 1,
+      "passed": 0,
+      "expected-fail": 0,
+      "failed": 1,
+      "flaky": 0,
+      "skipped": 0,
+      "durationMs": 6798
+    },
+    "EVT": {
+      "total": 4,
+      "passed": 0,
+      "expected-fail": 0,
+      "failed": 4,
+      "flaky": 0,
+      "skipped": 0,
+      "durationMs": 55629
+    },
+    "HOME": {
+      "total": 2,
+      "passed": 0,
+      "expected-fail": 0,
+      "failed": 2,
+      "flaky": 0,
+      "skipped": 0,
+      "durationMs": 17128
+    },
+    "LEG": {
+      "total": 2,
+      "passed": 0,
+      "expected-fail": 0,
+      "failed": 2,
+      "flaky": 0,
+      "skipped": 0,
+      "durationMs": 10369
+    }
+  },
+  "bySubmodule": {
+    "CAP-CAT": {
+      "total": 1,
+      "passed": 0,
+      "expected-fail": 0,
+      "failed": 1,
+      "flaky": 0,
+      "skipped": 0,
+      "durationMs": 6798
+    },
+    "EVT-EDI": {
+      "total": 2,
+      "passed": 0,
+      "expected-fail": 0,
+      "failed": 2,
+      "flaky": 0,
+      "skipped": 0,
+      "durationMs": 18092
+    },
+    "EVT-TDY": {
+      "total": 2,
+      "passed": 0,
+      "expected-fail": 0,
+      "failed": 2,
+      "flaky": 0,
+      "skipped": 0,
+      "durationMs": 37537
+    },
+    "HOME-NAV": {
+      "total": 1,
+      "passed": 0,
+      "expected-fail": 0,
+      "failed": 1,
+      "flaky": 0,
+      "skipped": 0,
+      "durationMs": 9711
+    },
+    "HOME-POR": {
+      "total": 1,
+      "passed": 0,
+      "expected-fail": 0,
+      "failed": 1,
+      "flaky": 0,
+      "skipped": 0,
+      "durationMs": 7417
+    },
+    "LEG-BLG": {
+      "total": 1,
+      "passed": 0,
+      "expected-fail": 0,
+      "failed": 1,
+      "flaky": 0,
+      "skipped": 0,
+      "durationMs": 5669
+    },
+    "LEG-GAL": {
+      "total": 1,
+      "passed": 0,
+      "expected-fail": 0,
+      "failed": 1,
+      "flaky": 0,
+      "skipped": 0,
+      "durationMs": 4700
+    }
+  },
+  "byPriority": {
+    "P1": {
+      "total": 1,
+      "passed": 0,
+      "expected-fail": 0,
+      "failed": 1,
+      "flaky": 0,
+      "skipped": 0,
+      "durationMs": 9050
+    },
+    "P2": {
+      "total": 4,
+      "passed": 0,
+      "expected-fail": 0,
+      "failed": 4,
+      "flaky": 0,
+      "skipped": 0,
+      "durationMs": 54665
+    },
+    "P3": {
+      "total": 4,
+      "passed": 0,
+      "expected-fail": 0,
+      "failed": 4,
+      "flaky": 0,
+      "skipped": 0,
+      "durationMs": 26209
+    }
+  },
+  "tests": [
+    {
+      "id": "TC-CAP-CAT-008",
+      "title": "Las imágenes del catálogo tienen texto alternativo",
+      "module": "CAP",
+      "submodule": "CAT",
+      "priority": "P3",
+      "tag": "@regression",
+      "file": "tests/capacitaciones/catalogo.spec.ts",
+      "status": "failed",
+      "attempts": 1,
+      "durationMs": 6798,
+      "defect": "DEF-TCH-005",
+      "skipReason": null,
+      "error": "Error: expect(received).toEqual(expected) // deep equality\n\n- Expected  - 1\n+ Received  + 4\n\n- Array []\n+ Array [\n+   \"https://3af2bd36ef.clvaw-cdnwnd.com/29a2d1a1bd29077db170af833302d83d/200004379-56eef56ef1/450/Logo%20Testing%20en%20Chile%20horizontal.webp?ph=3af2bd36ef\",\n+   \"https://3af2bd36ef.clvaw-cdnwnd.com/29a2d1a1bd29077db170af833302d83d/200003821-a2bcfa2bd0/450/SENCE-8.webp?ph=3af2bd36ef\",\n+ ]"
+    },
+    {
+      "id": "TC-EVT-EDI-003",
+      "title": "Los enlaces internos de la página de ediciones no devuelven 404",
+      "module": "EVT",
+      "submodule": "EDI",
+      "priority": "P1",
+      "tag": "@sanity",
+      "file": "tests/eventos/ediciones.spec.ts",
+      "status": "failed",
+      "attempts": 1,
+      "durationMs": 9050,
+      "defect": "DEF-TCH-001",
+      "skipReason": null,
+      "error": "Error: expect(received).toEqual(expected) // deep equality\n\n- Expected  - 1\n+ Received  + 7\n\n- Array []\n+ Array [\n+   Object {\n+     \"error\": null,\n+     \"status\": 404,\n+     \"url\": \"https://www.testingenchile.cl/testing-day-en-latam-2018/\",\n+   },\n+ ]"
+    },
+    {
+      "id": "TC-EVT-EDI-009",
+      "title": "Las imágenes de las páginas de edición tienen texto alternativo",
+      "module": "EVT",
+      "submodule": "EDI",
+      "priority": "P3",
+      "tag": "@regression",
+      "file": "tests/eventos/ediciones.spec.ts",
+      "status": "failed",
+      "attempts": 1,
+      "durationMs": 9042,
+      "defect": "DEF-TCH-005",
+      "skipReason": null,
+      "error": "Error: /testing-day-chile-2025/\n\nexpect(received).toEqual(expected) // deep equality\n\n- Expected  -  1\n+ Received  + 15\n\n- Array []\n+ Array [\n+   \"https://3af2bd36ef.clvaw-cdnwnd.com/29a2d1a1bd29077db170af833302d83d/200004379-56eef56ef1/450/Logo%20Testing%20en%20Chile%20horizontal.webp?ph=3af2bd36ef\",\n+   \"https://3af2bd36ef.clvaw-cdnwnd.com/29a2d1a1bd29077db170af833302d83d/200004132-e292de292f/dia%2028-2-6.webp?ph=3af2bd36ef\",\n+   \"https://3af2bd36ef.clvaw-cdnwnd.com/29a2d1a1bd29077db170af833302d83d/200004125-79f9e79fa0/700/Logo%20en%20PNG-1.webp?ph=3af2bd36ef\",\n+   \"https://3af2bd36ef.clvaw-cdnwnd.com/29a2d1a1bd29077db170af833302d83d/200004129-709ca709cc/Ecosistemas-9.webp?ph=3af2bd36ef\",\n+   \"https://3af2bd36ef.clvaw-cdnwnd.com/29a2d1a1bd29077db170af833302d83d/200003717-2c86e2c870/logo%20Haka%20Lab%202024_Mesa%20de%20trabajo%201%20copia-2.webp?ph=3af2bd36ef\",\n+   \"https://3af2bd36ef.c"
+    },
+    {
+      "id": "TC-EVT-TDY-007",
+      "title": "Los enlaces \"Inscribirse\" de la Agenda Online responden",
+      "module": "EVT",
+      "submodule": "TDY",
+      "priority": "P2",
+      "tag": "@regression",
+      "file": "tests/eventos/testing-day.spec.ts",
+      "status": "failed",
+      "attempts": 1,
+      "durationMs": 12934,
+      "defect": "DEF-TCH-002",
+      "skipReason": null,
+      "error": "Error: expect(received).toEqual(expected) // deep equality\n\n- Expected  -  1\n+ Received  + 17\n\n- Array []\n+ Array [\n+   Object {\n+     \"error\": null,\n+     \"status\": 404,\n+     \"url\": \"https://streamyard.com/watch/d2Y5CqepHVu6\",\n+   },\n+   Object {\n+     \"error\": null,\n+     \"status\": 404,\n+     \"url\": \"https://streamyard.com/watch/fxfpYcRcykN7\",\n+   },\n+   Object {\n+     \"error\": null,\n+     \"status\": 404,\n+     \"url\": \"https://streamyard.com/watch/zcWQhitGTYXW\",\n+   },\n+ ]"
+    },
+    {
+      "id": "TC-EVT-TDY-009",
+      "title": "Los logos de sponsors, comunidades y hoteles enlazan a dominios operativos",
+      "module": "EVT",
+      "submodule": "TDY",
+      "priority": "P2",
+      "tag": "@regression",
+      "file": "tests/eventos/testing-day.spec.ts",
+      "status": "failed",
+      "attempts": 1,
+      "durationMs": 24603,
+      "defect": "DEF-TCH-003",
+      "skipReason": null,
+      "error": "Error: expect(received).toEqual(expected) // deep equality\n\n- Expected  -  1\n+ Received  + 12\n\n- Array []\n+ Array [\n+   Object {\n+     \"error\": \"apiRequestContext.head: getaddrinfo ENOTFOUND mendezdistribucion.com\",\n+     \"status\": 0,\n+     \"url\": \"https://mendezdistribucion.com/\",\n+   },\n+   Object {\n+     \"error\": \"apiRequestContext.head: certificate has expired\",\n+     \"status\": 0,\n+     \"url\": \"https://www.hotelvegassantiago.com/\",\n+   },\n+ ]"
+    },
+    {
+      "id": "TC-HOME-NAV-012",
+      "title": "El logo del header tiene texto alternativo",
+      "module": "HOME",
+      "submodule": "NAV",
+      "priority": "P2",
+      "tag": "@regression",
+      "file": "tests/home/navegacion.spec.ts",
+      "status": "failed",
+      "attempts": 1,
+      "durationMs": 9711,
+      "defect": "DEF-TCH-004",
+      "skipReason": null,
+      "error": "Error: logo alt on /\n\nexpect(received).toMatch(expected)\n\nExpected pattern: /testing en chile/i\nReceived string:  \"\""
+    },
+    {
+      "id": "TC-HOME-POR-006",
+      "title": "Los logos de partners tienen texto alternativo",
+      "module": "HOME",
+      "submodule": "POR",
+      "priority": "P2",
+      "tag": "@regression",
+      "file": "tests/home/portada.spec.ts",
+      "status": "failed",
+      "attempts": 1,
+      "durationMs": 7417,
+      "defect": "DEF-TCH-005",
+      "skipReason": null,
+      "error": "Error: expect(received).toEqual(expected) // deep equality\n\n- Expected  - 1\n+ Received  + 4\n\n- Array []\n+ Array [\n+   \"https://3af2bd36ef.clvaw-cdnwnd.com/29a2d1a1bd29077db170af833302d83d/200004476-b3920b3922/chiletec_logo.jpeg?ph=3af2bd36ef\",\n+   \"https://3af2bd36ef.clvaw-cdnwnd.com/29a2d1a1bd29077db170af833302d83d/200004469-6f4a26f4a5/brightest_logo-7.png-9.png?ph=3af2bd36ef\",\n+ ]"
+    },
+    {
+      "id": "TC-LEG-BLG-009",
+      "title": "Las imágenes del listado tienen texto alternativo",
+      "module": "LEG",
+      "submodule": "BLG",
+      "priority": "P3",
+      "tag": "@regression",
+      "file": "tests/legal/blog.spec.ts",
+      "status": "failed",
+      "attempts": 1,
+      "durationMs": 5669,
+      "defect": "DEF-TCH-005",
+      "skipReason": null,
+      "error": "Error: expect(received).toEqual(expected) // deep equality\n\n- Expected  -  1\n+ Received  + 12\n\n- Array []\n+ Array [\n+   \"https://3af2bd36ef.clvaw-cdnwnd.com/29a2d1a1bd29077db170af833302d83d/200004546-2167621678/700/WhatsApp%20Image%202026-09-04%20at%2021.11.56%20%283%29.webp?ph=3af2bd36ef\",\n+   \"https://3af2bd36ef.clvaw-cdnwnd.com/29a2d1a1bd29077db170af833302d83d/200004283-e7402e7404/700/Charla%20Lourdes%20Castillo%20-%2024%20nov.webp?ph=3af2bd36ef\",\n+   \"https://3af2bd36ef.clvaw-cdnwnd.com/29a2d1a1bd29077db170af833302d83d/200004139-09d7809d7a/700/Entrevista%20Carla%20-%20Marcela.webp?ph=3af2bd36ef\",\n+   \"https://3af2bd36ef.clvaw-cdnwnd.com/29a2d1a1bd29077db170af833302d83d/200003847-6b2a16b2a2/700/Entrevista%207%20de%20julio.webp?ph=3af2bd36ef\",\n+   \"https://3af2bd36ef.clvaw-cdnwnd.com/29a2d1a1bd29077db170af833302d83d/200003861-5a0b65a0b9/700/webinar.webp?ph=3af2bd36ef\",\n+   \"https://3af"
+    },
+    {
+      "id": "TC-LEG-GAL-006",
+      "title": "Las fotos de la galería tienen texto alternativo",
+      "module": "LEG",
+      "submodule": "GAL",
+      "priority": "P3",
+      "tag": "@regression",
+      "file": "tests/legal/galeria.spec.ts",
+      "status": "failed",
+      "attempts": 1,
+      "durationMs": 4700,
+      "defect": "DEF-TCH-005",
+      "skipReason": null,
+      "error": "Error: expect(received).toHaveLength(expected)\n\nExpected length: 0\nReceived length: 558\nReceived array:  [\"https://3af2bd36ef.clvaw-cdnwnd.com/29a2d1a1bd29077db170af833302d83d/200004379-56eef56ef1/450/Logo%20Testing%20en%20Chile%20horizontal.webp?ph=3af2bd36ef\", \"https://3af2bd36ef.clvaw-cdnwnd.com/29a2d1a1bd29077db170af833302d83d/200004584-c2803c2806/Banner%20fotogaleria%201.webp?ph=3af2bd36ef\", \"https://3af2bd36ef.clvaw-cdnwnd.com/29a2d1a1bd29077db170af833302d83d/200004589-01b6701b6a/450/WhatsApp%20Image%202026-09-05%20at%2016.28.55%20%281%29.webp?ph=3af2bd36ef\", \"https://3af2bd36ef.clvaw-cdnwnd.com/29a2d1a1bd29077db170af833302d83d/200004590-3630c3630e/450/WhatsApp%20Image%202026-09-05%20at%2016.28.55.webp?ph=3af2bd36ef\", \"https://3af2bd36ef.clvaw-cdnwnd.com/29a2d1a1bd29077db170af833302d83d/200004591-3e1643e166/450/WhatsApp%20Image%202026-09-05%20at%2016.28.56.webp?ph=3af2bd36ef\", \"htt"
+    }
+  ]
+}
