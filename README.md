@@ -76,7 +76,7 @@ también la version html del reporte en una github page, e incluye el link en el
 
 ## Auditoría de la suite (qa-suite-audit)
 
-**Reporte HTML publicado:** https://keber.github.io/demo-qaframework-testingenchile/audit/
+**Reporte HTML publicado:** https://keber.dev/demo-qaframework-testingenchile/audit/
 
 ### Origen y propósito
 
