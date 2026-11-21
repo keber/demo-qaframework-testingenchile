@@ -7,6 +7,8 @@ import { BootcampPage } from '../../pages/capacitaciones/bootcamp.page';
 import { TestingDayPage } from '../../pages/eventos/testing-day.page';
 import { AgendaOnlinePage } from '../../pages/eventos/agenda-online.page';
 import { EditionsPage } from '../../pages/eventos/editions.page';
+import { ContactPage } from '../../pages/contacto/contact.page';
+import { CompanyContactPage } from '../../pages/contacto/company-contact.page';
 
 export type PageObjects = {
   homePage: HomePage;
@@ -17,6 +19,8 @@ export type PageObjects = {
   testingDayPage: TestingDayPage;
   agendaOnlinePage: AgendaOnlinePage;
   editionsPage: EditionsPage;
+  contactPage: ContactPage;
+  companyContactPage: CompanyContactPage;
 };
 
 // Every page object is created here and injected; specs never call `new`.
@@ -44,5 +48,11 @@ export const test = base.extend<PageObjects>({
   },
   editionsPage: async ({ page }, use) => {
     await use(new EditionsPage(page));
+  },
+  contactPage: async ({ page }, use) => {
+    await use(new ContactPage(page));
+  },
+  companyContactPage: async ({ page }, use) => {
+    await use(new CompanyContactPage(page));
   },
 });

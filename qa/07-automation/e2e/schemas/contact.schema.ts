@@ -1,8 +1,8 @@
 import { z } from 'zod/v4';
 
-// Shape of the data a contact-form test would type. The real form fields are
-// not confirmed yet (PENDING-BROWSER: the form renders inside an embed); update
-// this schema when /qa-module-analysis of module CON observes them.
+// Shape of the data a consultation-form test types into a course page (fields
+// observed 2026-11-21: Nombre y Apellido, E-mail, Celular, Mensaje). Never submitted (S7).
+// `company` is kept for the shared factory; the company form has its own schema.
 export const ContactFormSchema = z.strictObject({
   name: z.string().min(2),
   email: z.email(),
