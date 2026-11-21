@@ -45,6 +45,16 @@ Incluye en el readme snapshots de los informes PDF.
 > existía con otra demo (saucedemo.com). Para no sobrescribirlo, este se publicó como
 > `demo-qaframework-testingenchile`. Fue la única intervención humana: elegir el nombre.
 
+Más tarde, un segundo prompt agregó la ejecución en GitHub Actions y la auditoría de la suite
+(sección siguiente):
+
+```text
+lanza el workflow E2E en GitHub Actions.
+En paralelo, instala el paquete npm @keber/qa-suite-audit@next , y con él audita este repo .
+Añade al readme los resultados generales de la auditoría, su origen y propósito; Publica
+también la version html del reporte en una github page, e incluye el link en el readme.
+```
+
 ---
 
 ## Resultados en cifras
@@ -60,6 +70,67 @@ Incluye en el readme snapshots de los informes PDF.
 | Defectos abiertos | 5 (`DEF-TCH-001` a `DEF-TCH-005`: enlaces rotos y textos alternativos faltantes) |
 | Recomendaciones | 18 (`REC-TCH-001` a `REC-TCH-018`) |
 | Veredicto QA | Aprobado con observaciones |
+| Ejecución en GitHub Actions (21-11-2026) | [Run 44938437335](https://github.com/keber/demo-qaframework-testingenchile/actions/runs/44938437335): verde en 3m52s, 117 tests (sin los 2 `@destructive`), 87 pasan (incluye los 9 fallos esperados) y 30 omitidos |
+
+---
+
+## Auditoría de la suite (qa-suite-audit)
+
+**Reporte HTML publicado:** https://keber.github.io/demo-qaframework-testingenchile/audit/
+
+### Origen y propósito
+
+Después de generar la suite, se auditó con
+[`@keber/qa-suite-audit`](https://www.npmjs.com/package/@keber/qa-suite-audit) 0.1.0 (el tag
+`next` pedido no existe en npm; `latest` es la única versión publicada). La herramienta
+implementa la
+[rúbrica de 7 criterios de Adriana Troche Robles (Calidad sin Humo)](https://calidadsinhumo.com/guias/rubrica-para-juzgar-una-suite-de-tests/)
+para juzgar si una suite automatizada realmente sirve. Su propósito es que la auditoría sea
+**repetible y basada en evidencia**:
+
+1. Los scripts extraen evidencia del repositorio (`audit/input.json`).
+2. Un agente (sub-agente Claude Opus) asigna un nivel a cada dimensión dentro de los límites que
+   fija la evidencia y cita esa evidencia (`audit/verdict.json`).
+3. Un validador rechaza cualquier veredicto que no esté citado, que se salga de los límites o
+   que se haya escrito contra otra evidencia.
+
+La versión 0.1.0 solo lee el repositorio (sin historial de CI), por lo que el máximo
+alcanzable es 16 de los 21 puntos de la rúbrica original.
+
+### Resultado general
+
+| Dimensión | Nivel | Lectura del juez |
+|---|---|---|
+| D1 Oráculo | 2/3 | Los tests muestreados codifican su regla, pero solo 18 de 116 casos registran qué regla los respalda |
+| D2 Sensibilidad (eliminatoria) | **0/3** | Fijada por la evidencia: 25% de tests "sin aserciones" (límite 5%) |
+| D3 Determinismo | 1/2 | Sin esperas fijas reales, pero `retries: 1` sin justificar y sin medición de flakiness versionada |
+| D4 Diagnóstico | 2/3 | Trace, video y screenshot al fallar, 261 `test.step`; los títulos llevan el ID del caso, no el de la regla |
+| D5 Cobertura de reglas | 2/2 | Hay casos negativos y de borde; 18 de 120 reglas enlazadas a un test |
+| D6 Vida en CI | 0/1 | Fijada por la evidencia |
+| D7 Mantenibilidad | 2/2 | Nombres en lenguaje de negocio y capas separadas |
+| **Total** | **9/16 - NO PASA** | Eliminada por D2 = 0. El validador marca el veredicto como `VALID` |
+
+**Lectura honesta del resultado:**
+
+- El 25% "sin aserciones" corresponde exactamente a los **32 casos pendientes** cuyo cuerpo es
+  solo `skipPending()` (`test.skip` con motivo `PENDING-*`). Los 96 tests activos tienen
+  aserciones.
+- Aun así, la rúbrica tiene razón en el fondo: un test omitido no puede fallar. Para subir D2
+  hay que sacar los pendientes de la suite ejecutable y llevarlos a la documentación, o
+  automatizarlos.
+- El juez dejó registradas tres limitaciones de la extracción que no cambian el puntaje:
+  - D6: no se reconoce que el workflow ejecuta `playwright test`, porque la carpeta se pasa
+    como variable de entorno.
+  - D3: cuenta `test.setTimeout` como espera fija.
+  - D2: no detecta los 9 `expectOpenDefect()`.
+- Quedan cuatro preguntas para el equipo, sin responder a propósito:
+  - ¿Se mide la flakiness?
+  - ¿Hay exclusiones deliberadas de reglas?
+  - ¿Existe un pipeline externo?
+  - ¿Hay un proceso de revisión y retiro de tests?
+
+Artefactos: [audit/input.json](audit/input.json), [audit/verdict.json](audit/verdict.json),
+[audit/report.txt](audit/report.txt), [audit/report.html](audit/report.html).
 
 ---
 

@@ -1,0 +1,76 @@
+Suite audit  demo_testingenchile
+  adapter qa-framework   evidence 7903e5254367   18 test file(s)
+  suite type regression
+
+  RESULT   9/16   DOES NOT PASS
+           eliminated by dimension 2 scoring 0
+           v1 reads the repository only; 16 of 21 points are reachable at all
+
+  D1 Oracle           2/3  ##. 
+  D2 Sensitivity      0/3  ...   ELIMINATORY, settled by evidence, calibrated threshold
+  D3 Determinism      1/2  #.  
+  D4 Diagnosis        2/3  ##. 
+  D5 Rule coverage    2/2  ##  
+  D6 Life in CI       0/1  .     settled by evidence
+  D7 Maintainability  2/2  ##  
+
+  QUESTIONS FOR THE TEAM
+    D3 D3.flakiness-measured  [for the reader]
+       Is the failure rate of these tests across runs measured anywhere,
+       and where can it be read?
+       the bound stays; an answer records what a future extractor would
+       need (level 3 would then be allowed)
+    D5 D5.deliberate-exclusions  [for the reader]
+       Are any business rules left out of the suite on purpose, and where
+       is that decision written down?
+       the bound stays; an answer records what a future extractor would
+       need (level 3 would then be allowed)
+    D6 D6.external-pipeline  [for the reader]
+       Does this suite run from a pipeline defined outside this repository
+       (another repository, a scheduled job or a release definition), and
+       where is it defined?
+       the bound stays; an answer records what a future extractor would
+       need (level 1 would then be allowed)
+    D7 D7.review-retirement  [for the reader]
+       Is there a process for reviewing and retiring tests, and where is it
+       written down?
+       the bound stays; an answer records what a future extractor would
+       need (level 3 would then be allowed)
+    Questions marked read by this release lift their bound once the
+    answer is committed to the repository and the evidence is extracted
+    again. The others are for the reader of this report: they record
+    what a future extractor would need, and the bound stays where it is.
+
+  DECIDED BY CALIBRATION, NOT BY THE RUBRIC TEXT
+    D2 Sensitivity: assertless 25% (limit 5%), rendering-only 3.1% (limit 25%)
+       capped at 0 - tests that cannot fail are a characteristic of this suite
+    D2 Sensitivity: no mutation testing configuration found in the repository
+       capped at 2 - level 3 needs measured sensitivity; a rule broken on purpose leaves no trace v1 reads
+    Move a value in thresholds.json and this result moves with it.
+
+  THRESHOLD OBJECTIONS RAISED
+    D2.systemic-assertless (no se objeta el límite del 5%, sino la medición que lo alimenta): los 32 tests contados como assertless son tests omitidos en ejecución mediante skipPending(), helper de qa/07-automation/e2e/fixtures/pending.ts que llama a test.skip(true, motivo). El extractor no reconoce test.skip envuelto en un helper, de modo que D2.assertless-tests sobrestima (25% en vez de 0%) y D2.skipped-tests / D5.skip-ratio subestiman (0% en vez de 25%). El nivel 0 se mantendría igual bajo la lectura correcta, porque un 25% de tests omitidos tampoco puede fallar, pero el motivo reportado es otro.
+    D2.expected-failures: 9 tests usan expectOpenDefect() (qa/07-automation/e2e/fixtures/defects.ts), que llama a test.fail en tiempo de ejecución para defectos abiertos; el extractor solo cuenta test.fail declarado y reporta 0.
+    D3.fixed-waits: la única espera fija detectada (detalle-curso.spec.ts:33) es test.setTimeout(...), que fija el presupuesto de tiempo del test y no es una espera.
+    D6.runs-the-suite: el job e2e de .github/workflows/qa.yml ejecuta npm test (-> playwright test) con working-directory ${{ env.E2E_DIR }}, y E2E_DIR vale qa/07-automation/e2e en el bloque env del propio workflow. El extractor no resuelve el directorio pasado por variable y determina 0; con la resolución correcta el nivel 1 sería alcanzable (corre en CI, solo manual y semanal, sin bloquear el merge).
+
+  NOTES  Total 9 de 16 alcanzables; la suite queda eliminada porque D2
+         (eliminatoria) es 0, determinado por el umbral calibrado
+         D2.systemic-assertless. Ese umbral es una calibración, no una
+         lectura literal, y aquí la medición que lo dispara es un artefacto:
+         los 32 tests 'sin assert' son los 32 tests pendientes que llaman a
+         skipPending() (12 archivos e2e, p. ej. legales.spec.ts:46/50,
+         bootcamp.spec.ts:144/148, contacto-empresa.spec.ts:236/240). Aun
+         corrigiendo la lectura, el 25% de tests omitidos no puede fallar,
+         por lo que el resultado de D2 no cambiaría; sí cambia el
+         diagnóstico: el problema es la proporción de casos pendientes de
+         confirmación de reglas (PENDING-SPEC, PENDING-BROWSER,
+         PENDING-CODE), no asserts ausentes. D6 también quedó determinado en
+         0 por un posible artefacto de extracción (directorio pasado por
+         variable de entorno); ambos casos se registran en
+         thresholdObjections sin mover los niveles. Techos aplicados: D3
+         hasta 2, D5 hasta 2, D6 hasta 1 y D7 hasta 2, por evidencia que el
+         repositorio no puede atestiguar. Las preguntas al equipo
+         (D3.flakiness-measured, D5.deliberate-exclusions,
+         D6.external-pipeline, D7.review-retirement) se dejan sin responder
+         según el protocolo.

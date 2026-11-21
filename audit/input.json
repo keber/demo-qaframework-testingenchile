@@ -1,0 +1,1663 @@
+{
+  "schema": "judgment-input/v1",
+  "repo": "demo_testingenchile",
+  "adapter": {
+    "name": "qa-framework",
+    "description": "rules in 01-business-rules.md, cases in 05-test-scenarios.md, linked by co-occurrence",
+    "specsRoot": "qa/01-specifications"
+  },
+  "evidenceDigest": "7903e5254367782e824b994af9fc321637f009469b77f29c178cc3f4a4ee6f71",
+  "attainable": 16,
+  "maxPossibleGivenEvidence": 12,
+  "determinedDimensions": 2,
+  "openQuestions": 5,
+  "dimensions": [
+    {
+      "dimension": 1,
+      "name": "Oracle",
+      "eliminatory": true,
+      "ceiling": 3,
+      "ceilingReason": "reachable only where a rule inventory exists in the repository",
+      "bounds": {
+        "min": 0,
+        "max": 3
+      },
+      "determined": null,
+      "constraints": [],
+      "mustCite": [
+        "D1.tc-id-coverage",
+        "D1.ext-id-coverage",
+        "D1.spec-linkage",
+        "D5.covered-rules",
+        "D1.risk-inventory"
+      ],
+      "question": "Read a sample of tests against the rules they cite. Do the expected values encode the rule, or does the test merely carry the rule id while asserting whatever the system returns?"
+    },
+    {
+      "dimension": 2,
+      "name": "Sensitivity",
+      "eliminatory": true,
+      "ceiling": 3,
+      "ceilingReason": "level 3 needs measured sensitivity: mutation config in the repository (capped at 2 without it) or a rule broken on purpose, which v1 cannot read",
+      "bounds": {
+        "min": 0,
+        "max": 0
+      },
+      "determined": 0,
+      "constraints": [
+        {
+          "threshold": "D2.systemic-assertless",
+          "kind": "calibration",
+          "rule": "level 0 applies when tests that cannot fail are a CHARACTERISTIC of the suite, not an isolated defect",
+          "observed": "assertless 25% (limit 5%), rendering-only 3.1% (limit 25%)",
+          "effect": "capped at 0 - tests that cannot fail are a characteristic of this suite",
+          "capsAt": 0
+        },
+        {
+          "threshold": "D2.sensitivity-measured",
+          "kind": "calibration",
+          "rule": "with no mutation testing configuration in the repository (D2.mutation-config empty), the dimension cannot exceed level 2; a config lifts the cap but never sets a floor",
+          "observed": "no mutation testing configuration found in the repository",
+          "effect": "capped at 2 - level 3 needs measured sensitivity; a rule broken on purpose leaves no trace v1 reads",
+          "capsAt": 2
+        }
+      ],
+      "mustCite": [
+        "D2.assertless-tests",
+        "D2.indirect-assertions",
+        "D2.weak-assertions",
+        "D2.skipped-tests",
+        "D2.expected-failures",
+        "D2.mutation-config"
+      ],
+      "question": null
+    },
+    {
+      "dimension": 3,
+      "name": "Determinism",
+      "eliminatory": false,
+      "ceiling": 2,
+      "ceilingReason": "level 3 asserts behavior across runs, which the repository cannot witness",
+      "bounds": {
+        "min": 0,
+        "max": 2
+      },
+      "determined": null,
+      "constraints": [],
+      "mustCite": [
+        "D3.fixed-waits",
+        "D3.conditional-waits"
+      ],
+      "question": "Read the fixed waits and the retries setting in context. Are they load tolerance decisions the config explains, or flake suppression?"
+    },
+    {
+      "dimension": 4,
+      "name": "Diagnosis",
+      "eliminatory": false,
+      "ceiling": 3,
+      "ceilingReason": "no structural limit in v1",
+      "bounds": {
+        "min": 0,
+        "max": 3
+      },
+      "determined": null,
+      "constraints": [],
+      "mustCite": [
+        "D4.failure-context"
+      ],
+      "question": "Read the test titles. Does a failure report name the business behavior that broke, or only the mechanism that was clicked?"
+    },
+    {
+      "dimension": 5,
+      "name": "Rule coverage",
+      "eliminatory": false,
+      "ceiling": 2,
+      "ceilingReason": "level 3 needs the deliberate exclusions written down; v1 extracts no such statement",
+      "bounds": {
+        "min": 0,
+        "max": 2
+      },
+      "determined": null,
+      "constraints": [],
+      "mustCite": [
+        "D5.rule-catalogue",
+        "D5.covered-rules",
+        "D5.uncovered-rules",
+        "D5.orphan-tests",
+        "D5.risk-coverage"
+      ],
+      "question": "Read the uncovered rules. Are they absent by decision or by oversight, and does anything in the repository say which?"
+    },
+    {
+      "dimension": 6,
+      "name": "Life in CI",
+      "eliminatory": false,
+      "ceiling": 1,
+      "ceilingReason": "levels 2 and 3 assert merge and deploy gating, which lives in the CI server policy",
+      "bounds": {
+        "min": 0,
+        "max": 0
+      },
+      "determined": 0,
+      "constraints": [
+        {
+          "threshold": "D6.runs-the-suite",
+          "kind": "literal",
+          "rule": "level 1 requires a pipeline that both invokes the runner and points at the resolved suite; otherwise level 0",
+          "observed": "0 pipeline(s) both invoke the runner and point at the suite",
+          "effect": "determined at 0",
+          "capsAt": 0
+        }
+      ],
+      "mustCite": [
+        "D6.pipeline-present",
+        "D6.suite-invocation",
+        "D6.pipeline-triggers"
+      ],
+      "question": null
+    },
+    {
+      "dimension": 7,
+      "name": "Maintainability",
+      "eliminatory": false,
+      "ceiling": 2,
+      "ceilingReason": "level 3 needs review and retirement process evidence; v1 does not read history",
+      "bounds": {
+        "min": 0,
+        "max": 2
+      },
+      "determined": null,
+      "constraints": [],
+      "mustCite": [
+        "D7.selector-mix",
+        "D7.file-size"
+      ],
+      "question": "Read the test names and the largest files. Do names describe behavior or implementation, and is duplication structural or incidental?"
+    }
+  ],
+  "teamQuestions": [
+    {
+      "id": "D3.flakiness-measured",
+      "dimension": 3,
+      "question": "Is the failure rate of these tests across runs measured anywhere, and where can it be read?",
+      "unlocks": 3,
+      "reason": "level 3 asserts behavior across runs, which the repository cannot witness",
+      "source": "ceiling",
+      "readByThisRelease": false
+    },
+    {
+      "id": "D5.deliberate-exclusions",
+      "dimension": 5,
+      "question": "Are any business rules left out of the suite on purpose, and where is that decision written down?",
+      "unlocks": 3,
+      "reason": "level 3 needs the deliberate exclusions written down; v1 extracts no such statement",
+      "source": "ceiling",
+      "readByThisRelease": false
+    },
+    {
+      "id": "D6.external-pipeline",
+      "dimension": 6,
+      "question": "Does this suite run from a pipeline defined outside this repository (another repository, a scheduled job or a release definition), and where is it defined?",
+      "unlocks": 1,
+      "reason": "levels 2 and 3 assert merge and deploy gating, which lives in the CI server policy",
+      "source": "ceiling",
+      "readByThisRelease": false
+    },
+    {
+      "id": "D7.review-retirement",
+      "dimension": 7,
+      "question": "Is there a process for reviewing and retiring tests, and where is it written down?",
+      "unlocks": 3,
+      "reason": "level 3 needs review and retirement process evidence; v1 does not read history",
+      "source": "ceiling",
+      "readByThisRelease": false
+    }
+  ],
+  "items": {
+    "source": {
+      "D1.test-inventory": {
+        "tests": 128,
+        "files": 18
+      },
+      "D1.tc-id-coverage": {
+        "withCaseId": 119,
+        "of": 128,
+        "ratio": 0.93
+      },
+      "D1.ext-id-coverage": {
+        "withExternalId": 0,
+        "of": 128,
+        "ratio": 0
+      },
+      "D2.assertless-tests": {
+        "count": 32,
+        "of": 128,
+        "tests": [
+          "qa/07-automation/e2e/tests/capacitaciones/bootcamp.spec.ts:144",
+          "qa/07-automation/e2e/tests/capacitaciones/bootcamp.spec.ts:220",
+          "qa/07-automation/e2e/tests/capacitaciones/catalogo.spec.ts:182",
+          "qa/07-automation/e2e/tests/capacitaciones/catalogo.spec.ts:223",
+          "qa/07-automation/e2e/tests/capacitaciones/detalle-curso.spec.ts:271",
+          "qa/07-automation/e2e/tests/capacitaciones/detalle-curso.spec.ts:282",
+          "qa/07-automation/e2e/tests/contacto/contacto-empresa.spec.ts:155",
+          "qa/07-automation/e2e/tests/contacto/contacto-empresa.spec.ts:236",
+          "qa/07-automation/e2e/tests/contacto/contacto-empresa.spec.ts:247",
+          "qa/07-automation/e2e/tests/contacto/contacto-empresa.spec.ts:258",
+          "qa/07-automation/e2e/tests/contacto/contacto-empresa.spec.ts:269",
+          "qa/07-automation/e2e/tests/contacto/formulario-contacto.spec.ts:123",
+          "qa/07-automation/e2e/tests/contacto/formulario-contacto.spec.ts:134",
+          "qa/07-automation/e2e/tests/contacto/formulario-contacto.spec.ts:145",
+          "qa/07-automation/e2e/tests/contacto/formulario-contacto.spec.ts:156",
+          "qa/07-automation/e2e/tests/eventos/ediciones.spec.ts:112",
+          "qa/07-automation/e2e/tests/eventos/ediciones.spec.ts:175",
+          "qa/07-automation/e2e/tests/eventos/ediciones.spec.ts:186",
+          "qa/07-automation/e2e/tests/eventos/testing-day.spec.ts:282",
+          "qa/07-automation/e2e/tests/eventos/testing-day.spec.ts:319",
+          "qa/07-automation/e2e/tests/home/navegacion.spec.ts:122",
+          "qa/07-automation/e2e/tests/home/navegacion.spec.ts:347",
+          "qa/07-automation/e2e/tests/home/portada.spec.ts:220",
+          "qa/07-automation/e2e/tests/legal/blog.spec.ts:214",
+          "qa/07-automation/e2e/tests/legal/galeria.spec.ts:120",
+          "qa/07-automation/e2e/tests/legal/galeria.spec.ts:161",
+          "qa/07-automation/e2e/tests/legal/galeria.spec.ts:172",
+          "qa/07-automation/e2e/tests/legal/legales.spec.ts:102",
+          "qa/07-automation/e2e/tests/legal/legales.spec.ts:113",
+          "qa/07-automation/e2e/tests/legal/legales.spec.ts:46",
+          "qa/07-automation/e2e/tests/legal/legales.spec.ts:57",
+          "qa/07-automation/e2e/tests/legal/legales.spec.ts:68"
+        ]
+      },
+      "D2.indirect-assertions": {
+        "count": 1,
+        "of": 128,
+        "proxyCalls": 16,
+        "evidenceClass": "inferential",
+        "tests": [
+          "qa/07-automation/integration/tests/security/no-session.spec.ts:25"
+        ]
+      },
+      "D2.weak-assertions": {
+        "weakOnlyTests": 4,
+        "weakAssertions": 53,
+        "tests": [
+          "qa/07-automation/e2e/tests/contacto/formulario-contacto.spec.ts:70",
+          "qa/07-automation/e2e/tests/home/navegacion.spec.ts:160",
+          "qa/07-automation/e2e/tests/home/navegacion.spec.ts:98",
+          "qa/07-automation/integration/tests/write/example-write-cycle.spec.ts:63"
+        ]
+      },
+      "D2.assert-density": {
+        "assertions": 254,
+        "perActiveTest": 1.984
+      },
+      "D2.soft-assertions": {
+        "count": 0
+      },
+      "D2.skipped-tests": {
+        "count": 0,
+        "of": 128,
+        "ratio": 0
+      },
+      "D2.only-markers": {
+        "count": 0
+      },
+      "D2.conditional-skips": {
+        "count": 2,
+        "tests": [
+          "qa/07-automation/integration/tests/security/read-only-guard.spec.ts:35",
+          "qa/07-automation/integration/tests/security/read-only-guard.spec.ts:46"
+        ]
+      },
+      "D2.expected-failures": {
+        "count": 0,
+        "tests": []
+      },
+      "D3.fixed-waits": {
+        "count": 1,
+        "perTest": 0.008,
+        "tests": [
+          "qa/07-automation/e2e/tests/capacitaciones/detalle-curso.spec.ts:33"
+        ]
+      },
+      "D3.conditional-waits": {
+        "count": 0,
+        "perTest": 0
+      },
+      "D3.flaky-markers": {
+        "count": 0,
+        "tags": {
+          "count": 0,
+          "tests": []
+        },
+        "comments": {
+          "count": 0,
+          "at": []
+        }
+      },
+      "D4.failure-context": {
+        "steps": 261,
+        "testsWithSteps": 87
+      },
+      "D5.priority-distribution": {
+        "P0": 21,
+        "P1": 49,
+        "P2": 35,
+        "P3": 23
+      },
+      "D5.skip-ratio": {
+        "ratio": 0
+      },
+      "D5.negative-tests": {
+        "evidenceClass": "inferential",
+        "negative": {
+          "count": 11,
+          "tests": [
+            "qa/07-automation/e2e/tests/capacitaciones/bootcamp.spec.ts:144",
+            "qa/07-automation/e2e/tests/capacitaciones/detalle-curso.spec.ts:158",
+            "qa/07-automation/e2e/tests/capacitaciones/detalle-curso.spec.ts:189",
+            "qa/07-automation/e2e/tests/capacitaciones/detalle-curso.spec.ts:94",
+            "qa/07-automation/e2e/tests/contacto/contacto-empresa.spec.ts:105",
+            "qa/07-automation/e2e/tests/contacto/contacto-empresa.spec.ts:155",
+            "qa/07-automation/e2e/tests/contacto/contacto-empresa.spec.ts:75",
+            "qa/07-automation/e2e/tests/legal/galeria.spec.ts:120",
+            "qa/07-automation/integration/tests/security/read-only-guard.spec.ts:26",
+            "qa/07-automation/integration/tests/security/read-only-guard.spec.ts:35",
+            "qa/07-automation/integration/tests/security/read-only-guard.spec.ts:46"
+          ]
+        },
+        "boundary": {
+          "count": 4,
+          "tests": [
+            "qa/07-automation/e2e/tests/capacitaciones/detalle-curso.spec.ts:94",
+            "qa/07-automation/e2e/tests/contacto/contacto-empresa.spec.ts:155",
+            "qa/07-automation/e2e/tests/contacto/contacto-empresa.spec.ts:75",
+            "qa/07-automation/e2e/tests/home/portada.spec.ts:57"
+          ]
+        },
+        "of": 128,
+        "vocabulary": "NEGATIVE_VOCABULARY in src/extract-source.js (documented in docs/EVIDENCE-CATALOGUE.md, D5.negative-tests)"
+      },
+      "D7.selector-mix": {
+        "semantic": 3,
+        "testId": 0,
+        "raw": 0,
+        "semanticShare": 1
+      },
+      "D7.file-size": {
+        "files": 18,
+        "maxTestsInOneFile": 14,
+        "medianTestsPerFile": 8
+      },
+      "D7.page-object-usage": {
+        "evidenceClass": "inferential",
+        "layeredTests": {
+          "count": 61,
+          "of": 128,
+          "share": 0.477
+        },
+        "inlineTests": {
+          "count": 0
+        },
+        "layers": {
+          "files": [
+            "qa/07-automation/e2e/enums/messages.ts",
+            "qa/07-automation/e2e/enums/routes.ts",
+            "qa/07-automation/e2e/fixtures/pom/test-options.ts",
+            "qa/07-automation/e2e/fixtures/test-helpers.ts",
+            "qa/07-automation/e2e/pages/components/document-audit.component.ts",
+            "qa/07-automation/e2e/test-data/factories/company-contact.factory.ts",
+            "qa/07-automation/e2e/test-data/factories/contact.factory.ts",
+            "qa/07-automation/e2e/test-data/static/capacitaciones/capacitaciones.ts",
+            "qa/07-automation/e2e/test-data/static/contacto/contacto.ts",
+            "qa/07-automation/e2e/test-data/static/eventos/eventos.ts",
+            "qa/07-automation/e2e/test-data/static/home/navigation.ts",
+            "qa/07-automation/e2e/test-data/static/home/portada.ts",
+            "qa/07-automation/e2e/test-data/static/legal/legal.ts",
+            "qa/07-automation/integration/fixtures/base.ts",
+            "qa/07-automation/integration/fixtures/contract.ts",
+            "qa/07-automation/integration/fixtures/project-exclusions.ts",
+            "qa/07-automation/integration/fixtures/read-catalog.ts",
+            "qa/07-automation/integration/fixtures/write-catalog.ts",
+            "qa/07-automation/integration/scripts/api-guard.js",
+            "qa/07-automation/integration/scripts/hard-exclusions.js"
+          ],
+          "kinds": {
+            "pageObject": 1,
+            "fixture": 1,
+            "helper": 18
+          },
+          "unresolvedImports": 0
+        },
+        "customFixtures": {
+          "count": 1,
+          "files": [
+            "qa/07-automation/integration/fixtures/base.ts"
+          ]
+        }
+      },
+      "D3.retries-config": {
+        "bySuite": {
+          "qa/07-automation/e2e": {
+            "config": "qa/07-automation/e2e/playwright.config.ts",
+            "retries": "1"
+          },
+          "qa/07-automation/integration": {
+            "config": "qa/07-automation/integration/playwright.config.ts",
+            "retries": "writeRun ? 0 : process.env.CI ? 1 : 0"
+          }
+        }
+      },
+      "D3.serial-mode": {
+        "bySuite": {
+          "qa/07-automation/e2e": {
+            "config": "qa/07-automation/e2e/playwright.config.ts",
+            "fullyParallel": "true",
+            "workers": "WORKERS",
+            "describeSerial": 0,
+            "configuredSerial": 0
+          },
+          "qa/07-automation/integration": {
+            "config": "qa/07-automation/integration/playwright.config.ts",
+            "fullyParallel": "false",
+            "workers": "1",
+            "describeSerial": 1,
+            "configuredSerial": 0
+          }
+        }
+      },
+      "D4.reporter-config": {
+        "bySuite": {
+          "qa/07-automation/e2e": {
+            "config": "qa/07-automation/e2e/playwright.config.ts",
+            "reporters": [
+              "list",
+              "html",
+              "json"
+            ]
+          },
+          "qa/07-automation/integration": {
+            "config": "qa/07-automation/integration/playwright.config.ts",
+            "reporters": [
+              "list",
+              "html"
+            ]
+          }
+        }
+      },
+      "D4.trace-config": {
+        "bySuite": {
+          "qa/07-automation/e2e": {
+            "config": "qa/07-automation/e2e/playwright.config.ts",
+            "trace": "retain-on-failure",
+            "screenshot": "only-on-failure",
+            "video": "retain-on-failure"
+          },
+          "qa/07-automation/integration": {
+            "config": "qa/07-automation/integration/playwright.config.ts",
+            "trace": null,
+            "screenshot": null,
+            "video": null
+          }
+        }
+      },
+      "D4.artifact-retention": {
+        "bySuite": {
+          "qa/07-automation/e2e": {
+            "config": "qa/07-automation/e2e/playwright.config.ts",
+            "outputDir": "test-results/artifacts"
+          },
+          "qa/07-automation/integration": {
+            "config": "qa/07-automation/integration/playwright.config.ts",
+            "outputDir": "test-results/"
+          }
+        }
+      },
+      "D2.mutation-config": {
+        "count": 0,
+        "tools": []
+      },
+      "D0.suite-type-signals": {
+        "evidenceClass": "inferential",
+        "note": "signals only: the suite type is declared by the verdict, never computed here; every count is a number of tests",
+        "vocabulary": "DEFECT_ID in src/suite-type.js (documented in docs/EVIDENCE-CATALOGUE.md, D0.suite-type-signals)",
+        "suites": [
+          {
+            "suite": "qa/07-automation/e2e",
+            "testDir": "qa/07-automation/e2e/tests",
+            "directories": [
+              {
+                "directory": "capacitaciones",
+                "key": "qa/07-automation/e2e/capacitaciones",
+                "tests": 27,
+                "defectIds": {
+                  "count": 0,
+                  "examples": []
+                },
+                "expectedFailures": {
+                  "count": 0
+                },
+                "snapshotAssertions": {
+                  "count": 0
+                },
+                "caseIds": {
+                  "count": 27
+                },
+                "caseIdsLinkedToRules": {
+                  "count": 5
+                }
+              },
+              {
+                "directory": "contacto",
+                "key": "qa/07-automation/e2e/contacto",
+                "tests": 20,
+                "defectIds": {
+                  "count": 0,
+                  "examples": []
+                },
+                "expectedFailures": {
+                  "count": 0
+                },
+                "snapshotAssertions": {
+                  "count": 0
+                },
+                "caseIds": {
+                  "count": 20
+                },
+                "caseIdsLinkedToRules": {
+                  "count": 3
+                }
+              },
+              {
+                "directory": "eventos",
+                "key": "qa/07-automation/e2e/eventos",
+                "tests": 21,
+                "defectIds": {
+                  "count": 0,
+                  "examples": []
+                },
+                "expectedFailures": {
+                  "count": 0
+                },
+                "snapshotAssertions": {
+                  "count": 0
+                },
+                "caseIds": {
+                  "count": 21
+                },
+                "caseIdsLinkedToRules": {
+                  "count": 3
+                }
+              },
+              {
+                "directory": "home",
+                "key": "qa/07-automation/e2e/home",
+                "tests": 26,
+                "defectIds": {
+                  "count": 0,
+                  "examples": []
+                },
+                "expectedFailures": {
+                  "count": 0
+                },
+                "snapshotAssertions": {
+                  "count": 1
+                },
+                "caseIds": {
+                  "count": 26
+                },
+                "caseIdsLinkedToRules": {
+                  "count": 5
+                }
+              },
+              {
+                "directory": "legal",
+                "key": "qa/07-automation/e2e/legal",
+                "tests": 25,
+                "defectIds": {
+                  "count": 0,
+                  "examples": []
+                },
+                "expectedFailures": {
+                  "count": 0
+                },
+                "snapshotAssertions": {
+                  "count": 0
+                },
+                "caseIds": {
+                  "count": 25
+                },
+                "caseIdsLinkedToRules": {
+                  "count": 2
+                }
+              }
+            ]
+          },
+          {
+            "suite": "qa/07-automation/integration",
+            "testDir": "qa/07-automation/integration/tests",
+            "directories": [
+              {
+                "directory": ".",
+                "key": "qa/07-automation/integration/.",
+                "tests": 1,
+                "defectIds": {
+                  "count": 0,
+                  "examples": []
+                },
+                "expectedFailures": {
+                  "count": 0
+                },
+                "snapshotAssertions": {
+                  "count": 0
+                },
+                "caseIds": {
+                  "count": 0
+                },
+                "caseIdsLinkedToRules": {
+                  "count": 0
+                }
+              },
+              {
+                "directory": "security",
+                "key": "qa/07-automation/integration/security",
+                "tests": 6,
+                "defectIds": {
+                  "count": 0,
+                  "examples": []
+                },
+                "expectedFailures": {
+                  "count": 0
+                },
+                "snapshotAssertions": {
+                  "count": 0
+                },
+                "caseIds": {
+                  "count": 0
+                },
+                "caseIdsLinkedToRules": {
+                  "count": 0
+                }
+              },
+              {
+                "directory": "write",
+                "key": "qa/07-automation/integration/write",
+                "tests": 2,
+                "defectIds": {
+                  "count": 0,
+                  "examples": []
+                },
+                "expectedFailures": {
+                  "count": 0
+                },
+                "snapshotAssertions": {
+                  "count": 0
+                },
+                "caseIds": {
+                  "count": 0
+                },
+                "caseIdsLinkedToRules": {
+                  "count": 0
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "rules": {
+      "D1.risk-inventory": {
+        "present": false,
+        "register": null,
+        "risks": 0
+      },
+      "D5.risk-coverage": {
+        "count": 0,
+        "of": 0,
+        "ratio": null,
+        "evidenceClass": "inferential",
+        "covered": [],
+        "uncovered": []
+      },
+      "D1.rule-inventory": {
+        "documents": 72,
+        "documentsExcluded": 7,
+        "layout": "framework",
+        "rulesDeclared": 120,
+        "present": true
+      },
+      "D1.spec-linkage": {
+        "casesDeclared": 116,
+        "casesWithRuleRef": 18,
+        "ratio": 0.155
+      },
+      "D1.automated-case-ids": {
+        "count": 119
+      },
+      "D5.rule-catalogue": {
+        "count": 120,
+        "rules": [
+          {
+            "id": "FL-CAP-001",
+            "title": "Explorar el catálogo y abrir un curso",
+            "file": "qa/01-specifications/module-capacitaciones/submodule-catalogo/02-workflows.md",
+            "line": 7
+          },
+          {
+            "id": "FL-CAP-002",
+            "title": "Consulta por convenio Sence",
+            "file": "qa/01-specifications/module-capacitaciones/submodule-catalogo/02-workflows.md",
+            "line": 26
+          },
+          {
+            "id": "FL-CAP-003",
+            "title": "Destino de curso no disponible (camino de error)",
+            "file": "qa/01-specifications/module-capacitaciones/submodule-catalogo/02-workflows.md",
+            "line": 40
+          },
+          {
+            "id": "FL-CAP-004",
+            "title": "Revisar un curso y preparar una consulta (sin enviar)",
+            "file": "qa/01-specifications/module-capacitaciones/submodule-detalle-curso/02-workflows.md",
+            "line": 7
+          },
+          {
+            "id": "FL-CAP-005",
+            "title": "Pago del curso (fuera de ejecución)",
+            "file": "qa/01-specifications/module-capacitaciones/submodule-detalle-curso/02-workflows.md",
+            "line": 29
+          },
+          {
+            "id": "FL-CAP-006",
+            "title": "Autodiagnóstico de afinidad",
+            "file": "qa/01-specifications/module-capacitaciones/submodule-bootcamp/02-workflows.md",
+            "line": 7
+          },
+          {
+            "id": "FL-CAP-007",
+            "title": "Postulación por canales de contacto (sin ejecutar)",
+            "file": "qa/01-specifications/module-capacitaciones/submodule-bootcamp/02-workflows.md",
+            "line": 31
+          },
+          {
+            "id": "FL-CON-001",
+            "title": "Contactar al sitio desde el menú",
+            "file": "qa/01-specifications/module-contacto/submodule-formulario-contacto/02-workflows.md",
+            "line": 7
+          },
+          {
+            "id": "FL-CON-002",
+            "title": "El visitante busca un formulario y no lo encuentra (camino de error)",
+            "file": "qa/01-specifications/module-contacto/submodule-formulario-contacto/02-workflows.md",
+            "line": 26
+          },
+          {
+            "id": "FL-CON-003",
+            "title": "Solicitud de capacitación empresa (validación en el cliente, sin envío)",
+            "file": "qa/01-specifications/module-contacto/submodule-contacto-empresa/02-workflows.md",
+            "line": 7
+          },
+          {
+            "id": "FL-CON-004",
+            "title": "Envío real (fuera de ejecución)",
+            "file": "qa/01-specifications/module-contacto/submodule-contacto-empresa/02-workflows.md",
+            "line": 28
+          },
+          {
+            "id": "FL-EVT-001",
+            "title": "Informarse del evento y llegar a la inscripción",
+            "file": "qa/01-specifications/module-eventos/submodule-testing-day/02-workflows.md",
+            "line": 7
+          },
+          {
+            "id": "FL-EVT-002",
+            "title": "Visita después del evento (camino de error / vigencia)",
+            "file": "qa/01-specifications/module-eventos/submodule-testing-day/02-workflows.md",
+            "line": 30
+          },
+          {
+            "id": "FL-EVT-003",
+            "title": "Recorrer las ediciones anteriores",
+            "file": "qa/01-specifications/module-eventos/submodule-ediciones/02-workflows.md",
+            "line": 7
+          },
+          {
+            "id": "FL-EVT-004",
+            "title": "Enlace de edición inexistente (camino de error)",
+            "file": "qa/01-specifications/module-eventos/submodule-ediciones/02-workflows.md",
+            "line": 28
+          },
+          {
+            "id": "FL-HOME-001",
+            "title": "Navegación por el menú principal (escritorio)",
+            "file": "qa/01-specifications/module-home/submodule-navegacion/02-workflows.md",
+            "line": 7
+          },
+          {
+            "id": "FL-HOME-002",
+            "title": "Navegación con el menú móvil",
+            "file": "qa/01-specifications/module-home/submodule-navegacion/02-workflows.md",
+            "line": 31
+          },
+          {
+            "id": "FL-HOME-003",
+            "title": "Gestión del consentimiento de cookies",
+            "file": "qa/01-specifications/module-home/submodule-navegacion/02-workflows.md",
+            "line": 51
+          },
+          {
+            "id": "FL-HOME-004",
+            "title": "Ruta inexistente (camino de error)",
+            "file": "qa/01-specifications/module-home/submodule-navegacion/02-workflows.md",
+            "line": 69
+          },
+          {
+            "id": "FL-HOME-005",
+            "title": "Descubrimiento de la oferta desde la portada",
+            "file": "qa/01-specifications/module-home/submodule-portada/02-workflows.md",
+            "line": 7
+          },
+          {
+            "id": "FL-HOME-006",
+            "title": "Contenido que no carga (camino de error)",
+            "file": "qa/01-specifications/module-home/submodule-portada/02-workflows.md",
+            "line": 31
+          },
+          {
+            "id": "FL-LEG-001",
+            "title": "Consultar las condiciones y la privacidad",
+            "file": "qa/01-specifications/module-legal/submodule-legales/02-workflows.md",
+            "line": 7
+          },
+          {
+            "id": "FL-LEG-002",
+            "title": "Buscar información de cookies desde el banner (camino de error)",
+            "file": "qa/01-specifications/module-legal/submodule-legales/02-workflows.md",
+            "line": 25
+          },
+          {
+            "id": "FL-LEG-003",
+            "title": "Leer un artículo del blog",
+            "file": "qa/01-specifications/module-legal/submodule-blog/02-workflows.md",
+            "line": 7
+          },
+          {
+            "id": "FL-LEG-004",
+            "title": "Artículo inexistente (camino de error)",
+            "file": "qa/01-specifications/module-legal/submodule-blog/02-workflows.md",
+            "line": 23
+          },
+          {
+            "id": "FL-LEG-005",
+            "title": "Ver fotos de un álbum",
+            "file": "qa/01-specifications/module-legal/submodule-galeria/02-workflows.md",
+            "line": 7
+          },
+          {
+            "id": "FL-LEG-006",
+            "title": "Imagen que no carga (camino de error)",
+            "file": "qa/01-specifications/module-legal/submodule-galeria/02-workflows.md",
+            "line": 24
+          },
+          {
+            "id": "RN-CAP-001",
+            "title": "El catálogo lista las capacitaciones vigentes como tarjetas",
+            "file": "qa/01-specifications/module-capacitaciones/submodule-catalogo/01-business-rules.md",
+            "line": 7
+          },
+          {
+            "id": "RN-CAP-002",
+            "title": "Los filtros de categoría restringen las tarjetas visibles sin recargar",
+            "file": "qa/01-specifications/module-capacitaciones/submodule-catalogo/01-business-rules.md",
+            "line": 16
+          },
+          {
+            "id": "RN-CAP-003",
+            "title": "El filtro \"Certificaciones\" muestra exactamente las tarjetas con insignia \"Certificación\"",
+            "file": "qa/01-specifications/module-capacitaciones/submodule-catalogo/01-business-rules.md",
+            "line": 24
+          },
+          {
+            "id": "RN-CAP-004",
+            "title": "Todos los enlaces \"Saber más\" llevan a una página existente",
+            "file": "qa/01-specifications/module-capacitaciones/submodule-catalogo/01-business-rules.md",
+            "line": 32
+          },
+          {
+            "id": "RN-CAP-005",
+            "title": "El catálogo ofrece contacto para convenio Sence",
+            "file": "qa/01-specifications/module-capacitaciones/submodule-catalogo/01-business-rules.md",
+            "line": 40
+          },
+          {
+            "id": "RN-CAP-006",
+            "title": "El catálogo declara título, H1 y description descriptivos",
+            "file": "qa/01-specifications/module-capacitaciones/submodule-catalogo/01-business-rules.md",
+            "line": 49
+          },
+          {
+            "id": "RN-CAP-007",
+            "title": "Cada página de curso enlazada desde el catálogo está publicada",
+            "file": "qa/01-specifications/module-capacitaciones/submodule-detalle-curso/01-business-rules.md",
+            "line": 7
+          },
+          {
+            "id": "RN-CAP-008",
+            "title": "El formulario de consulta exige nombre, e-mail, mensaje y consentimiento",
+            "file": "qa/01-specifications/module-capacitaciones/submodule-detalle-curso/01-business-rules.md",
+            "line": 15
+          },
+          {
+            "id": "RN-CAP-009",
+            "title": "El e-mail debe tener formato válido",
+            "file": "qa/01-specifications/module-capacitaciones/submodule-detalle-curso/01-business-rules.md",
+            "line": 25
+          },
+          {
+            "id": "RN-CAP-010",
+            "title": "El celular admite solo dígitos y los signos . + - ( ) y espacio",
+            "file": "qa/01-specifications/module-capacitaciones/submodule-detalle-curso/01-business-rules.md",
+            "line": 34
+          },
+          {
+            "id": "RN-CAP-011",
+            "title": "Límites de longitud de los campos de texto",
+            "file": "qa/01-specifications/module-capacitaciones/submodule-detalle-curso/01-business-rules.md",
+            "line": 42
+          },
+          {
+            "id": "RN-CAP-012",
+            "title": "En AiU el asunto es obligatorio y tiene tres opciones",
+            "file": "qa/01-specifications/module-capacitaciones/submodule-detalle-curso/01-business-rules.md",
+            "line": 50
+          },
+          {
+            "id": "RN-CAP-013",
+            "title": "El formulario está protegido por reCAPTCHA",
+            "file": "qa/01-specifications/module-capacitaciones/submodule-detalle-curso/01-business-rules.md",
+            "line": 58
+          },
+          {
+            "id": "RN-CAP-014",
+            "title": "El pago se realiza en una pasarela externa en pestaña nueva",
+            "file": "qa/01-specifications/module-capacitaciones/submodule-detalle-curso/01-business-rules.md",
+            "line": 67
+          },
+          {
+            "id": "RN-CAP-015",
+            "title": "El consentimiento de datos enlaza a una política de privacidad vigente",
+            "file": "qa/01-specifications/module-capacitaciones/submodule-detalle-curso/01-business-rules.md",
+            "line": 76
+          },
+          {
+            "id": "RN-CAP-016",
+            "title": "La fecha de \"próximo inicio\" anunciada es futura",
+            "file": "qa/01-specifications/module-capacitaciones/submodule-bootcamp/01-business-rules.md",
+            "line": 7
+          },
+          {
+            "id": "RN-CAP-017",
+            "title": "Las anclas del hero desplazan a su sección",
+            "file": "qa/01-specifications/module-capacitaciones/submodule-bootcamp/01-business-rules.md",
+            "line": 15
+          },
+          {
+            "id": "RN-CAP-018",
+            "title": "El autodiagnóstico exige responder las cuatro preguntas",
+            "file": "qa/01-specifications/module-capacitaciones/submodule-bootcamp/01-business-rules.md",
+            "line": 23
+          },
+          {
+            "id": "RN-CAP-019",
+            "title": "El autodiagnóstico clasifica por puntaje",
+            "file": "qa/01-specifications/module-capacitaciones/submodule-bootcamp/01-business-rules.md",
+            "line": 31
+          },
+          {
+            "id": "RN-CAP-020",
+            "title": "Las preguntas frecuentes se expanden al hacer clic",
+            "file": "qa/01-specifications/module-capacitaciones/submodule-bootcamp/01-business-rules.md",
+            "line": 40
+          },
+          {
+            "id": "RN-CAP-021",
+            "title": "Los CTAs de contacto del Bootcamp usan canales válidos",
+            "file": "qa/01-specifications/module-capacitaciones/submodule-bootcamp/01-business-rules.md",
+            "line": 48
+          },
+          {
+            "id": "RN-CON-001",
+            "title": "El ítem \"Contacto\" del menú lleva a la página de contacto",
+            "file": "qa/01-specifications/module-contacto/submodule-formulario-contacto/01-business-rules.md",
+            "line": 7
+          },
+          {
+            "id": "RN-CON-002",
+            "title": "La página de contacto ofrece WhatsApp con mensaje prellenado",
+            "file": "qa/01-specifications/module-contacto/submodule-formulario-contacto/01-business-rules.md",
+            "line": 15
+          },
+          {
+            "id": "RN-CON-003",
+            "title": "La página de contacto enlaza las redes sociales oficiales",
+            "file": "qa/01-specifications/module-contacto/submodule-formulario-contacto/01-business-rules.md",
+            "line": 23
+          },
+          {
+            "id": "RN-CON-004",
+            "title": "Los correos se publican por tipo de consulta",
+            "file": "qa/01-specifications/module-contacto/submodule-formulario-contacto/01-business-rules.md",
+            "line": 32
+          },
+          {
+            "id": "RN-CON-005",
+            "title": "La página de contacto ofrece un formulario para escribir al sitio",
+            "file": "qa/01-specifications/module-contacto/submodule-formulario-contacto/01-business-rules.md",
+            "line": 40
+          },
+          {
+            "id": "RN-CON-006",
+            "title": "La página de contacto tiene un único H1",
+            "file": "qa/01-specifications/module-contacto/submodule-formulario-contacto/01-business-rules.md",
+            "line": 48
+          },
+          {
+            "id": "RN-CON-007",
+            "title": "El contacto empresa es accesible desde la portada",
+            "file": "qa/01-specifications/module-contacto/submodule-contacto-empresa/01-business-rules.md",
+            "line": 7
+          },
+          {
+            "id": "RN-CON-008",
+            "title": "Todos los campos del formulario empresa son obligatorios",
+            "file": "qa/01-specifications/module-contacto/submodule-contacto-empresa/01-business-rules.md",
+            "line": 15
+          },
+          {
+            "id": "RN-CON-009",
+            "title": "El email debe tener formato válido",
+            "file": "qa/01-specifications/module-contacto/submodule-contacto-empresa/01-business-rules.md",
+            "line": 24
+          },
+          {
+            "id": "RN-CON-010",
+            "title": "El número de personas solo admite valores numéricos",
+            "file": "qa/01-specifications/module-contacto/submodule-contacto-empresa/01-business-rules.md",
+            "line": 33
+          },
+          {
+            "id": "RN-CON-011",
+            "title": "El número de personas es un entero mayor o igual a 1",
+            "file": "qa/01-specifications/module-contacto/submodule-contacto-empresa/01-business-rules.md",
+            "line": 41
+          },
+          {
+            "id": "RN-CON-012",
+            "title": "Código Sence se elige entre tres opciones",
+            "file": "qa/01-specifications/module-contacto/submodule-contacto-empresa/01-business-rules.md",
+            "line": 49
+          },
+          {
+            "id": "RN-CON-013",
+            "title": "Un formulario que recolecta datos personales informa la política de privacidad",
+            "file": "qa/01-specifications/module-contacto/submodule-contacto-empresa/01-business-rules.md",
+            "line": 57
+          },
+          {
+            "id": "RN-CON-014",
+            "title": "Las etiquetas del formulario tienen ortografía correcta",
+            "file": "qa/01-specifications/module-contacto/submodule-contacto-empresa/01-business-rules.md",
+            "line": 65
+          },
+          {
+            "id": "RN-CON-015",
+            "title": "Los campos obligatorios se identifican visualmente",
+            "file": "qa/01-specifications/module-contacto/submodule-contacto-empresa/01-business-rules.md",
+            "line": 73
+          },
+          {
+            "id": "RN-CON-016",
+            "title": "El formulario empresa está protegido por reCAPTCHA",
+            "file": "qa/01-specifications/module-contacto/submodule-contacto-empresa/01-business-rules.md",
+            "line": 81
+          },
+          {
+            "id": "RN-EVT-001",
+            "title": "La página del evento presenta edición, fechas, sede y CTAs",
+            "file": "qa/01-specifications/module-eventos/submodule-testing-day/01-business-rules.md",
+            "line": 7
+          },
+          {
+            "id": "RN-EVT-002",
+            "title": "La compra de entradas se hace en ecopass en pestaña nueva",
+            "file": "qa/01-specifications/module-eventos/submodule-testing-day/01-business-rules.md",
+            "line": 15
+          },
+          {
+            "id": "RN-EVT-003",
+            "title": "\"Convertirse en Sponsor\" lleva a la sección de sponsors",
+            "file": "qa/01-specifications/module-eventos/submodule-testing-day/01-business-rules.md",
+            "line": 24
+          },
+          {
+            "id": "RN-EVT-004",
+            "title": "La agenda presencial lista bloques con horario y título",
+            "file": "qa/01-specifications/module-eventos/submodule-testing-day/01-business-rules.md",
+            "line": 32
+          },
+          {
+            "id": "RN-EVT-005",
+            "title": "La agenda completa está en Agenda Online",
+            "file": "qa/01-specifications/module-eventos/submodule-testing-day/01-business-rules.md",
+            "line": 40
+          },
+          {
+            "id": "RN-EVT-006",
+            "title": "Los sponsors se agrupan por nivel",
+            "file": "qa/01-specifications/module-eventos/submodule-testing-day/01-business-rules.md",
+            "line": 48
+          },
+          {
+            "id": "RN-EVT-007",
+            "title": "El brochure de sponsors se solicita por correo",
+            "file": "qa/01-specifications/module-eventos/submodule-testing-day/01-business-rules.md",
+            "line": 56
+          },
+          {
+            "id": "RN-EVT-008",
+            "title": "La Agenda Online lista las sesiones con su inscripción",
+            "file": "qa/01-specifications/module-eventos/submodule-testing-day/01-business-rules.md",
+            "line": 64
+          },
+          {
+            "id": "RN-EVT-009",
+            "title": "Los enlaces externos del evento están operativos",
+            "file": "qa/01-specifications/module-eventos/submodule-testing-day/01-business-rules.md",
+            "line": 72
+          },
+          {
+            "id": "RN-EVT-010",
+            "title": "Un evento finalizado no ofrece compra ni inscripción",
+            "file": "qa/01-specifications/module-eventos/submodule-testing-day/01-business-rules.md",
+            "line": 80
+          },
+          {
+            "id": "RN-EVT-011",
+            "title": "Cada sponsor 2026 tiene tarjeta con enlaces propios",
+            "file": "qa/01-specifications/module-eventos/submodule-testing-day/01-business-rules.md",
+            "line": 88
+          },
+          {
+            "id": "RN-EVT-012",
+            "title": "Las páginas del evento tienen título, description y H1 coherentes",
+            "file": "qa/01-specifications/module-eventos/submodule-testing-day/01-business-rules.md",
+            "line": 96
+          },
+          {
+            "id": "RN-EVT-013",
+            "title": "La página de ediciones anteriores resume las ediciones 2016-2019",
+            "file": "qa/01-specifications/module-eventos/submodule-ediciones/01-business-rules.md",
+            "line": 7
+          },
+          {
+            "id": "RN-EVT-014",
+            "title": "Las páginas de edición enlazadas desde el menú están publicadas",
+            "file": "qa/01-specifications/module-eventos/submodule-ediciones/01-business-rules.md",
+            "line": 15
+          },
+          {
+            "id": "RN-EVT-015",
+            "title": "Los enlaces internos de las páginas de edición no están rotos",
+            "file": "qa/01-specifications/module-eventos/submodule-ediciones/01-business-rules.md",
+            "line": 23
+          },
+          {
+            "id": "RN-EVT-016",
+            "title": "El título de cada página de edición corresponde a su año",
+            "file": "qa/01-specifications/module-eventos/submodule-ediciones/01-business-rules.md",
+            "line": 31
+          },
+          {
+            "id": "RN-EVT-017",
+            "title": "La página de la edición 2025 enlaza a sus sponsors y muestra la entrevista",
+            "file": "qa/01-specifications/module-eventos/submodule-ediciones/01-business-rules.md",
+            "line": 39
+          },
+          {
+            "id": "RN-EVT-018",
+            "title": "Los enlaces de \"edición más reciente\" apuntan a la última edición publicada",
+            "file": "qa/01-specifications/module-eventos/submodule-ediciones/01-business-rules.md",
+            "line": 47
+          },
+          {
+            "id": "RN-HOME-001",
+            "title": "El menú principal muestra seis ítems en orden fijo",
+            "file": "qa/01-specifications/module-home/submodule-navegacion/01-business-rules.md",
+            "line": 7
+          },
+          {
+            "id": "RN-HOME-002",
+            "title": "El submenú de Testing Day se despliega al pasar el puntero",
+            "file": "qa/01-specifications/module-home/submodule-navegacion/01-business-rules.md",
+            "line": 16
+          },
+          {
+            "id": "RN-HOME-003",
+            "title": "El tercer nivel de \"Ediciones anteriores\" da acceso a las ediciones pasadas",
+            "file": "qa/01-specifications/module-home/submodule-navegacion/01-business-rules.md",
+            "line": 24
+          },
+          {
+            "id": "RN-HOME-004",
+            "title": "En móvil el menú se ofrece en un panel con submenús expandibles",
+            "file": "qa/01-specifications/module-home/submodule-navegacion/01-business-rules.md",
+            "line": 33
+          },
+          {
+            "id": "RN-HOME-005",
+            "title": "La barra superior ofrece contacto directo y redes",
+            "file": "qa/01-specifications/module-home/submodule-navegacion/01-business-rules.md",
+            "line": 41
+          },
+          {
+            "id": "RN-HOME-006",
+            "title": "El footer contiene datos de contacto, redes y enlaces legales",
+            "file": "qa/01-specifications/module-home/submodule-navegacion/01-business-rules.md",
+            "line": 49
+          },
+          {
+            "id": "RN-HOME-007",
+            "title": "Los enlaces a sitios externos abren en una pestaña nueva",
+            "file": "qa/01-specifications/module-home/submodule-navegacion/01-business-rules.md",
+            "line": 57
+          },
+          {
+            "id": "RN-HOME-008",
+            "title": "La elección del banner de cookies se respeta y persiste",
+            "file": "qa/01-specifications/module-home/submodule-navegacion/01-business-rules.md",
+            "line": 65
+          },
+          {
+            "id": "RN-HOME-009",
+            "title": "El enlace \"Cookies\" del footer permite revisar la elección",
+            "file": "qa/01-specifications/module-home/submodule-navegacion/01-business-rules.md",
+            "line": 73
+          },
+          {
+            "id": "RN-HOME-010",
+            "title": "El botón flotante de WhatsApp abre una conversación prellenada",
+            "file": "qa/01-specifications/module-home/submodule-navegacion/01-business-rules.md",
+            "line": 81
+          },
+          {
+            "id": "RN-HOME-011",
+            "title": "Una ruta inexistente responde 404 con navegación disponible",
+            "file": "qa/01-specifications/module-home/submodule-navegacion/01-business-rules.md",
+            "line": 89
+          },
+          {
+            "id": "RN-HOME-012",
+            "title": "Las imágenes informativas tienen texto alternativo",
+            "file": "qa/01-specifications/module-home/submodule-navegacion/01-business-rules.md",
+            "line": 97
+          },
+          {
+            "id": "RN-HOME-013",
+            "title": "Los perfiles sociales enlazados son los oficiales y consistentes",
+            "file": "qa/01-specifications/module-home/submodule-navegacion/01-business-rules.md",
+            "line": 106
+          },
+          {
+            "id": "RN-HOME-014",
+            "title": "Las redirecciones canónicas consolidan el dominio",
+            "file": "qa/01-specifications/module-home/submodule-navegacion/01-business-rules.md",
+            "line": 114
+          },
+          {
+            "id": "RN-HOME-015",
+            "title": "El diseño móvil no genera desplazamiento horizontal",
+            "file": "qa/01-specifications/module-home/submodule-navegacion/01-business-rules.md",
+            "line": 122
+          },
+          {
+            "id": "RN-HOME-016",
+            "title": "El hero ofrece acceso al catálogo y al Bootcamp",
+            "file": "qa/01-specifications/module-home/submodule-portada/01-business-rules.md",
+            "line": 7
+          },
+          {
+            "id": "RN-HOME-017",
+            "title": "Los contadores muestran cifras distintas de cero tras hacer scroll",
+            "file": "qa/01-specifications/module-home/submodule-portada/01-business-rules.md",
+            "line": 15
+          },
+          {
+            "id": "RN-HOME-018",
+            "title": "La sección de servicios enlaza al catálogo y al contacto empresa",
+            "file": "qa/01-specifications/module-home/submodule-portada/01-business-rules.md",
+            "line": 24
+          },
+          {
+            "id": "RN-HOME-019",
+            "title": "Las capacitaciones destacadas enlazan a su temario",
+            "file": "qa/01-specifications/module-home/submodule-portada/01-business-rules.md",
+            "line": 32
+          },
+          {
+            "id": "RN-HOME-020",
+            "title": "Cada página tiene un único H1 descriptivo",
+            "file": "qa/01-specifications/module-home/submodule-portada/01-business-rules.md",
+            "line": 40
+          },
+          {
+            "id": "RN-HOME-021",
+            "title": "La portada declara metadatos SEO completos",
+            "file": "qa/01-specifications/module-home/submodule-portada/01-business-rules.md",
+            "line": 48
+          },
+          {
+            "id": "RN-LEG-001",
+            "title": "Las páginas legales son accesibles desde el footer de todo el sitio",
+            "file": "qa/01-specifications/module-legal/submodule-legales/01-business-rules.md",
+            "line": 7
+          },
+          {
+            "id": "RN-LEG-002",
+            "title": "Los Términos y Condiciones describen la relación real con el usuario",
+            "file": "qa/01-specifications/module-legal/submodule-legales/01-business-rules.md",
+            "line": 15
+          },
+          {
+            "id": "RN-LEG-003",
+            "title": "La política de privacidad identifica al responsable y un canal para ejercer derechos",
+            "file": "qa/01-specifications/module-legal/submodule-legales/01-business-rules.md",
+            "line": 23
+          },
+          {
+            "id": "RN-LEG-004",
+            "title": "La política de privacidad describe los tratamientos que el sitio realiza",
+            "file": "qa/01-specifications/module-legal/submodule-legales/01-business-rules.md",
+            "line": 31
+          },
+          {
+            "id": "RN-LEG-005",
+            "title": "La información de cookies es accesible desde el banner",
+            "file": "qa/01-specifications/module-legal/submodule-legales/01-business-rules.md",
+            "line": 39
+          },
+          {
+            "id": "RN-LEG-006",
+            "title": "Las páginas legales tienen título, H1 y description representativos",
+            "file": "qa/01-specifications/module-legal/submodule-legales/01-business-rules.md",
+            "line": 47
+          },
+          {
+            "id": "RN-LEG-007",
+            "title": "El listado muestra artículos con título, fecha y extracto",
+            "file": "qa/01-specifications/module-legal/submodule-blog/01-business-rules.md",
+            "line": 7
+          },
+          {
+            "id": "RN-LEG-008",
+            "title": "Los artículos se ordenan del más reciente al más antiguo",
+            "file": "qa/01-specifications/module-legal/submodule-blog/01-business-rules.md",
+            "line": 15
+          },
+          {
+            "id": "RN-LEG-009",
+            "title": "El listado se pagina de a 10 artículos",
+            "file": "qa/01-specifications/module-legal/submodule-blog/01-business-rules.md",
+            "line": 23
+          },
+          {
+            "id": "RN-LEG-010",
+            "title": "Cada artículo tiene su página con H1, fecha y contenido",
+            "file": "qa/01-specifications/module-legal/submodule-blog/01-business-rules.md",
+            "line": 31
+          },
+          {
+            "id": "RN-LEG-011",
+            "title": "El título del artículo sigue el patrón del sitio",
+            "file": "qa/01-specifications/module-legal/submodule-blog/01-business-rules.md",
+            "line": 39
+          },
+          {
+            "id": "RN-LEG-012",
+            "title": "El listado del blog tiene H1 y description",
+            "file": "qa/01-specifications/module-legal/submodule-blog/01-business-rules.md",
+            "line": 47
+          },
+          {
+            "id": "RN-LEG-013",
+            "title": "La galería agrupa fotos por álbum con encabezado",
+            "file": "qa/01-specifications/module-legal/submodule-galeria/01-business-rules.md",
+            "line": 7
+          },
+          {
+            "id": "RN-LEG-014",
+            "title": "Una miniatura abre el visor en la foto elegida",
+            "file": "qa/01-specifications/module-legal/submodule-galeria/01-business-rules.md",
+            "line": 15
+          },
+          {
+            "id": "RN-LEG-015",
+            "title": "El visor permite avanzar y cerrar con teclado",
+            "file": "qa/01-specifications/module-legal/submodule-galeria/01-business-rules.md",
+            "line": 23
+          },
+          {
+            "id": "RN-LEG-016",
+            "title": "El título de la galería es correcto",
+            "file": "qa/01-specifications/module-legal/submodule-galeria/01-business-rules.md",
+            "line": 31
+          },
+          {
+            "id": "RN-LEG-017",
+            "title": "Las fotos de la galería tienen texto alternativo",
+            "file": "qa/01-specifications/module-legal/submodule-galeria/01-business-rules.md",
+            "line": 39
+          }
+        ]
+      },
+      "D5.covered-rules": {
+        "count": 18,
+        "of": 120,
+        "ratio": 0.15,
+        "rules": [
+          "RN-CAP-002",
+          "RN-CAP-012",
+          "RN-CAP-015",
+          "RN-CAP-016",
+          "RN-CAP-019",
+          "RN-CON-005",
+          "RN-CON-011",
+          "RN-CON-013",
+          "RN-EVT-010",
+          "RN-EVT-016",
+          "RN-EVT-018",
+          "RN-HOME-001",
+          "RN-HOME-006",
+          "RN-HOME-012",
+          "RN-HOME-013",
+          "RN-HOME-020",
+          "RN-LEG-002",
+          "RN-LEG-005"
+        ]
+      },
+      "D5.uncovered-rules": {
+        "count": 102,
+        "rules": [
+          "FL-CAP-001",
+          "FL-CAP-002",
+          "FL-CAP-003",
+          "FL-CAP-004",
+          "FL-CAP-005",
+          "FL-CAP-006",
+          "FL-CAP-007",
+          "FL-CON-001",
+          "FL-CON-002",
+          "FL-CON-003",
+          "FL-CON-004",
+          "FL-EVT-001",
+          "FL-EVT-002",
+          "FL-EVT-003",
+          "FL-EVT-004",
+          "FL-HOME-001",
+          "FL-HOME-002",
+          "FL-HOME-003",
+          "FL-HOME-004",
+          "FL-HOME-005",
+          "FL-HOME-006",
+          "FL-LEG-001",
+          "FL-LEG-002",
+          "FL-LEG-003",
+          "FL-LEG-004",
+          "FL-LEG-005",
+          "FL-LEG-006",
+          "RN-CAP-001",
+          "RN-CAP-003",
+          "RN-CAP-004",
+          "RN-CAP-005",
+          "RN-CAP-006",
+          "RN-CAP-007",
+          "RN-CAP-008",
+          "RN-CAP-009",
+          "RN-CAP-010",
+          "RN-CAP-011",
+          "RN-CAP-013",
+          "RN-CAP-014",
+          "RN-CAP-017",
+          "RN-CAP-018",
+          "RN-CAP-020",
+          "RN-CAP-021",
+          "RN-CON-001",
+          "RN-CON-002",
+          "RN-CON-003",
+          "RN-CON-004",
+          "RN-CON-006",
+          "RN-CON-007",
+          "RN-CON-008",
+          "RN-CON-009",
+          "RN-CON-010",
+          "RN-CON-012",
+          "RN-CON-014",
+          "RN-CON-015",
+          "RN-CON-016",
+          "RN-EVT-001",
+          "RN-EVT-002",
+          "RN-EVT-003",
+          "RN-EVT-004",
+          "RN-EVT-005",
+          "RN-EVT-006",
+          "RN-EVT-007",
+          "RN-EVT-008",
+          "RN-EVT-009",
+          "RN-EVT-011",
+          "RN-EVT-012",
+          "RN-EVT-013",
+          "RN-EVT-014",
+          "RN-EVT-015",
+          "RN-EVT-017",
+          "RN-HOME-002",
+          "RN-HOME-003",
+          "RN-HOME-004",
+          "RN-HOME-005",
+          "RN-HOME-007",
+          "RN-HOME-008",
+          "RN-HOME-009",
+          "RN-HOME-010",
+          "RN-HOME-011",
+          "RN-HOME-014",
+          "RN-HOME-015",
+          "RN-HOME-016",
+          "RN-HOME-017",
+          "RN-HOME-018",
+          "RN-HOME-019",
+          "RN-HOME-021",
+          "RN-LEG-001",
+          "RN-LEG-003",
+          "RN-LEG-004",
+          "RN-LEG-006",
+          "RN-LEG-007",
+          "RN-LEG-008",
+          "RN-LEG-009",
+          "RN-LEG-010",
+          "RN-LEG-011",
+          "RN-LEG-012",
+          "RN-LEG-013",
+          "RN-LEG-014",
+          "RN-LEG-015",
+          "RN-LEG-016",
+          "RN-LEG-017"
+        ]
+      },
+      "D5.orphan-tests": {
+        "count": 3,
+        "note": "automated cases whose id is declared in no scenario document",
+        "cases": [
+          "TC-HOME-SMOKE-001",
+          "TC-HOME-SMOKE-002",
+          "TC-HOME-SMOKE-003"
+        ]
+      },
+      "D5.pending-markers": {
+        "count": 0,
+        "note": "markers for information the analysis could not confirm"
+      }
+    },
+    "pipelines": {
+      "D6.pipeline-present": {
+        "yamlScanned": 1,
+        "pipelinesIdentified": 1,
+        "files": [
+          ".github/workflows/qa.yml"
+        ]
+      },
+      "D6.suite-invocation": {
+        "pipelinesRunningTheSuite": 0,
+        "note": "a pipeline counts only when it invokes the runner (directly, or through an npm/yarn/pnpm script that expands to playwright test; an unresolvable npm test still counts) AND names a resolved suite directory",
+        "files": []
+      },
+      "D6.run-scope": {
+        "pipelines": [],
+        "filteredPipelines": 0,
+        "fullPipelines": 0,
+        "note": "scope is read from the pipeline text; a filter marked variable is set outside the repository and its effective scope is unknowable here"
+      },
+      "D6.pipeline-triggers": {
+        "push": 1,
+        "pullRequest": 1,
+        "schedule": 1,
+        "manual": 1
+      },
+      "D6.result-publication": {
+        "publishingResults": 1,
+        "publishingToTestPlans": 0
+      },
+      "D6.declared-gating": {
+        "pipelinesDeclaringPrTrigger": 1,
+        "evidenceClass": "declaration",
+        "note": "a pull request trigger is an intention; enforcement lives in the branch policy and is out of scope for v1"
+      }
+    }
+  },
+  "suiteFiles": [
+    "qa/07-automation/e2e/tests/capacitaciones/bootcamp.spec.ts",
+    "qa/07-automation/e2e/tests/capacitaciones/catalogo.spec.ts",
+    "qa/07-automation/e2e/tests/capacitaciones/detalle-curso.spec.ts",
+    "qa/07-automation/e2e/tests/contacto/contacto-empresa.spec.ts",
+    "qa/07-automation/e2e/tests/contacto/formulario-contacto.spec.ts",
+    "qa/07-automation/e2e/tests/eventos/ediciones.spec.ts",
+    "qa/07-automation/e2e/tests/eventos/testing-day.spec.ts",
+    "qa/07-automation/e2e/tests/home/home-smoke.spec.ts",
+    "qa/07-automation/e2e/tests/home/navegacion.spec.ts",
+    "qa/07-automation/e2e/tests/home/portada.spec.ts",
+    "qa/07-automation/e2e/tests/legal/blog.spec.ts",
+    "qa/07-automation/e2e/tests/legal/galeria.spec.ts",
+    "qa/07-automation/e2e/tests/legal/legales.spec.ts",
+    "qa/07-automation/integration/tests/example.spec.ts",
+    "qa/07-automation/integration/tests/security/catalogs.spec.ts",
+    "qa/07-automation/integration/tests/security/no-session.spec.ts",
+    "qa/07-automation/integration/tests/security/read-only-guard.spec.ts",
+    "qa/07-automation/integration/tests/write/example-write-cycle.spec.ts"
+  ]
+}
