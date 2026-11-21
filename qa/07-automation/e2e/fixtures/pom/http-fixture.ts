@@ -57,6 +57,23 @@ export class LinkChecker {
   }
 
   /**
+   * <title> of an HTML document fetched with GET (no browser needed).
+   * @param url - absolute URL or path relative to baseURL
+   * @returns the trimmed title with the basic HTML entities decoded; empty when absent
+   */
+  async documentTitle(url: string): Promise<string> {
+    const response = await this.request.get(url, { timeout: DEFAULT_TIMEOUT_MS, failOnStatusCode: false });
+    const html = await response.text();
+    const raw = /<title[^>]*>([\s\S]*?)<\/title>/i.exec(html)?.[1] ?? '';
+    return raw
+      .replace(/&quot;/g, '"')
+      .replace(/&#0?39;|&apos;/g, "'")
+      .replace(/&amp;/g, '&')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  /**
    * First hop of a URL without following redirects.
    * @param url - absolute URL or path relative to baseURL
    * @returns the status and the Location header
