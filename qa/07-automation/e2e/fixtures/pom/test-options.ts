@@ -10,7 +10,7 @@ export const test = mergeTests(networkTest, pageObjectTest, httpTest);
 export { expect } from '@playwright/test';
 export { expectOpenDefect, openDefect, InfraError } from '../defects';
 export { skipPending } from '../pending';
-export type { LinkStatus } from './http-fixture';
+export { unreachable, type LinkStatus } from './http-fixture';
 
 // Pixel 5 context options usable in a describe-level `test.use()` (the
 // browser-level `defaultBrowserType` of the device descriptor is left out).

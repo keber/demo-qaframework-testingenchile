@@ -76,3 +76,18 @@ export const test = base.extend<{ linkChecker: LinkChecker }>({
     await use(new LinkChecker(request));
   },
 });
+
+const HTTP_OK_MIN = 200;
+const HTTP_REDIRECT_MAX = 399;
+
+/**
+ * Links that did not resolve to a 2xx or 3xx status.
+ * @param results - statuses from LinkChecker
+ * @param ignored - statuses classified as "not verifiable" (anti-bot answers)
+ * @returns url, status and error of each unreachable link
+ */
+export function unreachable(results: readonly LinkStatus[], ignored: readonly number[] = []): LinkStatus[] {
+  return results.filter(
+    (r) => !ignored.includes(r.status) && (r.status < HTTP_OK_MIN || r.status > HTTP_REDIRECT_MAX),
+  );
+}
