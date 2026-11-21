@@ -89,7 +89,8 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      // Desktop viewport of the test plans (section 6: 1366x900).
+      use: { ...devices['Desktop Chrome'], viewport: { width: 1366, height: 900 } },
     },
   ],
 
