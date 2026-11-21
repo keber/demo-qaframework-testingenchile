@@ -41,7 +41,9 @@ export default tseslint.config(
       'playwright/no-wait-for-timeout': 'error',
       'playwright/prefer-web-first-assertions': 'error',
       'playwright/require-top-level-describe': 'error',
-      'playwright/expect-expect': 'error',
+      // skipPending() (fixtures/pending.ts) is the body of a PENDING-* TC (framework rule 8,
+      // state c): it skips with a mandatory reason, so it counts as the TC's verdict.
+      'playwright/expect-expect': ['error', { assertFunctionNames: ['expect', 'skipPending'] }],
       'playwright/no-focused-test': 'error',
       'playwright/no-raw-locators': 'warn',
       'playwright/no-nth-methods': 'warn',
