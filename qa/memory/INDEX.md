@@ -9,3 +9,4 @@
 | `e2e-stabilization-patterns.md` | Flakiness patterns, crash-recovery techniques, strict-mode conflicts, reference timeouts | Investigating intermittent failures; refactoring fragile specs |
 | `data-volatility-strategies.md` | Strategies for handling volatile test data (filter values, row counts, search inputs) | Fixing hardcoded-data failures; choosing an assertion resilience approach |
 | `testingenchile-site-exploration.md` | Aprendizajes de la exploración en vivo (etapas 1-2): etiquetas de Google, formularios Webnode, menú, cookies, enlaces externos, privacidad | Antes de automatizar cualquier módulo o reexplorar el sitio |
+| `test-plan-classification.md` | Criterio DEF/REC (regla 8), decisiones de automatización, etiquetas y resultado de las etapas 3-4 | Antes de automatizar (etapa 5), al clasificar un hallazgo nuevo o al regenerar el plan |
