@@ -1,0 +1,12 @@
+node_modules/
+.env
+**/.env
+**/.auth/
+qa/07-automation/**/test-results/
+qa/07-automation/**/playwright-report/
+qa/07-automation/**/blob-report/
+qa/07-automation/e2e/diagnosis/
+reports/**/*.aux
+reports/**/*.log
+reports/**/*.out
+reports/**/*.toc

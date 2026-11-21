@@ -1,0 +1,131 @@
+{
+  "$schema": "./qa-framework.config.schema.json",
+  "frameworkVersion": "1.14.0-rc.9",
+  "project": {
+    "name": "testingenchile",
+    "displayName": "Testing en Chile",
+    "description": "Sitio público institucional de Testing en Chile (comunidad, capacitaciones, eventos Testing Day). Sin usuarios ni sección privada conocidos.",
+    "qaBaseUrl": "https://www.testingenchile.cl",
+    "techStack": "Webnode CMS (sitio estático renderizado en servidor), CDN CloudFront",
+    "loginPath": null
+  },
+  "modules": [
+    {
+      "code": "HOME",
+      "name": "Inicio y navegación global",
+      "description": "Página de inicio, menú principal, header, footer, redes sociales y enlaces globales",
+      "specPath": "qa/01-specifications/module-home",
+      "automationPath": "qa/07-automation/e2e/tests/home"
+    },
+    {
+      "code": "CAP",
+      "name": "Capacitaciones",
+      "description": "Catálogo de cursos: Bootcamp de Testing, ISTQB, automatización Selenium Java, IA",
+      "specPath": "qa/01-specifications/module-capacitaciones",
+      "automationPath": "qa/07-automation/e2e/tests/capacitaciones"
+    },
+    {
+      "code": "EVT",
+      "name": "Eventos Testing Day",
+      "description": "Páginas de Testing Day Chile, ediciones anteriores, agendas, speakers y sponsors",
+      "specPath": "qa/01-specifications/module-eventos",
+      "automationPath": "qa/07-automation/e2e/tests/eventos"
+    },
+    {
+      "code": "CON",
+      "name": "Contacto y formularios",
+      "description": "Formulario de contacto y contacto empresa (validación sin envío real)",
+      "specPath": "qa/01-specifications/module-contacto",
+      "automationPath": "qa/07-automation/e2e/tests/contacto"
+    },
+    {
+      "code": "LEG",
+      "name": "Contenido legal y blog",
+      "description": "Política de privacidad, términos y condiciones, blog y galería",
+      "specPath": "qa/01-specifications/module-legal",
+      "automationPath": "qa/07-automation/e2e/tests/legal"
+    }
+  ],
+  "conventions": {
+    "language": "es",
+    "locale": "es-CL",
+    "testCaseIdPattern": "TC-{MODULE}-{SUBMODULE}-{NUM}",
+    "businessRuleIdPattern": "RN-{MODULE}-{NUM}",
+    "workflowIdPattern": "FL-{MODULE}-{NUM}",
+    "defectIdPattern": "DEF-{PREFIX}-{NUM}",
+    "testNamingPattern": "[{ID}] {title} @{priority}",
+    "timestampFormat": "YYYY-MM-DD_HH-MM-SS",
+    "tcPriorityLevels": [
+      "P0",
+      "P1",
+      "P2",
+      "P3"
+    ],
+    "qaRoot": "qa",
+    "defectIdPrefix": "TCH"
+  },
+  "testUsers": [],
+  "parallelLanes": {
+    "enabled": false,
+    "lanes": [
+      {
+        "id": "1",
+        "account": "QA_USER",
+        "storageState": ".auth/user-default.json",
+        "mcpNamespace": null,
+        "runnerProject": "chromium",
+        "capabilities": []
+      }
+    ]
+  },
+  "integrations": {
+    "playwright": {
+      "enabled": true,
+      "automationRoot": "qa/07-automation/e2e",
+      "workers": {
+        "local": 2,
+        "ci": 1
+      },
+      "timeout": 30000,
+      "navigationTimeout": 60000,
+      "actionTimeout": 10000,
+      "retries": {
+        "local": 0,
+        "ci": 2
+      },
+      "browsers": [
+        "chromium"
+      ]
+    },
+    "azureDevOps": {
+      "enabled": false,
+      "organization": "{{ADO_ORG}}",
+      "project": "{{ADO_PROJECT}}",
+      "testPlanId": null,
+      "suiteId": null,
+      "variableGroup": "{{ADO_VARIABLE_GROUP}}",
+      "pipelineFile": "qa/08-azure-integration/pipelines/azure-pipeline-qa.yml",
+      "moduleRegistry": "qa/08-azure-integration/module-registry.json",
+      "reporterPackage": "@alex_neo/playwright-azure-reporter",
+      "sprintCycle": {
+        "enabled": false,
+        "sprintDurationDays": 8,
+        "manualTestingTimeboxDays": 2,
+        "dateFormat": "dd-mm-aaaa",
+        "timezone": "America/Santiago",
+        "approvalThresholdPercent": 85
+      }
+    }
+  },
+  "agentSettings": {
+    "instructionsPath": "qa/00-guides",
+    "credentialPolicy": "env-vars-only",
+    "credentialPlaceholder": "<PLACEHOLDER>",
+    "screenshotPath": "qa/07-automation/e2e/diagnosis",
+    "sessionSummaryLocation": "qa/",
+    "tc_per_submodule_target": {
+      "min": 8,
+      "max": 20
+    }
+  }
+}

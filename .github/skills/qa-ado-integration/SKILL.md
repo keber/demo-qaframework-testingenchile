@@ -1,0 +1,163 @@
+---
+name: qa-ado-integration
+description: >
+  Optional stage of the QA pipeline. Syncs test plans, test cases, and
+  automation results with Azure DevOps (ADO) Test Plans. Injects ADO IDs
+  back into local spec files and configures the Playwright ADO reporter.
+  Use when asked to sync with Azure DevOps, push test cases to ADO, create
+  a test plan in ADO, configure ADO reporting, inject ADO IDs, or link
+  Playwright results to ADO. Also use before classifying, scoping, or
+  concluding anything about an ADO work item (Task, Bug, Issue, User Story),
+  for example in gap analysis or coverage decisions: it must be read in full.
+  Requires ADO enabled in qa-framework.config.json with valid PAT in env vars.
+---
+
+# QA Skill: ADO Integration (Optional Stage)
+
+**Stage**: Optional - ADO Integration (no pipeline order dependency)
+**Prerequisite**: `Plan-de-Pruebas-{proyecto}-Sprint-{N}-{modulo}.md` exists with a complete Tabla de Pruebas (steps filled in); valid `ADO_PAT` env var
+**Output**: ADO Test Plan populated with Test Suites and Test Cases (with steps) + `qa/08-azure-integration/module-registry.json` updated
+**Use any time** after Stage 3 (Plan de Pruebas) is ready - Stage 4 and 5 are not required
+
+> **Direction: local to ADO only.** This skill pushes the local Plan de Pruebas into ADO (suites, test cases with steps, IDs injected back into local files) and wires the reporter. It does not pull execution results out of an existing ADO Test Plan. For a sprint's execution report built from ADO results, use the `qa-reporte-ejecucion` agent, which exports them with the `ado-qa` skill.
+> **Credential rule**: NEVER hardcode PAT, username, or organization URL in any file. Always read from env vars or `<PLACEHOLDER>` in documentation. Where each credential lives, how it rotates, and the read/write split (`ADO_PROJECT_READ`/`ADO_PROJECT_WRITE`, a read-only PAT for tooling that never writes): `references/credential-policy.md`.
+> **Steps rule**: ADO Test Cases must have steps. Do not sync TCs from a Plan de Pruebas with empty or summary-only steps - run Stage 4 first to expand them.
+> **Work item read rule (BLOCKING)**: Never conclude anything about an ADO work item from its title or State. Read it in full first - see "Reading ADO work items" below.
+
+---
+
+## Reading ADO work items
+
+Whenever this skill, another stage, or a sub-agent reads an ADO work item (Task, Bug, Issue, User Story) to classify it, scope it, or decide coverage, apply `references/ado-workitem-full-read-protocol.md` before writing any verdict. In short, read all five:
+
+1. Type, Title, State **and Reason** (Reason separates "Completed" from "Removed", "Duplicate", "Cut")
+2. The full content fields: Description, ReproSteps (Bug), AcceptanceCriteria (User Story)
+3. Every embedded or attached image - look at each one
+4. All comments
+5. The parent/child hierarchy - the parent User Story is read with the same protocol
+
+The reference holds the reasons, the local cache convention, a PowerShell example (which depends on the separate `@keber/ado-powershell` package, not on `integrations/ado-powershell/`), and the equivalent REST calls. A verdict reached without all five points is provisional and must say so.
+
+---
+
+## Reviewing pull requests
+
+When QA is asked to review or vote on pull requests, apply the project's rubric in `qa/00-standards/pr-review-rubric.md` (installed by `init` when missing; the project owns and edits it). Review by work item, not by PR; vote by the escalation level of the failing criteria; write the report with the template in its section 10, keeping "Observations for QA" and "Limitations of this analysis". Reading PRs needs only read access: use the read variables of `references/credential-policy.md`. Publishing a vote or a comment is a write: it needs the write PAT (Code: Read and write) and the user's go-ahead.
+
+---
+
+## Inputs Required
+
+1. `qa/qa-framework.config.json` - ADO org URL, project name, test plan ID (or "create new")
+2. `qa/02-test-plans/sprints/Sprint-{N}/Plan-de-Pruebas-{proyecto}-Sprint-{N}-{modulo}.md` - one file per module; each file's Tabla de Pruebas becomes one Test Suite in ADO
+3. `ADO_PAT_WRITE` (or `ADO_PAT`) environment variable - personal access token with Test Plans read/write
+4. Optionally: `qa/08-azure-integration/module-registry.json` for existing ID mapping
+
+> **Note**: The consolidated `Plan-de-Pruebas-{proyecto}-Sprint-{N}.md` (without module suffix)
+> is for human reference only - do not use it as input for ADO scripts.
+
+---
+
+## Process
+
+### Step 1 - Verify ADO config
+
+Check `qa/qa-framework.config.json` for:
+```json
+"ado": {
+  "org": "<ADO_ORG_URL>",
+  "project": "<PROJECT_NAME>",
+  "planId": <PLAN_ID_OR_NULL>
+}
+```
+If `planId` is null, a new plan will be created in Step 2.
+
+### Step 2 - Create or verify Test Plan
+
+Use the PowerShell script: `integrations/ado-powershell/scripts/create-testplan-from-mapping.ps1`
+
+See `references/scripts-and-config.md` for usage, parameters, and required env vars.
+
+Required env vars:
+- `$env:ADO_ORG` - organization name (e.g., `myorg`) or URL (e.g., `https://dev.azure.com/myorg`)
+- `$env:ADO_PROJECT_WRITE` - project name (falls back to `$env:ADO_PROJECT`)
+- `$env:ADO_PAT_WRITE` - PAT token (falls back to `$env:ADO_PAT`)
+
+The shipped scripts that call ADO all write, so they prefer the `_WRITE` variables; read-only work (gap analysis, the work item full-read protocol, PR reviews) uses `ADO_PROJECT_READ` / `ADO_PAT_READ`. See the read/write split in `references/credential-policy.md` (section 5) and the variable table in `references/scripts-and-config.md`.
+
+Manual execution results go to ADO with `publish-results.ps1` (a test run bound to the test points); defects are opened with `create-issue.ps1`, which returns the existing item instead of creating a duplicate. Preview both with `-DryRun` and get the user's go-ahead before the real run: they write to ADO.
+
+### Step 3 - Sync test cases from Plan de Pruebas
+
+For each `Plan-de-Pruebas-{proyecto}-Sprint-{N}-{modulo}.md` file:
+1. Read the Tabla de Pruebas
+2. Create one **Test Suite** in ADO named after the module (or use the suite groupings from section 5 of the plan)
+3. For each row in the table, create one **Test Case** with:
+   - Title: the Título column value
+   - Steps: the Steps column value (numbered steps, `<br>`-separated -> each becomes one ADO step)
+   - Expected result: the Resultado Esperado column value
+   - Tags: Tipo + Prioridad values
+4. Write the returned ADO Test Case IDs back into the table (column "ADO WI") and into `module-registry.json`
+
+Use `inject-ado-ids.ps1` to automate the create + inject cycle.
+
+After sync, each row in the Plan de Pruebas table must have an ADO WI ID.
+
+### Step 4 - Configure Playwright ADO reporter
+
+See `references/scripts-and-config.md` for the reporter config block to add to `qa/07-automation/e2e/playwright.config.ts`.
+
+Required fields:
+- `orgUrl`, `projectName`, `planId`, `runName`
+- All values must come from environment variables - no hardcoded IDs
+
+### Step 5 - Run sync and validate
+
+Run `sync-ado-titles.ps1` after automation runs to update ADO test outcomes from Playwright report JSON.
+
+### Step 6 - Update registry
+
+Update `qa/08-azure-integration/module-registry.json` with:
+- Module name
+- ADO Plan ID
+- ADO Suite IDs per submodule
+- Sync date
+
+---
+
+## Troubleshooting Quick Reference
+
+| Symptom | Likely cause | Fix |
+|---|---|---|
+| 401 Unauthorized | Expired or wrong PAT | Regenerate PAT; check `$env:ADO_PAT` |
+| 403 on every call; `X-TFS-ServiceError` says `VS403463` | Entra Conditional Access policy rejected the network or device, not the PAT | See "Conditional Access blocks (VS403463)" above; regenerating the PAT does not help |
+| Plan not found | Wrong planId in config | Verify planId or set to null to create new |
+| TCs not appearing | Wrong suite parent ID | Check `module-registry.json` suite mapping |
+| Reporter not posting | Missing env var at runtime | Pass vars via CI pipeline or `.env` |
+| Duplicate TCs | Re-ran create script | Use `inject-ado-ids.ps1` idempotently |
+| "ADO session not found" or "incomplete" from `create-testplan-from-mapping.ps1` | No usable `$AdoSession` | Dot-source `load.ps1` with the `ADO_*` env vars set, or pass `-Session $AdoSession` |
+| Existing suites missing from a lookup in a large plan | Flat suite list pages at 200 | Read `suites/{parentSuiteId}?expand=children` (see `references/scripts-and-config.md`) |
+
+---
+
+## Conditional Access blocks (VS403463)
+
+**Symptom.** Every ADO call returns 403, including calls any valid token can make, such as listing the organization's projects. The response header `X-TFS-ServiceError` contains `VS403463` and says a conditional access policy has failed. Some request wrappers rewrite this 403 as "the PAT does not have sufficient permissions", which points to the wrong cause.
+
+**What it means.** The token is not the problem: it is not an expired, wrong or under-scoped PAT. The organization is backed by Microsoft Entra ID, and an Entra Conditional Access policy rejected the context of the request (typically the network location or IP range, or the device). ADO can enforce those policies for PAT and other token-based calls too, so a script that worked from one network fails from another with the same PAT. Regenerating the PAT or widening its scopes does not help.
+
+**What to do.**
+
+1. Read the header before concluding anything about credentials. In Windows PowerShell 5.1, inside the `catch` of `Invoke-RestMethod`: `$_.Exception.Response.Headers['X-TFS-ServiceError']`. In PowerShell 7 the response is an `HttpResponseMessage`: read it with `$_.Exception.Response.Headers.GetValues('X-TFS-ServiceError')`. Report the header text, never the token.
+2. Run the ADO step from a network and device the policy allows (for example the corporate network or VPN, on a managed machine). In CI, use the pipeline's own token (`System.AccessToken`) instead of a personal PAT; whether the agent's network is allowed is decided by the same policy, so confirm it with the administrator.
+3. If no allowed context is available, stop the ADO step, mark it as blocked by Conditional Access in the session summary, and leave the local artifacts ready (for example the dry-run output of a sync script) so it can run later. Do not retry in a loop: every call fails the same way.
+4. Ask the organization's Entra or ADO administrator when the block is unexpected. Never work around the policy: no proxies or tunnels to change the apparent location, no tokens that belong to someone else.
+
+---
+
+## Outputs
+
+- ADO Test Plan populated with test cases
+- `qa/03-test-cases/automated/TC-*.md` - ADO IDs injected
+- `qa/08-azure-integration/module-registry.json` updated
+- `qa/07-automation/e2e/playwright.config.ts` updated with reporter config

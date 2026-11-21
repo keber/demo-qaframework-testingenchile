@@ -1,0 +1,116 @@
+# Bug Report - DEF-{{PREFIX}}-{{NNN}}: {{Short Title}}
+
+| Field | Value |
+|-------|-------|
+| Bug ID | DEF-{{PREFIX}}-{{NNN}} |
+| Title | {{Short title (max 80 chars)}} |
+| Severity | Critical / High / Medium / Low |
+| Priority | P0 / P1 / P2 / P3 |
+| Status | Open / In Progress / Disputed / Resolved / Closed |
+| Assigned to | {{Developer or "Unassigned"}} |
+| Module | {{Module name}} |
+| Submodule | {{Submodule name}} |
+| Environment | QA ({{QA_BASE_URL}}) |
+| Browser | Chromium {{version}} |
+| Date reported | YYYY-MM-DD |
+| ADO WI | #{ADO_WORK_ITEM_ID} (if ADO enabled) |
+| Related TCs | TC-{{M}}-{{S}}-{{NNN}} |
+
+---
+
+## Known-issues check
+
+> Filled in **before** this file is created. See the blocking step in the
+> `qa-test-stabilization` skill. A defect filed without this section is not ready.
+
+| Field | Value |
+|-------|-------|
+| Source consulted | {{tracker query / known-issues file / both}} |
+| Terms searched | {{symptom terms, not the TC ID}} |
+| Matches found | {{item IDs and their state, or "none"}} |
+| Classification | New defect / Regression of {{ID}} / Duplicate of {{ID}} |
+| Rule violated | {{RN-ID or source that requires the behavior}} - if no source requires it, this is not a defect: file it in `qa/06-defects/recommendations/` as `REC-{{PREFIX}}-{{NNN}}` |
+
+---
+
+## Description
+
+{{1-2 sentences describing what the bug is and where it occurs}}
+
+---
+
+## Steps to Reproduce
+
+| Step | Action |
+|------|--------|
+| 1 | Navigate to `{{QA_BASE_URL}}/{{path}}` as `{{role}}` |
+| 2 | {{action}} |
+| 3 | {{action}} |
+| 4 | Observe `{{element}}` |
+
+---
+
+## Expected Result
+
+{{What should happen according to business rules RN-{{M}}-{{NNN}}}}
+
+---
+
+## Actual Result
+
+{{What actually happens}}
+
+---
+
+## Evidence
+
+- Screenshot: `qa/07-automation/e2e/diagnosis/{{NNN}}-{{bug-slug}}.png`
+- Test output: (link to execution report if captured automatically)
+
+---
+
+## Root Cause Analysis
+
+{{If known: explain why this happens. If unknown: "Under investigation"}}
+
+---
+
+## Fix Suggestion
+
+{{If known: describe the fix. Example: "Set IND_CORREO default to true in C# model constructor"}}
+
+---
+
+## Impact on Automation
+
+| TC ID | Current test state | Impact |
+|-------|-------------------|--------|
+| TC-{{M}}-{{S}}-{{NNN}} | `test.skip()` added | Test will remain skipped until fix is deployed |
+| TC-{{M}}-{{S}}-{{NNN}} | Assertion adjusted | `toBeFalsy()` documents buggy default |
+
+**Test skip command added**:
+```typescript
+test.skip(true,
+  'DEF-{{PREFIX}}-{{NNN}}: {{description}}. Reactivate when ADO #{{WI_ID}} is resolved.'
+);
+```
+
+---
+
+## Reactivation Instructions
+
+When this bug is fixed:
+1. Remove `test.skip()` from TC-{{M}}-{{S}}-{{NNN}} in `{{spec-file}}`
+2. Restore original assertion (e.g., `toBeTruthy()`)
+3. Run the test at least 2 times with different EXEC_IDX values to confirm stability
+4. Move this file to `06-defects/resolved/`
+
+---
+
+## Changelog
+
+| Version | Date | Description |
+|---------|------|-------------|
+| 1.0 | YYYY-MM-DD | Bug reported |
+| 1.1 | YYYY-MM-DD | Root cause identified |
+| 1.2 | YYYY-MM-DD | Fix deployed, verified |

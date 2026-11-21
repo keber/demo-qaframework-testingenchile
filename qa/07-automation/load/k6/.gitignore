@@ -1,0 +1,2 @@
+# Session values for k6 runs (live credentials): never commit them.
+.session/
