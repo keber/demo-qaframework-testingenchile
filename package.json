@@ -4,7 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm --prefix qa/07-automation/e2e test",
+    "test:e2e": "npm --prefix qa/07-automation/e2e test",
+    "test:smoke": "npm --prefix qa/07-automation/e2e run test:smoke",
+    "lint": "npm --prefix qa/07-automation/e2e run lint",
+    "typecheck": "npm --prefix qa/07-automation/e2e run typecheck",
+    "check:constitution": "node scripts/enforce-constitution.mjs --scan",
+    "check:encoding": "node node_modules/@keber/qa-framework/scripts/check-forbidden-chars.js AGENTS.md CLAUDE.md AI-WORKFLOWS.md .claude/rules/testingenchile.md .claude/skills .github/prompts scripts qa/07-automation/e2e/tests qa/07-automation/e2e/pages qa/07-automation/e2e/fixtures/pom qa/07-automation/e2e/enums qa/07-automation/e2e/test-data qa/07-automation/e2e/schemas",
+    "setup:e2e": "cd qa/07-automation/e2e && npm ci && npx playwright install chromium"
   },
   "keywords": [],
   "author": "",
