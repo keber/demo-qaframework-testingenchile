@@ -10,9 +10,22 @@
 
 | Module | Submodule | TCs Total | TCs Automated | Plan | ADO Suite | Status | Last Run |
 |---|---|---|---|---|---|---|---|
-| {MODULE_NAME} | {SUBMODULE_NAME} | - | - | ⬜ | - | 🔲 Not started | - |
+| HOME | navegacion (NAV) | 14 | 0 | ⬜ | - | ⚠️ Specs (etapas 1-2) | - |
+| HOME | portada (POR) | 9 | 0 | ⬜ | - | ⚠️ Specs (etapas 1-2) | - |
+| CAP | catalogo (CAT) | 9 | 0 | ⬜ | - | ⚠️ Specs (etapas 1-2) | - |
+| CAP | detalle-curso (CUR) | 10 | 0 | ⬜ | - | ⚠️ Specs (etapas 1-2) | - |
+| CAP | bootcamp (BTC) | 8 | 0 | ⬜ | - | ⚠️ Specs (etapas 1-2) | - |
+| EVT | testing-day (TDY) | 12 | 0 | ⬜ | - | ⚠️ Specs (etapas 1-2) | - |
+| EVT | ediciones (EDI) | 9 | 0 | ⬜ | - | ⚠️ Specs (etapas 1-2) | - |
+| CON | formulario-contacto (FCO) | 8 | 0 | ⬜ | - | ⚠️ Specs (etapas 1-2) | - |
+| CON | contacto-empresa (EMP) | 12 | 0 | ⬜ | - | ⚠️ Specs (etapas 1-2) | - |
+| LEG | legales (LGL) | 8 | 0 | ⬜ | - | ⚠️ Specs (etapas 1-2) | - |
+| LEG | blog (BLG) | 9 | 0 | ⬜ | - | ⚠️ Specs (etapas 1-2) | - |
+| LEG | galeria (GAL) | 8 | 0 | ⬜ | - | ⚠️ Specs (etapas 1-2) | - |
 
 **Legend**: ✅ Done · ⚠️ Partial · 🔲 Not started · ⛔ Blocked
+
+> Etapas 1 y 2 completadas el 2026-11-21: 116 TCs en 12 submódulos. Resumen y hallazgos candidatos: `qa/01-specifications/ANALISIS-DE-PRUEBAS.md`. Siguiente etapa: plan de pruebas (`/qa-test-plan`).
 
 ---
 
@@ -92,7 +105,19 @@ Checklist (completed):
 - [x] {Task 2}
 -->
 
-_No sprints completed yet._
+### Etapa 0-2 - Configuración, análisis y especificaciones (2026-11-21)
+
+**Submódulos**: HOME (navegacion, portada), CAP (catalogo, detalle-curso, bootcamp), EVT (testing-day, ediciones), CON (formulario-contacto, contacto-empresa), LEG (legales, blog, galeria)
+**TCs especificados**: 116 (13 P0, 45 P1, 35 P2, 23 P3); 0 automatizados
+**Análisis**: `qa/01-specifications/ANALISIS-DE-PRUEBAS.md`
+
+Checklist (completado):
+- [x] Configurar módulos en `qa/qa-framework.config.json`
+- [x] Instalar Playwright y Chromium en `qa/07-automation/e2e`
+- [x] Revisar `AGENTS.md` (ya existente, no se reemplaza)
+- [x] Etapa 1: análisis de los 5 módulos en el sitio en vivo (solo lectura)
+- [x] Etapa 2: set de 6 archivos por submódulo (12 submódulos) y submódulos registrados en la configuración
+- [ ] Nota: `qa/07-automation/e2e/.env.example` no se pudo editar por permisos; queda pendiente revisarlo manualmente
 
 ---
 

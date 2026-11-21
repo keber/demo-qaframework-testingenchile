@@ -8,3 +8,4 @@
 | `ci-pipeline-findings.md` | CI pipeline issues, root causes, applied fixes, failure triage categories | Diagnosing CI failures; reviewing pipeline changes |
 | `e2e-stabilization-patterns.md` | Flakiness patterns, crash-recovery techniques, strict-mode conflicts, reference timeouts | Investigating intermittent failures; refactoring fragile specs |
 | `data-volatility-strategies.md` | Strategies for handling volatile test data (filter values, row counts, search inputs) | Fixing hardcoded-data failures; choosing an assertion resilience approach |
+| `testingenchile-site-exploration.md` | Aprendizajes de la exploración en vivo (etapas 1-2): etiquetas de Google, formularios Webnode, menú, cookies, enlaces externos, privacidad | Antes de automatizar cualquier módulo o reexplorar el sitio |
