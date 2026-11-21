@@ -10,22 +10,22 @@
 
 | Module | Submodule | TCs Total | TCs Automated | Plan | ADO Suite | Status | Last Run |
 |---|---|---|---|---|---|---|---|
-| HOME | navegacion (NAV) | 14 | 0 | ✅ | - | ⚠️ Plan (etapas 3-4) | - |
-| HOME | portada (POR) | 9 | 0 | ✅ | - | ⚠️ Plan (etapas 3-4) | - |
-| CAP | catalogo (CAT) | 9 | 0 | ✅ | - | ⚠️ Plan (etapas 3-4) | - |
-| CAP | detalle-curso (CUR) | 10 | 0 | ✅ | - | ⚠️ Plan (etapas 3-4) | - |
-| CAP | bootcamp (BTC) | 8 | 0 | ✅ | - | ⚠️ Plan (etapas 3-4) | - |
-| EVT | testing-day (TDY) | 12 | 0 | ✅ | - | ⚠️ Plan (etapas 3-4) | - |
-| EVT | ediciones (EDI) | 9 | 0 | ✅ | - | ⚠️ Plan (etapas 3-4) | - |
-| CON | formulario-contacto (FCO) | 8 | 0 | ✅ | - | ⚠️ Plan (etapas 3-4) | - |
-| CON | contacto-empresa (EMP) | 12 | 0 | ✅ | - | ⚠️ Plan (etapas 3-4) | - |
-| LEG | legales (LGL) | 8 | 0 | ✅ | - | ⚠️ Plan (etapas 3-4) | - |
-| LEG | blog (BLG) | 9 | 0 | ✅ | - | ⚠️ Plan (etapas 3-4) | - |
-| LEG | galeria (GAL) | 8 | 0 | ✅ | - | ⚠️ Plan (etapas 3-4) | - |
+| HOME | navegacion (NAV) | 14 | 12 | ✅ | - | ✅ Automatizado: 12 automatizados (1 DEF), 2 PENDING | 2026-11-21 |
+| HOME | portada (POR) | 9 | 8 | ✅ | - | ✅ Automatizado: 8 automatizados (1 DEF), 1 PENDING | 2026-11-21 |
+| CAP | catalogo (CAT) | 9 | 7 | ✅ | - | ✅ Automatizado: 7 automatizados (1 DEF), 2 PENDING | 2026-11-21 |
+| CAP | detalle-curso (CUR) | 10 | 8 | ✅ | - | ✅ Automatizado: 8 automatizados, 2 PENDING | 2026-11-21 |
+| CAP | bootcamp (BTC) | 8 | 6 | ✅ | - | ✅ Automatizado: 6 automatizados, 2 PENDING | 2026-11-21 |
+| EVT | testing-day (TDY) | 12 | 10 | ✅ | - | ✅ Automatizado: 10 automatizados (2 DEF), 2 PENDING | 2026-11-21 |
+| EVT | ediciones (EDI) | 9 | 6 | ✅ | - | ✅ Automatizado: 6 automatizados (2 DEF), 3 PENDING | 2026-11-21 |
+| CON | formulario-contacto (FCO) | 8 | 4 | ✅ | - | ✅ Automatizado: 4 automatizados, 4 PENDING | 2026-11-21 |
+| CON | contacto-empresa (EMP) | 12 | 7 | ✅ | - | ✅ Automatizado: 7 automatizados, 5 PENDING | 2026-11-21 |
+| LEG | legales (LGL) | 8 | 3 | ✅ | - | ✅ Automatizado: 3 automatizados, 5 PENDING | 2026-11-21 |
+| LEG | blog (BLG) | 9 | 8 | ✅ | - | ✅ Automatizado: 8 automatizados (1 DEF), 1 PENDING | 2026-11-21 |
+| LEG | galeria (GAL) | 8 | 5 | ✅ | - | ✅ Automatizado: 5 automatizados (1 DEF), 3 PENDING | 2026-11-21 |
 
 **Legend**: ✅ Done · ⚠️ Partial · 🔲 Not started · ⛔ Blocked
 
-> Etapas 1-4 completadas el 2026-11-21: 116 TCs en 12 submódulos (84 Automatizar, 2 Manual, 30 Pendiente), 5 defectos y 18 recomendaciones. Plan maestro: `qa/02-test-plans/Plan-Maestro-de-Pruebas-testingenchile.md`; planes por módulo en `qa/02-test-plans/sprints/Sprint-1/`. Siguiente etapa: automatización (`/qa-automation`).
+> Etapas 1-5 completadas el 2026-11-21: 116 TCs en 12 submódulos; 84 automatizados (75 pasan, 9 en `test.fail()` con DEF-TCH-001 a 005) y 32 en `test.skip()` con motivo PENDING-* (30 Pendiente y 2 de la pista manual). Ejecución completa: 87 esperados (78 pasan + 9 fallos esperados), 32 omitidos, 0 fallos inesperados, 0 inestables. Siguiente etapa: estabilización (`/qa-test-stabilization`).
 
 ---
 
@@ -33,7 +33,7 @@
 
 ```bash
 # Run all automated tests
-cd qa/07-automation
+cd qa/07-automation/e2e
 npx playwright test
 
 # Run a specific module
@@ -65,7 +65,7 @@ npx playwright test --last-failed
 
 | Suite | Date | Pass | Fail | Skip | CI Link |
 |---|---|---|---|---|---|
-| E2E | - | - | - | - | - |
+| E2E | 2026-11-21 | 87 (78 + 9 `test.fail()`) | 0 | 32 | `qa/07-automation/e2e/playwright-report/index.html` (local) |
 | API | - | - | - | - | - |
 
 > Update this table after each significant run. The CI Link can be an ADO TestRun URL, a
@@ -75,7 +75,7 @@ npx playwright test --last-failed
 
 | Date | Suite | Pass | Skip | Fail | Duration | Report |
 |---|---|---|---|---|---|---|
-| - | - | - | - | - | - | - |
+| 2026-11-21 | E2E completo (119 tests: 116 TCs + 3 smoke previos) | 87 | 32 | 0 | 7,0 min | `qa/07-automation/e2e/test-results/results.json` (local) |
 
 ## Flaky Tests
 
@@ -104,6 +104,23 @@ Checklist (completed):
 - [x] {Task 1}
 - [x] {Task 2}
 -->
+
+### Etapa 5 - Automatización Sprint 1 (2026-11-21)
+
+**Submódulos**: los 12 (HOME, CAP, EVT, CON, LEG)
+**TCs automatizados**: 84 de 116 (13 P0 en `@smoke`); 9 en `test.fail()` con `expectOpenDefect`; 32 en `test.skip()` con `skipPending`
+**Specs**: `qa/07-automation/e2e/tests/{home,capacitaciones,eventos,contacto,legal}/{submódulo}.spec.ts`
+**Ejecución**: 87 esperados, 32 omitidos, 0 inesperados, 0 inestables (`test-results/results.json`, local)
+
+Checklist (completado):
+- [x] Fixture base con bloqueo de rastreadores (Google, Facebook, LinkedIn y otros) en toda prueba y page object del banner de cookies ("Aceptar solo lo necesario")
+- [x] Automatizar los 13 casos P0 (`@smoke`) y verificar en verde
+- [x] Automatizar el resto de los 84 casos `Automatizar`; los 9 casos con DEF usan `expectOpenDefect` y fallan en la aserción de la especificación con `DEFECTS_DIAG=1`
+- [x] Registrar los 30 casos `Pendiente` y los 2 de la pista manual como `test.skip()` con motivo PENDING-*
+- [x] Verificar: `npm run lint`, `npm run typecheck`, `npm run check:constitution`, `npx playwright test` y los dos verificadores de codificación
+- [ ] Aprobación humana del plan maestro y respuesta a las 12 preguntas abiertas: traspasado a la etapa 5b
+- [ ] Ejecutar la pista manual (TC-CAP-BTC-008, TC-LEG-LGL-004 y casos PENDING-SPEC) y registrar en `qa/05-test-execution/`: traspasado a la etapa 5b
+- [ ] Revisar manualmente `qa/07-automation/e2e/.env.example`: traspasado a la etapa 5b
 
 ### Etapa 3-4 - Plan de pruebas y expansión de pasos (2026-11-21)
 
@@ -144,4 +161,4 @@ Checklist (completado):
 | Naming Conventions | `qa/00-standards/naming-conventions.md` |
 | Memory Index | `qa/memory/INDEX.md` |
 | Agent Next Steps | `qa/AGENT-NEXT-STEPS.md` |
-| Automation Config | `qa/07-automation/playwright.config.ts` |
+| Automation Config | `qa/07-automation/e2e/playwright.config.ts` |
