@@ -1,0 +1,997 @@
+% Plan de Pruebas - Sitio web testingenchile.cl
+% Compilar con: tectonic plan-de-pruebas.tex (motor XeTeX)
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{fontspec}
+\usepackage[spanish,es-noshorthands,es-nodecimaldot,es-tabla]{babel}
+\usepackage[margin=2.2cm,headheight=14pt]{geometry}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{xltabular}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage{needspace}
+\usepackage{etoolbox}
+\usepackage{tocloft}
+\setlength{\cftsecnumwidth}{2em}
+\setlength{\cftsubsecnumwidth}{2.8em}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,shapes.geometric}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18, /pgf/number format/assume math mode=true}
+\usepackage[most]{tcolorbox}
+\usepackage{xurl}
+\usepackage{hyperref}
+
+% Fuentes del bundle de Tectonic, por nombre de archivo
+\setmainfont{IBMPlexSans}[Extension=.otf, UprightFont=*-Regular,
+  BoldFont=*-Bold, ItalicFont=*-Italic, BoldItalicFont=*-BoldItalic]
+\setmonofont{IBMPlexMono}[Extension=.otf, UprightFont=*-Regular,
+  BoldFont=*-Bold, ItalicFont=*-Italic, BoldItalicFont=*-BoldItalic, Scale=0.92]
+
+% Paleta neutral
+\definecolor{primary}{RGB}{31,78,121}
+\definecolor{secondary}{RGB}{46,125,50}
+\definecolor{accent}{RGB}{230,126,34}
+\definecolor{muted}{RGB}{110,110,110}
+\definecolor{danger}{RGB}{176,42,55}
+
+\hypersetup{colorlinks=true,linkcolor=primary,urlcolor=primary,hypertexnames=false,
+  pdftitle={Plan de Pruebas - Sitio web testingenchile.cl},
+  pdfauthor={Generado con @keber/qa-framework + Claude}}
+
+\addto\extrasspanish{\def\%{\char37\relax}}
+
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{3em}
+\renewcommand{\tabularxcolumn}[1]{>{\raggedright\arraybackslash}p{#1}}
+\setlength{\parskip}{0.55em}
+\renewcommand{\arraystretch}{1.18}
+\setlist{itemsep=0.15em, topsep=0.3em}
+
+\titleformat{\section}{\Large\bfseries\color{primary}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\large\bfseries\color{primary!85!black}}{\thesubsection}{0.6em}{}
+\titlespacing*{\section}{0pt}{1.2em}{0.5em}
+\titlespacing*{\subsection}{0pt}{0.9em}{0.3em}
+% Evita títulos huérfanos al pie de página
+\pretocmd{\section}{\needspace{14\baselineskip}}{}{}
+\pretocmd{\subsection}{\needspace{10\baselineskip}}{}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{muted}Plan de Pruebas - testingenchile.cl}
+\fancyhead[R]{\small\color{muted}Versión 1.0 - 21-11-2026}
+\fancyfoot[C]{\small\color{muted}\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+
+\newcommand{\tcid}[1]{\texttt{#1}}
+\newcommand{\baseurl}{\texttt{\{QA\_BASE\_URL\}}}
+\newcommand{\hcell}[1]{\textbf{#1}}
+
+\tikzset{
+  arrow/.style={-{Stealth}, thick, color=muted},
+}
+
+\newtcolorbox{infobox}[1][Nota]{colback=primary!5, colframe=primary,
+  fonttitle=\bfseries, title=#1, breakable}
+\newtcolorbox{warnbox}[1][Atención]{colback=accent!8, colframe=accent!90!black,
+  fonttitle=\bfseries, title=#1, breakable}
+\newtcolorbox{casebox}[1]{colback=white, colframe=primary!70, colbacktitle=primary!10,
+  coltitle=primary!70!black, fonttitle=\bfseries\small, title={#1},
+  boxrule=0.6pt, left=2mm, right=2mm, top=1mm, bottom=1mm}
+
+\begin{document}
+
+% ---------------------------------------------------------------- Portada
+\begin{titlepage}
+\begin{tikzpicture}[remember picture, overlay]
+  \fill[primary] (current page.north west) rectangle ([yshift=-9.2cm]current page.north east);
+  \fill[accent] ([yshift=-9.2cm]current page.north west) rectangle ([yshift=-9.5cm]current page.north east);
+\end{tikzpicture}
+\vspace*{0.6cm}
+{\color{white}\small\bfseries QA - ETAPAS 3 Y 4 DEL PIPELINE\par}
+\vspace{1.4cm}
+{\color{white}\fontsize{38}{44}\selectfont\bfseries Plan de Pruebas\par}
+\vspace{0.4cm}
+{\color{white}\Large Sitio web testingenchile.cl\par}
+\vspace{4.2cm}
+
+\begin{tabularx}{\textwidth}{@{}>{\color{muted}}l X@{}}
+Sitio bajo prueba & \url{https://www.testingenchile.cl} (Webnode CMS, producción) \\
+Fecha & 21-11-2026 \\
+Versión & 1.0 \\
+Estado & \textbf{\color{accent!90!black}Pendiente de aprobación} \\
+Ventana QA propuesta & 23-11-2026 a 02-12-2026 (Sprint 1) \\
+Framework & \texttt{@keber/qa-framework} 1.14.0-rc.9 + harness agentic-playwright \\
+Universo & 5 módulos, 12 submódulos, 116 casos de prueba \\
+\end{tabularx}
+
+\vfill
+\begin{tcolorbox}[colback=primary!5, colframe=primary!40, boxrule=0.4pt]
+\small Documento de demostración. Pruebas de solo lectura sobre un sitio público de
+terceros: sin envíos de formularios, compras ni conversiones generadas por la automatización.
+\end{tcolorbox}
+\vspace{0.4cm}
+{\small\color{muted}Generado con \texttt{@keber/qa-framework} + Claude\par}
+\end{titlepage}
+\setcounter{page}{2}
+
+% ---------------------------------------------------------------- Índice
+\tableofcontents
+\clearpage
+
+% ---------------------------------------------------------------- 1
+\section{Resumen ejecutivo}
+
+Este plan define cómo se verifica la calidad del sitio público de Testing en Chile
+en su único ambiente, producción, mediante pruebas de
+solo lectura. Consolida estrategia, criterios y planificación de los cinco módulos del sitio;
+el detalle de pasos de cada caso vive en los cinco planes por módulo del Sprint 1.
+
+\begin{itemize}
+  \item \textbf{116 casos} planificados en 5 módulos y 12 submódulos, con resultado esperado
+        medible y trazabilidad a reglas de negocio (RN) y flujos (FL).
+  \item \textbf{84 casos (72{,}4\%) se automatizan} con Playwright E2E de solo lectura;
+        2 son manuales y 30 quedan pendientes por regla no confirmada, comportamiento no
+        observado o envío destructivo.
+  \item \textbf{22 hallazgos candidatos} clasificados: \textbf{5 defectos} (DEF-TCH-001 a 005,
+        a partir de 4 hallazgos) y \textbf{18 recomendaciones} (REC-TCH-001 a 018).
+        9 casos quedarán en \texttt{test.fail()} documentando defectos abiertos.
+  \item Los riesgos más relevantes son legales (Términos y Condiciones y Política de privacidad
+        con texto de plantilla, REC-TCH-001 y REC-TCH-002, severidad alta) y de calidad de datos
+        (el autodiagnóstico del Bootcamp dispara una conversión ``purchase'' de Google Ads, REC-TCH-017).
+\end{itemize}
+
+\begin{warnbox}[Estado del documento]
+Este plan está \textbf{pendiente de aprobación humana} por el Líder QA y el Responsable del sitio
+(sección~\ref{sec:aprobaciones}). Doce preguntas abiertas condicionan la clasificación de reglas
+\texttt{PENDIENTE-CONFIRMACIÓN} (sección~\ref{sec:preguntas}).
+\end{warnbox}
+
+% ---------------------------------------------------------------- 2
+\section{Objetivos}
+
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}l X X@{}}
+\toprule
+\# & Objetivo & Medida de logro \\
+\midrule
+O1 & Verificar las reglas de negocio confirmadas de los 5 módulos & 116 casos planificados con resultado esperado medible y trazabilidad a RN/FL \\
+O2 & Construir una regresión automatizada de solo lectura & Casos \textit{Automatizar} implementados en Playwright en la etapa 5 y en verde (o \texttt{test.fail()} con defecto) \\
+O3 & Documentar con evidencia cada incumplimiento & Defectos \texttt{DEF-TCH-NNN} para reglas confirmadas; recomendaciones \texttt{REC-TCH-NNN} para el resto \\
+O4 & Proteger el negocio durante las pruebas & Cero envíos reales, cero compras, cero conversiones analíticas generadas por la automatización \\
+O5 & Cerrar las reglas \texttt{PENDIENTE-CONFIRMACIÓN} & Preguntas abiertas respondidas por el responsable del sitio \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ---------------------------------------------------------------- 3
+\section{Alcance}
+
+\subsection{En alcance}
+
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}X l X r@{}}
+\toprule
+Módulo & Código & Submódulos & Casos \\
+\midrule
+Inicio y navegación global & HOME & navegación (NAV), portada (POR) & 23 \\
+Capacitaciones & CAP & catálogo (CAT), detalle de curso (CUR), bootcamp (BTC) & 27 \\
+Eventos Testing Day & EVT & testing-day (TDY), ediciones (EDI) & 21 \\
+Contacto y formularios & CON & formulario de contacto (FCO), contacto empresa (EMP) & 20 \\
+Contenido legal y blog & LEG & legales (LGL), blog (BLG), galería (GAL) & 25 \\
+\midrule
+\textbf{Total} & & \textbf{12 submódulos} & \textbf{116} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Tipos de prueba: funcional (navegación, filtros, cálculo, paginación), contenido y vigencia,
+integración por atributos o solicitudes HTTP (WhatsApp, Flow, ecopass, StreamYard, sponsors),
+negativa (validación en el cliente, 404, enlaces rotos), SEO, accesibilidad puntual (WCAG 1.1.1),
+cumplimiento (privacidad, consentimiento) y responsiva.
+
+\subsection{Fuera de alcance}
+
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.36\textwidth} X@{}}
+\toprule
+Exclusión & Motivo \\
+\midrule
+Azure DevOps (planes, suites, bugs) & Integración deshabilitada en \texttt{qa/qa-framework.config.json} \\
+Credenciales, login, panel de Webnode & El sitio no tiene usuarios; política \texttt{env-vars-only} sin secretos necesarios \\
+Envío real de formularios, pagos, compra de entradas, WhatsApp o correo & Producción es el único ambiente (reglas S7 y W9); reCAPTCHA en todos los formularios \\
+Pruebas de carga, estrés o rendimiento & Prohibidas contra producción; \texttt{robots.txt} declara \texttt{Crawl-delay: 10} \\
+Pruebas de seguridad ofensivas & Política de la organización: se derivan al proceso formal de seguridad \\
+Auditoría WCAG completa y evaluación jurídica & Se cubren controles puntuales; lo legal lo valida el área legal \\
+Navegadores distintos de Chromium y dispositivos reales & \texttt{browsers: ["chromium"]} en la configuración \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ---------------------------------------------------------------- 4
+\section{Estrategia de pruebas}
+
+\subsection{Enfoque por pista}
+
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.17\textwidth} X >{\raggedright\arraybackslash}p{0.2\textwidth} >{\raggedright\arraybackslash}p{0.2\textwidth}@{}}
+\toprule
+Pista & Qué cubre & Herramienta & Cuándo \\
+\midrule
+Automatizada E2E de solo lectura & Casos \textit{Automatizar}: deterministas, observables en el navegador o por HTTP, sin efectos & Playwright + TypeScript en \path{qa/07-automation/e2e/}, Chromium & Etapa 5; smoke en cada ejecución, regresión completa por sprint \\
+Manual & Casos \textit{Manual} (contenido legal, evidencia analítica única) y casos \textit{Pendiente} por regla no confirmada, ejecutados a mano para mantener la evidencia de su recomendación & Navegador real, captura de red, checklist del plan & Timebox manual del sprint (2 días) \\
+Bloqueada & \texttt{PENDING-BROWSER} (comportamiento no observado) y \texttt{@destructive} (envío real) & Navegador real; entorno de pruebas inexistente & Al observar el comportamiento o al disponer de staging \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{infobox}[Seguimiento de hallazgos sin tracker externo]
+La gestión de defectos es bloqueante y se hace en archivos versionados dentro de
+\texttt{qa/06-defects/} (\texttt{open/} y \texttt{recommendations/}); no hay tracker externo
+porque la integración con Azure DevOps está deshabilitada. Un \texttt{test.fail()} sin su archivo
+\texttt{DEF-TCH-NNN} impide cerrar el sprint.
+\end{infobox}
+
+\subsection{Criterio de decisión de automatización}
+
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}l X X@{}}
+\toprule
+Decisión & Criterio & Estado esperado en la etapa 5 \\
+\midrule
+Automatizar & Regla confirmada (\texttt{OBSERVADO} o \texttt{ESTÁNDAR} normativo); determinista; solo lectura & \texttt{test()} si cumple; \texttt{test.fail()} vía \texttt{expectOpenDefect} + \texttt{DEF-TCH-NNN} si incumple \\
+Manual & Requiere criterio humano o su ejecución produce efectos reales en terceros & Fuera de la suite automatizada \\
+Pendiente & Regla \texttt{PENDIENTE-CONFIRMACIÓN} o criterio editorial/SEO no confirmado que hoy falla; comportamiento no observado; envío destructivo & \texttt{test.skip()} con \texttt{PENDING-SPEC}, \texttt{PENDING-BROWSER} o \texttt{@destructive} y su motivo \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Clasificación de hallazgos (regla 8 del framework)}
+
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.29\textwidth} X >{\raggedright\arraybackslash}p{0.28\textwidth}@{}}
+\toprule
+Origen de la regla & Ejemplos & Clasificación si se incumple \\
+\midrule
+\texttt{OBSERVADO} & RN-EVT-008 (cada sesión ofrece inscripción) & Defecto \texttt{DEF-TCH-NNN} + \texttt{test.fail()} \\
+\texttt{ESTÁNDAR} normativo (WCAG 2.1 A; enlace que debe resolver) & RN-HOME-012, RN-LEG-017 (WCAG 1.1.1); RN-EVT-009, RN-EVT-015 & Defecto \texttt{DEF-TCH-NNN} + \texttt{test.fail()} \\
+\texttt{ESTÁNDAR} editorial o SEO & RN-HOME-020 (un H1), RN-CAP-006, RN-CON-006, RN-CON-014, RN-CON-015, RN-EVT-012, RN-LEG-006, RN-LEG-012, RN-LEG-016 & Recomendación \texttt{REC-TCH-NNN}; caso \textit{Pendiente} (\texttt{PENDING-SPEC}) si hoy falla \\
+\texttt{PENDIENTE-CONFIRMACIÓN} & RN-CAP-016, RN-EVT-010, RN-CON-005, RN-LEG-002 a RN-LEG-005 & Recomendación o pregunta abierta, nunca defecto \\
+Sin regla & HC-18, HC-19, HC-21 & Recomendación \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Etiquetas de tipo y prioridades}
+
+Cada caso lleva exactamente una etiqueta de tipo y una prioridad en su título, con el patrón
+\texttt{[TC-MÓDULO-SUB-NNN] título @P0..@P3}.
+
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}l X r@{}}
+\toprule
+Etiqueta & Uso & Casos \\
+\midrule
+\texttt{@smoke} & P0: disponibilidad de cada submódulo & 13 \\
+\texttt{@sanity} & P1: funcionalidad principal dentro de una página & 43 \\
+\texttt{@e2e} & Recorridos multipágina (menú, hero, agenda, sponsors, blog, edición 2025) & 5 \\
+\texttt{@regression} & P2 y P3: funcionalidad secundaria, enlaces, SEO, accesibilidad, responsividad & 53 \\
+\texttt{@destructive} & Envíos reales; siempre \texttt{test.skip()} en producción (W9) & 2 \\
+\midrule
+\textbf{Total} & & \textbf{116} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}l X r@{}}
+\toprule
+Prioridad & Criterio & Casos \\
+\midrule
+P0 & Disponibilidad de la página o flujo principal (smoke) & 13 \\
+P1 & Funcionalidad principal, validaciones obligatorias, destinos de CTAs, vigencia & 45 \\
+P2 & Funcionalidad secundaria, enlaces externos, responsividad, accesibilidad & 35 \\
+P3 & SEO, ortografía, consistencia y casos de borde & 23 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Técnicas y controles transversales}
+
+\begin{itemize}
+  \item Validación de formularios sin envío, mediante \texttt{checkValidity()},
+        \texttt{validity.valid} y un \texttt{validationMessage} no vacío (los mensajes nativos
+        dependen del idioma del navegador).
+  \item Integraciones verificadas por atributos (\texttt{href}, \texttt{target}) o por solicitudes
+        HTTP con el fixture \texttt{request}, sin hacer clic.
+  \item Enlaces externos: respuestas 999, 400 y 403 se clasifican como ``no verificable'' (anti-bot)
+        y se reverifican manualmente antes de declarar un defecto.
+  \item Datos volátiles: aserciones de estructura, formato y relación de orden; literales en
+        \texttt{enums/} y \texttt{test-data/static/}.
+  \item Bloqueo de \texttt{googlesyndication.com}, \texttt{googleadservices.com} y
+        \texttt{googletagmanager.com} con \texttt{page.route} en el fixture base de toda la suite.
+\end{itemize}
+
+% ---------------------------------------------------------------- 5
+\section{Criterios de entrada y salida}
+
+\subsection{Criterios de entrada}
+
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}l X >{\raggedright\arraybackslash}p{0.27\textwidth}@{}}
+\toprule
+\# & Criterio & Estado al 21-11-2026 \\
+\midrule
+E1 & Etapas 1-2 completas: 12 submódulos con 6 archivos de especificación & Cumplido \\
+E2 & Plan de Pruebas (plan maestro y 5 planes por módulo) aprobado & \textbf{Pendiente de aprobación} \\
+E3 & Ambiente Playwright instalado (Chromium) en \texttt{qa/07-automation/e2e} & Cumplido (Playwright 1.65.1) \\
+E4 & Fixture base con bloqueo de etiquetas de Google y page object del banner de cookies & Pendiente (etapa 5) \\
+E5 & Sitio disponible (HTTP 200 en \texttt{/}) & Cumplido (verificado el 21-11-2026) \\
+E6 & Ningún caso \texttt{PENDING-CODE} en el alcance (prerrequisito de la etapa 5) & Cumplido (0 casos) \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Criterios de salida: los tres estados válidos de un caso}
+
+El sprint se cierra cuando todos los casos del alcance están en uno de estos tres estados, y en ningún otro:
+
+\begin{center}
+\begin{tikzpicture}[
+  st/.style={rectangle, rounded corners, draw=#1, fill=#1!8, line width=0.8pt,
+    text width=0.27\textwidth, align=center, minimum height=2.5cm, font=\small}]
+  \node[st=secondary] (a) {\textbf{\texttt{test()} en verde}\\[0.3em]El sitio cumple la especificación};
+  \node[st=danger, right=0.4cm of a] (b) {\textbf{\texttt{test.fail()} + DEF}\\[0.3em]El sitio incumple una regla confirmada y existe \texttt{DEF-TCH-NNN\_*.md}};
+  \node[st=accent, right=0.4cm of b] (c) {\textbf{\texttt{test.skip()} + PENDING}\\[0.3em]\texttt{PENDING-SPEC} (con su REC), \texttt{PENDING-BROWSER} o \texttt{@destructive}, con motivo};
+\end{tikzpicture}
+\end{center}
+
+Además: 100\% de los P0 ejecutados; cero fallos sin \texttt{test.fail()}; cero \texttt{test.fail()}
+sin archivo de defecto; lint, typecheck y escaneo de la Constitución limpios; verificadores de
+codificación con salida 0; casos manuales ejecutados y registrados en \texttt{qa/05-test-execution/}.
+
+\begin{infobox}[Nota de conciliación]
+La regla 8 del framework menciona \texttt{PENDING-CODE} para \texttt{test.skip()}. Este proyecto no
+tiene código propio (CMS de terceros), por lo que \texttt{AGENTS.md} admite también
+\texttt{PENDING-BROWSER} y \texttt{PENDING-SPEC} con motivo explícito.
+\end{infobox}
+
+\subsection{Suspensión y reanudación}
+
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}X X X@{}}
+\toprule
+Condición de suspensión & Acción & Reanudación \\
+\midrule
+Sitio no disponible o con errores 5xx generalizados & Detener la ejecución; registrar \texttt{InfraError} & Al volver a responder 200 de forma estable \\
+Bloqueo por límite de tasa o anti-bot del sitio & Detener; revisar workers y ritmo & Con workers $\leq$ 2 y ejecución secuencial \\
+Indicio de envío real, compra o conversión generada & Detener inmediatamente y avisar al responsable & Tras corregir la causa y revisar el PR \\
+Cambio estructural del CMS (deriva masiva de selectores) & Pasar a mantenimiento (\texttt{/qa-maintenance}) & Tras actualizar page objects \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ---------------------------------------------------------------- 6
+\section{Ambiente y herramientas}
+
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.25\textwidth} X@{}}
+\toprule
+Elemento & Valor \\
+\midrule
+Ambiente & Producción pública: \baseurl{} = \url{https://www.testingenchile.cl} (no existe staging) \\
+Navegador & Chromium (Playwright 1.65.1), headless en CI \\
+Viewports & Escritorio 1366x900 (y 1920x1000 de referencia); móvil Pixel 5 (393 px) \\
+Paralelismo & Workers: 2 local, 1 CI (máximo 2 por regla S7) \\
+Reintentos & 0 local, 2 CI \\
+Tiempos límite & Test 30 s; navegación 60 s; acción 10 s \\
+CDN & Recursos de Webnode servidos desde \texttt{*.clvaw-cdnwnd.com} (CloudFront); latencia variable \\
+Evidencias & \texttt{qa/07-automation/e2e/diagnosis/} (no versionado) y \texttt{qa/05-test-execution/} \\
+Gestión de defectos & Archivos en \texttt{qa/06-defects/} (sin tracker externo) \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ---------------------------------------------------------------- 7
+\section{Riesgos y mitigaciones}
+
+{\footnotesize
+\begin{xltabular}{\textwidth}{@{}l >{\raggedright\arraybackslash}p{0.24\textwidth} >{\raggedright\arraybackslash}p{0.16\textwidth} l X@{}}
+\toprule
+ID & Riesgo & Impacto & Prob. & Mitigación \\
+\midrule
+\endfirsthead
+\toprule
+ID & Riesgo & Impacto & Prob. & Mitigación \\
+\midrule
+\endhead
+R1 & Volatilidad del contenido de eventos y marketing (fechas, agenda, sponsors, cursos, contadores) & Falsos negativos y mantenimiento frecuente & Alta & Aserciones de estructura; literales en \texttt{enums/} y \texttt{test-data/static/}; el healer lo clasifica como deriva de datos \\
+R2 & Producción como único ambiente: envío accidental de formularios, compras o mensajes & Datos basura o cargos reales & Media & S7 y W9: \texttt{@destructive} + \texttt{test.skip()}; nunca clic en enviar o pagar; revisión de PR \\
+R3 & El autodiagnóstico dispara una conversión ``purchase'' de Google Ads (HC-21) & Métricas comerciales distorsionadas & Alta (observado) & Abortar etiquetas de Google con \texttt{page.route} en el fixture base; TC-CAP-BTC-008 solo manual y una vez \\
+R4 & Bloqueos anti-bot en enlaces externos (LinkedIn 999, Facebook 400, sitios 403) & Falsos positivos de enlace roto & Alta & Clasificar como ``no verificable''; reverificación manual antes de declarar defecto \\
+R5 & CDN de Webnode y cambios del CMS sin aviso & Deriva de selectores y tiempos variables & Media & Selectores por rol y etiqueta (K3); esperas web-first; smoke programado \\
+R6 & reCAPTCHA y ausencia de staging & Caminos exitosos de formularios no verificables & Cierta & Casos \texttt{@destructive} documentados; solicitar staging si se requiere cobertura \\
+R7 & Incumplimiento normativo de privacidad y condiciones (HC-01, HC-02, HC-16) & Riesgo legal y reputacional & Alta (observado) & REC-TCH-001, REC-TCH-002 y REC-TCH-012 escalados a negocio y área legal \\
+R8 & Límite de tasa del sitio (\texttt{Crawl-delay: 10}) & Bloqueo o degradación & Baja & Workers $\leq$ 2; CI secuencial; sin crawling masivo \\
+R9 & Diferencias entre Chromium headless y navegadores reales (hover, animaciones) & Casos no reproducibles & Media & Casos \texttt{PENDING-BROWSER} confirmados en navegador real antes de automatizar \\
+R10 & Reglas sin confirmar por falta de un responsable funcional & Recomendaciones que no escalan a defecto & Alta & Preguntas abiertas con responsable y fecha objetivo \\
+\bottomrule
+\end{xltabular}
+}
+
+% ---------------------------------------------------------------- 8
+\section{Cronograma}
+
+Fechas propuestas según \texttt{sprintDurationDays: 8} y \texttt{manualTestingTimeboxDays: 2} de la
+configuración; sujetas a aprobación.
+
+\begin{center}
+\begin{tikzpicture}[x=0.82cm, y=0.62cm]
+  % Encabezado de días (d = 0 es 21-11-2026)
+  \foreach \d/\lab in {0/21,1/22,2/23,3/24,4/25,5/26,6/27,7/28,8/29,9/30,10/01,11/02} {
+    \node[font=\scriptsize, color=muted] at (\d+0.5, 0.7) {\lab};
+    \draw[muted!25] (\d,0.3) -- (\d,-6.3);
+  }
+  \draw[muted!25] (12,0.3) -- (12,-6.3);
+  \node[font=\scriptsize\bfseries, color=muted, anchor=west] at (0,1.4) {Noviembre 2026};
+  \node[font=\scriptsize\bfseries, color=muted, anchor=west] at (10,1.4) {Dic.};
+  % Actividades
+  \foreach \i/\s/\e/\c/\lab in {
+      1/0/1/primary/Plan de pruebas y expansión de pasos,
+      2/2/4/accent/Aprobación y preguntas abiertas,
+      3/2/5/primary/Fixture base{,} page objects y smoke,
+      4/4/10/primary/Automatización P1{,} P2 y P3,
+      5/10/12/secondary/Ejecución manual (timebox),
+      6/11/12/secondary/Estabilización y cierre} {
+    \node[font=\small, anchor=east] at (-0.2, -\i+0.5) {\lab};
+    \fill[\c, rounded corners=1.5pt] (\s+0.06, -\i+0.18) rectangle (\e-0.06, -\i+0.82);
+  }
+\end{tikzpicture}
+\end{center}
+
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}X l l l X@{}}
+\toprule
+Actividad & Etapa & Inicio & Fin & Entregable \\
+\midrule
+Plan de pruebas y expansión de pasos & 3-4 & 21-11-2026 & 21-11-2026 & Plan maestro, 5 planes por módulo, DEF y REC \\
+Aprobación del plan y respuesta a preguntas abiertas & 3 (cierre) & 23-11-2026 & 24-11-2026 & Plan aprobado; reglas confirmadas o descartadas \\
+Fixture base, page objects y smoke (P0) & 5 & 23-11-2026 & 25-11-2026 & 13 casos P0 (\texttt{@smoke}) en verde \\
+Automatización P1 y P2/P3 \textit{Automatizar} & 5 & 25-11-2026 & 30-11-2026 & Specs por módulo; \texttt{test.fail()} con DEF \\
+Ejecución manual (timebox de 2 días) & 5 & 01-12-2026 & 02-12-2026 & Registro en \texttt{qa/05-test-execution/} \\
+Estabilización y cierre del sprint & 5b & 02-12-2026 & 02-12-2026 & Informe de ejecución; criterios de salida cumplidos \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ---------------------------------------------------------------- 9
+\section{Roles y responsabilidades}
+
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.3\textwidth} X@{}}
+\toprule
+Rol & Responsabilidades \\
+\midrule
+Líder QA & Aprueba el plan, prioriza, valida la clasificación DEF/REC y el cierre del sprint \\
+Analista QA & Mantiene especificaciones y plan; ejecuta la pista manual; registra evidencias \\
+Automatizador QA & Implementa la etapa 5 según la Constitución; mantiene la suite verde o con \texttt{test.fail()} documentado \\
+Responsable del sitio (Testing en Chile) & Responde las preguntas abiertas; confirma o descarta reglas; corrige el contenido en Webnode \\
+Área legal & Valida HC-01, HC-02 y HC-16 (REC-TCH-001, REC-TCH-002, REC-TCH-012) \\
+Seguridad & Evalúa la observación pasiva de cabeceras HTTP por el proceso formal \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ---------------------------------------------------------------- 10
+\section{Resumen cuantitativo}
+
+Cifras tomadas de la sección 9 del plan maestro y verificadas contra la tabla consolidada de 116 casos.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  xbar, width=0.42\textwidth, height=4.6cm,
+  bar width=14pt, xmin=0, xmax=100,
+  symbolic y coords={Pendiente,Manual,Automatizar}, ytick=data,
+  y tick label style={font=\small},
+  x tick label style={font=\scriptsize},
+  nodes near coords, nodes near coords align={horizontal},
+  every node near coord/.append style={font=\small\bfseries},
+  axis lines*=left, enlarge y limits=0.3,
+  title={\small\bfseries Por decisión de automatización},
+  xmajorgrids, grid style={muted!20}]
+  \addplot[fill=primary, draw=none] coordinates {(84,Automatizar) (2,Manual) (30,Pendiente)};
+\end{axis}
+\end{tikzpicture}\hfill
+\begin{tikzpicture}
+\begin{axis}[
+  ybar stacked, width=0.5\textwidth, height=5.4cm,
+  bar width=20pt, ymin=0, ymax=50,
+  symbolic x coords={P0,P1,P2,P3}, xtick=data,
+  x tick label style={font=\small}, y tick label style={font=\scriptsize},
+  axis lines*=left, enlarge x limits=0.18,
+  title={\small\bfseries Por prioridad y decisión},
+  legend style={font=\scriptsize, at={(0.5,-0.16)}, anchor=north, legend columns=-1, draw=none},
+  ymajorgrids, grid style={muted!20}]
+  \addplot[fill=primary, draw=none] coordinates {(P0,13) (P1,39) (P2,26) (P3,6)};
+  \addplot[fill=secondary, draw=none] coordinates {(P0,0) (P1,1) (P2,0) (P3,1)};
+  \addplot[fill=accent, draw=none] coordinates {(P0,0) (P1,5) (P2,9) (P3,16)};
+  \legend{Automatizar, Manual, Pendiente}
+\end{axis}
+\end{tikzpicture}
+\caption{Casos por decisión de automatización (116 en total) y por prioridad.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  xbar stacked, width=0.8\textwidth, height=5.6cm,
+  bar width=13pt, xmin=0, xmax=30,
+  symbolic y coords={LEG,CON,EVT,CAP,HOME}, ytick=data,
+  y tick label style={font=\small}, x tick label style={font=\scriptsize},
+  axis lines*=left, enlarge y limits=0.15,
+  title={\small\bfseries Casos por módulo y decisión},
+  legend style={font=\scriptsize, at={(0.5,-0.18)}, anchor=north, legend columns=-1, draw=none},
+  xmajorgrids, grid style={muted!20}]
+  \addplot[fill=primary, draw=none] coordinates {(20,HOME) (21,CAP) (16,EVT) (11,CON) (16,LEG)};
+  \addplot[fill=secondary, draw=none] coordinates {(0,HOME) (1,CAP) (0,EVT) (0,CON) (1,LEG)};
+  \addplot[fill=accent, draw=none] coordinates {(3,HOME) (5,CAP) (5,EVT) (9,CON) (8,LEG)};
+  \legend{Automatizar, Manual, Pendiente}
+\end{axis}
+\end{tikzpicture}
+\caption{Distribución de la decisión de automatización por módulo.}
+\end{figure}
+
+\begin{table}[H]
+\centering\small
+\begin{minipage}[b]{0.52\textwidth}
+\centering
+\begin{tabular}{@{}l r r r r r@{}}
+\toprule
+Módulo & P0 & P1 & P2 & P3 & Total \\
+\midrule
+HOME & 3 & 10 & 8 & 2 & 23 \\
+CAP & 3 & 12 & 8 & 4 & 27 \\
+EVT & 2 & 7 & 7 & 5 & 21 \\
+CON & 2 & 8 & 5 & 5 & 20 \\
+LEG & 3 & 8 & 7 & 7 & 25 \\
+\midrule
+\textbf{Total} & \textbf{13} & \textbf{45} & \textbf{35} & \textbf{23} & \textbf{116} \\
+\bottomrule
+\end{tabular}
+\caption{Casos por módulo y prioridad.}
+\end{minipage}\hfill
+\begin{minipage}[b]{0.44\textwidth}
+\centering
+\begin{tabular}{@{}l r@{}}
+\toprule
+Estado esperado (etapa 5) & Casos \\
+\midrule
+\texttt{test()} (pasa) & 75 \\
+\texttt{test.fail()} + DEF & 9 \\
+\texttt{test.skip()} PENDING-SPEC + REC & 24 \\
+\texttt{test.skip()} PENDING-BROWSER & 4 \\
+\texttt{test.skip()} \texttt{@destructive} & 2 \\
+Ejecución manual & 2 \\
+\midrule
+\textbf{Total} & \textbf{116} \\
+\bottomrule
+\end{tabular}
+\caption{Estado esperado por caso.}
+\end{minipage}
+\end{table}
+
+% ---------------------------------------------------------------- 11
+\section{Tabla consolidada de casos}
+
+Los 116 casos del alcance. Pasos, precondiciones, datos y resultado esperado de cada caso: sección 9
+del plan del módulo correspondiente (\texttt{qa/02-test-plans/sprints/Sprint-1/}).
+
+{\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{@{}r l X c l l@{}}
+\caption{Casos de prueba consolidados (116).}\label{tab:tcs}\\
+\toprule
+N & ID & Título & Prior. & Etiqueta & Decisión \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\color{muted}Continuación de la tabla~\ref{tab:tcs}}\\
+\toprule
+N & ID & Título & Prior. & Etiqueta & Decisión \\
+\midrule
+\endhead
+\midrule
+\multicolumn{6}{r@{}}{\scriptsize\color{muted}Continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+1 & \tcid{TC-HOME-NAV-001} & La página de inicio carga con header, menú y footer & P0 & \texttt{@smoke} & Automatizar \\
+2 & \tcid{TC-HOME-NAV-002} & El menú principal muestra los seis ítems y cada uno navega a su ruta & P0 & \texttt{@smoke} & Automatizar \\
+3 & \tcid{TC-HOME-NAV-003} & El submenú de Testing Day se despliega al pasar el puntero & P1 & \texttt{@sanity} & Automatizar \\
+4 & \tcid{TC-HOME-NAV-004} & El tercer nivel de ``Ediciones anteriores'' muestra las ediciones pasadas & P2 & \texttt{@regression} & Pendiente \\
+5 & \tcid{TC-HOME-NAV-005} & El menú móvil se abre, expande el submenú y se cierra & P1 & \texttt{@sanity} & Automatizar \\
+6 & \tcid{TC-HOME-NAV-006} & El banner de cookies acepta solo lo necesario y la elección persiste & P1 & \texttt{@sanity} & Automatizar \\
+7 & \tcid{TC-HOME-NAV-007} & El enlace ``Cookies'' del footer reabre el banner & P2 & \texttt{@regression} & Automatizar \\
+8 & \tcid{TC-HOME-NAV-008} & El footer muestra contacto, redes y enlaces legales operativos & P1 & \texttt{@sanity} & Automatizar \\
+9 & \tcid{TC-HOME-NAV-009} & Los enlaces de contacto rápido apuntan a destinos válidos & P1 & \texttt{@sanity} & Automatizar \\
+10 & \tcid{TC-HOME-NAV-010} & Una ruta inexistente responde 404 con navegación & P1 & \texttt{@sanity} & Automatizar \\
+11 & \tcid{TC-HOME-NAV-011} & Las variantes de dominio redirigen con 301 a la URL canónica & P2 & \texttt{@regression} & Automatizar \\
+12 & \tcid{TC-HOME-NAV-012} & El logo del header tiene texto alternativo & P2 & \texttt{@regression} & Automatizar \\
+13 & \tcid{TC-HOME-NAV-013} & Los perfiles sociales son consistentes entre páginas & P3 & \texttt{@regression} & Pendiente \\
+14 & \tcid{TC-HOME-NAV-014} & La página de inicio no desborda horizontalmente en móvil & P2 & \texttt{@regression} & Automatizar \\
+15 & \tcid{TC-HOME-POR-001} & Los CTAs del hero llevan al catálogo y al Bootcamp & P0 & \texttt{@smoke} & Automatizar \\
+16 & \tcid{TC-HOME-POR-002} & Los contadores muestran cifras mayores que cero tras hacer scroll & P1 & \texttt{@sanity} & Automatizar \\
+17 & \tcid{TC-HOME-POR-003} & Los CTAs de ``Nuestros Servicios'' apuntan al destino correcto & P1 & \texttt{@sanity} & Automatizar \\
+18 & \tcid{TC-HOME-POR-004} & Las capacitaciones destacadas enlazan a páginas de curso existentes & P1 & \texttt{@sanity} & Automatizar \\
+19 & \tcid{TC-HOME-POR-005} & Las secciones de testimonios y partners están presentes & P2 & \texttt{@regression} & Automatizar \\
+20 & \tcid{TC-HOME-POR-006} & Los logos de partners tienen texto alternativo & P2 & \texttt{@regression} & Automatizar \\
+21 & \tcid{TC-HOME-POR-007} & La portada declara metadatos SEO completos & P1 & \texttt{@sanity} & Automatizar \\
+22 & \tcid{TC-HOME-POR-008} & La portada tiene un único H1 & P3 & \texttt{@regression} & Pendiente \\
+23 & \tcid{TC-HOME-POR-009} & Los CTAs del hero son visibles y operables en móvil & P2 & \texttt{@regression} & Automatizar \\
+24 & \tcid{TC-CAP-CAT-001} & El catálogo carga con tarjetas y enlaces ``Saber más'' & P0 & \texttt{@smoke} & Automatizar \\
+25 & \tcid{TC-CAP-CAT-002} & Todos los ``Saber más'' responden HTTP 200 & P1 & \texttt{@sanity} & Automatizar \\
+26 & \tcid{TC-CAP-CAT-003} & El filtro ``Certificaciones'' muestra solo tarjetas con insignia ``Certificación'' & P1 & \texttt{@sanity} & Automatizar \\
+27 & \tcid{TC-CAP-CAT-004} & Cada filtro reduce la lista y ``Todos'' la restaura & P1 & \texttt{@sanity} & Automatizar \\
+28 & \tcid{TC-CAP-CAT-005} & Los enlaces ``Saber más'' abren en pestaña nueva & P2 & \texttt{@regression} & Automatizar \\
+29 & \tcid{TC-CAP-CAT-006} & El botón ``Hablemos'' apunta a WhatsApp & P2 & \texttt{@regression} & Automatizar \\
+30 & \tcid{TC-CAP-CAT-007} & El catálogo tiene un H1 y un título descriptivo & P3 & \texttt{@regression} & Pendiente \\
+31 & \tcid{TC-CAP-CAT-008} & Las imágenes del catálogo tienen texto alternativo & P3 & \texttt{@regression} & Automatizar \\
+32 & \tcid{TC-CAP-CAT-009} & Filtros y tarjetas son usables en móvil & P2 & \texttt{@regression} & Pendiente \\
+33 & \tcid{TC-CAP-CUR-001} & Las páginas de curso del catálogo cargan con título y H1 & P0 & \texttt{@smoke} & Automatizar \\
+34 & \tcid{TC-CAP-CUR-002} & El formulario de consulta muestra sus campos y obligatoriedad & P1 & \texttt{@sanity} & Automatizar \\
+35 & \tcid{TC-CAP-CUR-003} & El formulario vacío es inválido sin enviarlo & P1 & \texttt{@sanity} & Automatizar \\
+36 & \tcid{TC-CAP-CUR-004} & El formulario completo con datos sintéticos es válido en el cliente & P1 & \texttt{@sanity} & Automatizar \\
+37 & \tcid{TC-CAP-CUR-005} & Un e-mail sin ``@'' es rechazado por la validación & P1 & \texttt{@sanity} & Automatizar \\
+38 & \tcid{TC-CAP-CUR-006} & El celular rechaza letras & P2 & \texttt{@regression} & Automatizar \\
+39 & \tcid{TC-CAP-CUR-007} & En AiU el asunto es obligatorio y ofrece tres opciones & P1 & \texttt{@sanity} & Automatizar \\
+40 & \tcid{TC-CAP-CUR-008} & El botón de pago apunta a la pasarela externa en pestaña nueva & P1 & \texttt{@sanity} & Automatizar \\
+41 & \tcid{TC-CAP-CUR-009} & El consentimiento enlaza a la política de privacidad & P2 & \texttt{@regression} & Pendiente \\
+42 & \tcid{TC-CAP-CUR-010} & El envío real del formulario de consulta muestra confirmación & P3 & \texttt{@destructive} & Pendiente \\
+43 & \tcid{TC-CAP-BTC-001} & La landing del Bootcamp carga con hero y CTAs & P0 & \texttt{@smoke} & Automatizar \\
+44 & \tcid{TC-CAP-BTC-002} & Las anclas del hero llevan a su sección & P2 & \texttt{@regression} & Automatizar \\
+45 & \tcid{TC-CAP-BTC-003} & El autodiagnóstico sin respuestas no muestra resultado & P1 & \texttt{@sanity} & Automatizar \\
+46 & \tcid{TC-CAP-BTC-004} & El autodiagnóstico clasifica según el puntaje & P1 & \texttt{@sanity} & Automatizar \\
+47 & \tcid{TC-CAP-BTC-005} & La fecha de próximo inicio no está vencida & P1 & \texttt{@sanity} & Pendiente \\
+48 & \tcid{TC-CAP-BTC-006} & Las preguntas frecuentes se expanden al hacer clic & P2 & \texttt{@regression} & Automatizar \\
+49 & \tcid{TC-CAP-BTC-007} & Los CTAs de WhatsApp y correo apuntan a destinos válidos & P2 & \texttt{@regression} & Automatizar \\
+50 & \tcid{TC-CAP-BTC-008} & El autodiagnóstico no dispara conversiones de compra & P3 & \texttt{@regression} & Manual \\
+51 & \tcid{TC-EVT-TDY-001} & La página del evento carga con edición, fechas, sede y CTAs & P0 & \texttt{@smoke} & Automatizar \\
+52 & \tcid{TC-EVT-TDY-002} & Los CTAs de entrada apuntan a ecopass en pestaña nueva & P1 & \texttt{@sanity} & Automatizar \\
+53 & \tcid{TC-EVT-TDY-003} & ``Convertirse en Sponsor'' desplaza a la sección de sponsors & P2 & \texttt{@regression} & Automatizar \\
+54 & \tcid{TC-EVT-TDY-004} & La agenda presencial muestra bloques con horario y título & P1 & \texttt{@sanity} & Automatizar \\
+55 & \tcid{TC-EVT-TDY-005} & ``Ver Agenda Completa e Inscribirse'' lleva a Agenda Online & P1 & \texttt{@e2e} & Automatizar \\
+56 & \tcid{TC-EVT-TDY-006} & La Agenda Online lista sesiones con inscripción & P1 & \texttt{@sanity} & Automatizar \\
+57 & \tcid{TC-EVT-TDY-007} & Los enlaces ``Inscribirse'' de la Agenda Online responden & P2 & \texttt{@regression} & Automatizar \\
+58 & \tcid{TC-EVT-TDY-008} & Los sponsors se muestran por nivel y enlazan a la página de sponsors & P2 & \texttt{@e2e} & Automatizar \\
+59 & \tcid{TC-EVT-TDY-009} & Los logos de sponsors, comunidades y hoteles enlazan a dominios operativos & P2 & \texttt{@regression} & Automatizar \\
+60 & \tcid{TC-EVT-TDY-010} & Tras el evento no se ofrecen CTAs de compra & P1 & \texttt{@sanity} & Pendiente \\
+61 & \tcid{TC-EVT-TDY-011} & El brochure de sponsors se solicita por correo con asunto & P2 & \texttt{@regression} & Automatizar \\
+62 & \tcid{TC-EVT-TDY-012} & Las páginas del evento tienen título, description y H1 coherentes & P3 & \texttt{@regression} & Pendiente \\
+63 & \tcid{TC-EVT-EDI-001} & La página de ediciones anteriores carga con sus bloques & P0 & \texttt{@smoke} & Automatizar \\
+64 & \tcid{TC-EVT-EDI-002} & Todas las páginas del submenú ``Ediciones anteriores'' responden 200 & P1 & \texttt{@sanity} & Automatizar \\
+65 & \tcid{TC-EVT-EDI-003} & Los enlaces internos de la página de ediciones no devuelven 404 & P1 & \texttt{@sanity} & Automatizar \\
+66 & \tcid{TC-EVT-EDI-004} & El título de cada página de edición contiene su año & P2 & \texttt{@regression} & Pendiente \\
+67 & \tcid{TC-EVT-EDI-005} & La edición 2025 enlaza a sus sponsors y muestra el video & P2 & \texttt{@e2e} & Automatizar \\
+68 & \tcid{TC-EVT-EDI-006} & Los enlaces externos de resumen de ediciones responden & P3 & \texttt{@regression} & Automatizar \\
+69 & \tcid{TC-EVT-EDI-007} & ``Ver detalles de la edición más reciente'' apunta a la última edición & P3 & \texttt{@regression} & Pendiente \\
+70 & \tcid{TC-EVT-EDI-008} & Las páginas de edición tienen un único H1 con texto & P3 & \texttt{@regression} & Pendiente \\
+71 & \tcid{TC-EVT-EDI-009} & Las imágenes de las páginas de edición tienen texto alternativo & P3 & \texttt{@regression} & Automatizar \\
+72 & \tcid{TC-CON-FCO-001} & El ítem ``Contacto'' lleva a la página de contacto & P0 & \texttt{@smoke} & Automatizar \\
+73 & \tcid{TC-CON-FCO-002} & El CTA de WhatsApp apunta a una conversación prellenada & P1 & \texttt{@sanity} & Automatizar \\
+74 & \tcid{TC-CON-FCO-003} & Los correos por tipo de consulta están visibles & P1 & \texttt{@sanity} & Automatizar \\
+75 & \tcid{TC-CON-FCO-004} & Las redes sociales de la página abren en pestaña nueva & P2 & \texttt{@regression} & Automatizar \\
+76 & \tcid{TC-CON-FCO-005} & La página de contacto ofrece un formulario & P1 & \texttt{@sanity} & Pendiente \\
+77 & \tcid{TC-CON-FCO-006} & La página de contacto declara metadatos y un único H1 & P3 & \texttt{@regression} & Pendiente \\
+78 & \tcid{TC-CON-FCO-007} & Los correos del footer son enlaces \texttt{mailto:} & P3 & \texttt{@regression} & Pendiente \\
+79 & \tcid{TC-CON-FCO-008} & La página de contacto es usable en móvil & P2 & \texttt{@regression} & Pendiente \\
+80 & \tcid{TC-CON-EMP-001} & El formulario empresa carga con su H1 & P0 & \texttt{@smoke} & Automatizar \\
+81 & \tcid{TC-CON-EMP-002} & El formulario muestra sus seis campos obligatorios & P1 & \texttt{@sanity} & Automatizar \\
+82 & \tcid{TC-CON-EMP-003} & El formulario vacío es inválido sin enviarlo & P1 & \texttt{@sanity} & Automatizar \\
+83 & \tcid{TC-CON-EMP-004} & Un email sin ``@'' es inválido & P1 & \texttt{@sanity} & Automatizar \\
+84 & \tcid{TC-CON-EMP-005} & ``Número de personas'' no admite letras & P2 & \texttt{@regression} & Automatizar \\
+85 & \tcid{TC-CON-EMP-006} & ``Número de personas'' rechaza cero y negativos & P2 & \texttt{@regression} & Pendiente \\
+86 & \tcid{TC-CON-EMP-007} & Código Sence es obligatorio con tres opciones & P1 & \texttt{@sanity} & Automatizar \\
+87 & \tcid{TC-CON-EMP-008} & El formulario completo con datos sintéticos es válido en el cliente & P1 & \texttt{@sanity} & Automatizar \\
+88 & \tcid{TC-CON-EMP-009} & El formulario informa la política de privacidad & P2 & \texttt{@regression} & Pendiente \\
+89 & \tcid{TC-CON-EMP-010} & Las etiquetas del formulario tienen ortografía correcta & P3 & \texttt{@regression} & Pendiente \\
+90 & \tcid{TC-CON-EMP-011} & Los campos obligatorios tienen indicador visual & P3 & \texttt{@regression} & Pendiente \\
+91 & \tcid{TC-CON-EMP-012} & El envío real muestra una confirmación & P3 & \texttt{@destructive} & Pendiente \\
+92 & \tcid{TC-LEG-LGL-001} & Los enlaces legales del footer abren páginas existentes en pestaña nueva & P0 & \texttt{@smoke} & Automatizar \\
+93 & \tcid{TC-LEG-LGL-002} & Términos y Condiciones no contiene texto de plantilla & P1 & \texttt{@sanity} & Pendiente \\
+94 & \tcid{TC-LEG-LGL-003} & La política de privacidad no contiene marcadores sin completar & P1 & \texttt{@sanity} & Pendiente \\
+95 & \tcid{TC-LEG-LGL-004} & La política identifica al responsable y el canal para ejercer derechos & P1 & \texttt{@sanity} & Manual \\
+96 & \tcid{TC-LEG-LGL-005} & La política de privacidad presenta sus secciones & P2 & \texttt{@regression} & Automatizar \\
+97 & \tcid{TC-LEG-LGL-006} & El banner de cookies enlaza a la información de cookies & P2 & \texttt{@regression} & Pendiente \\
+98 & \tcid{TC-LEG-LGL-007} & Las páginas legales tienen description representativa & P3 & \texttt{@regression} & Pendiente \\
+99 & \tcid{TC-LEG-LGL-008} & Las páginas legales declaran idioma y un único H1 & P3 & \texttt{@regression} & Automatizar \\
+100 & \tcid{TC-LEG-BLG-001} & El blog carga con al menos un artículo & P0 & \texttt{@smoke} & Automatizar \\
+101 & \tcid{TC-LEG-BLG-002} & Cada artículo del listado muestra título enlazado, fecha y extracto & P1 & \texttt{@sanity} & Automatizar \\
+102 & \tcid{TC-LEG-BLG-003} & Los artículos están en orden cronológico descendente & P1 & \texttt{@sanity} & Automatizar \\
+103 & \tcid{TC-LEG-BLG-004} & La paginación avanza y retrocede & P1 & \texttt{@e2e} & Automatizar \\
+104 & \tcid{TC-LEG-BLG-005} & Los artículos de la primera página responden 200 & P1 & \texttt{@sanity} & Automatizar \\
+105 & \tcid{TC-LEG-BLG-006} & El artículo muestra H1 igual al título del listado y su fecha & P2 & \texttt{@e2e} & Automatizar \\
+106 & \tcid{TC-LEG-BLG-007} & El título de los artículos sigue el patrón del sitio & P2 & \texttt{@regression} & Automatizar \\
+107 & \tcid{TC-LEG-BLG-008} & El listado del blog tiene H1 y description & P3 & \texttt{@regression} & Pendiente \\
+108 & \tcid{TC-LEG-BLG-009} & Las imágenes del listado tienen texto alternativo & P3 & \texttt{@regression} & Automatizar \\
+109 & \tcid{TC-LEG-GAL-001} & La galería carga con álbumes y miniaturas & P0 & \texttt{@smoke} & Automatizar \\
+110 & \tcid{TC-LEG-GAL-002} & Una miniatura abre el visor y Escape lo cierra & P1 & \texttt{@sanity} & Automatizar \\
+111 & \tcid{TC-LEG-GAL-003} & La flecha derecha avanza a la siguiente foto & P2 & \texttt{@regression} & Automatizar \\
+112 & \tcid{TC-LEG-GAL-004} & El álbum más reciente aparece primero & P2 & \texttt{@regression} & Automatizar \\
+113 & \tcid{TC-LEG-GAL-005} & El título de la galería no tiene errores tipográficos & P3 & \texttt{@regression} & Pendiente \\
+114 & \tcid{TC-LEG-GAL-006} & Las fotos de la galería tienen texto alternativo & P3 & \texttt{@regression} & Automatizar \\
+115 & \tcid{TC-LEG-GAL-007} & La galería tiene un único H1 & P3 & \texttt{@regression} & Pendiente \\
+116 & \tcid{TC-LEG-GAL-008} & La galería es usable en móvil & P2 & \texttt{@regression} & Pendiente \\
+\end{xltabular}
+}
+
+% ---------------------------------------------------------------- 12
+\section{Casos representativos por módulo}
+
+Un caso por módulo, expandido con sus pasos, datos y resultado esperado, tomado de la sección 9 del
+plan de cada módulo. Se eligieron para mostrar los distintos estados esperados: \texttt{test()},
+\texttt{test.fail()} con defecto y \texttt{test.skip()} con \texttt{PENDING-SPEC}. Todos comparten la
+precondición base: visitante anónimo en contexto de navegador limpio, banner resuelto con
+``Aceptar solo lo necesario'' y etiquetas de Google bloqueadas (\texttt{page.route}).
+
+\begin{casebox}{HOME - TC-HOME-NAV-001 · La página de inicio carga con header, menú y footer}
+\small
+\begin{tabularx}{\linewidth}{@{}>{\leavevmode\color{muted}}p{0.2\linewidth} X@{}}
+Prioridad / etiqueta & P0 / \texttt{@smoke} \\
+Decisión / estado & Automatizar / \texttt{test()} (pasa) \\
+Trazabilidad & RN-HOME-001, RN-HOME-006; FL-HOME-001 \\
+Datos & Ruta \texttt{/} \\
+\end{tabularx}
+\textbf{Pasos}
+\begin{enumerate}
+  \item Navegar a \baseurl/.
+  \item Hacer clic en ``Aceptar solo lo necesario'' en el banner de cookies.
+  \item Verificar que la respuesta de la navegación es HTTP 200.
+  \item Verificar que el título de la pestaña contiene ``Testing en Chile''.
+  \item Verificar que el menú principal (navegación) es visible.
+  \item Desplazarse al final de la página y verificar que el footer es visible.
+\end{enumerate}
+\textbf{Resultado esperado:} HTTP 200; \texttt{<title>} contiene ``Testing en Chile''; menú principal y footer visibles.
+\end{casebox}
+
+\begin{casebox}{CAP - TC-CAP-CUR-004 · El formulario completo con datos sintéticos es válido en el cliente}
+\small
+\begin{tabularx}{\linewidth}{@{}>{\leavevmode\color{muted}}p{0.2\linewidth} X@{}}
+Prioridad / etiqueta & P1 / \texttt{@sanity} \\
+Decisión / estado & Automatizar / \texttt{test()} (pasa) \\
+Trazabilidad & RN-CAP-008, RN-CAP-009, RN-CAP-010, RN-CAP-011; FL-CAP-004 \\
+Datos & Forma ``Formulario válido'' de \texttt{04-test-data.md}: Faker con prefijo QA, dominio \texttt{example.com} (sintéticos, regla S5) \\
+\end{tabularx}
+\textbf{Pasos}
+\begin{enumerate}
+  \item Navegar a \baseurl\path{/curso-automatizacion-pruebas-software-web-selenium-java/}.
+  \item Ingresar ``QA Nombre \{EXEC\_IDX\}'' en ``Nombre y Apellido''.
+  \item Ingresar \texttt{qa.\{EXEC\_IDX\}@example.com} en ``E-mail'' y \texttt{+56 9 0000 0000} en ``Celular''.
+  \item Ingresar ``QA mensaje de prueba'' en ``Mensaje'' y marcar el consentimiento.
+  \item Evaluar \texttt{validity.valid} de cada campo visible (excluido el reCAPTCHA).
+  \item Verificar que no se realizó ninguna solicitud POST al sitio.
+\end{enumerate}
+\textbf{Resultado esperado:} todos los campos visibles son válidos y no hay ningún envío al sitio.
+\end{casebox}
+
+\begin{casebox}{EVT - TC-EVT-TDY-007 · Los enlaces ``Inscribirse'' de la Agenda Online responden}
+\small
+\begin{tabularx}{\linewidth}{@{}>{\leavevmode\color{muted}}p{0.2\linewidth} X@{}}
+Prioridad / etiqueta & P2 / \texttt{@regression} \\
+Decisión / estado & Automatizar / \textbf{\color{danger}\texttt{test.fail()} + DEF-TCH-002} \\
+Trazabilidad & RN-EVT-008, RN-EVT-009; FL-EVT-001; hallazgo HC-06 \\
+Datos & Observado el 21-11-2026: 3 de 4 enlaces únicos responden 404 (StreamYard) \\
+\end{tabularx}
+\textbf{Pasos}
+\begin{enumerate}
+  \item Navegar a \baseurl/agenda-online/.
+  \item Recopilar los \texttt{href} únicos de ``Inscribirse''.
+  \item Solicitar cada URL con el fixture \texttt{request} (sin hacer clic).
+  \item Verificar que cada respuesta es 2xx o 3xx.
+\end{enumerate}
+\textbf{Resultado esperado:} todas las respuestas son 2xx o 3xx. Como el sitio incumple una regla
+confirmada, la aserción se mantiene y el caso queda en \texttt{test.fail()} vía \texttt{expectOpenDefect}.
+\end{casebox}
+
+\begin{casebox}{CON - TC-CON-EMP-006 · ``Número de personas'' rechaza cero y negativos}
+\small
+\begin{tabularx}{\linewidth}{@{}>{\leavevmode\color{muted}}p{0.2\linewidth} X@{}}
+Prioridad / etiqueta & P2 / \texttt{@regression} \\
+Decisión / estado & Pendiente / \textbf{\color{accent!90!black}\texttt{test.skip()} PENDING-SPEC (REC-TCH-009)} \\
+Trazabilidad & RN-CON-011 (\texttt{PENDIENTE-CONFIRMACIÓN}, pregunta abierta 4); FL-CON-003; hallazgo HC-13 \\
+Datos & Valores \texttt{0} y \texttt{-5} \\
+\end{tabularx}
+\textbf{Pasos} (ejecución manual hasta confirmar la regla)
+\begin{enumerate}
+  \item Navegar a \baseurl/contacto-empresa/ y esperar el campo ``Nombre''.
+  \item Ingresar \texttt{0} en ``Número de personas'' y leer \texttt{validity.valid}.
+  \item Ingresar \texttt{-5} y leer \texttt{validity.valid}.
+  \item Verificar que ambos valores son inválidos.
+\end{enumerate}
+\textbf{Resultado esperado:} \texttt{0} y \texttt{-5} son inválidos. Hoy ambos son válidos, pero la
+regla no está confirmada: se registra como recomendación, nunca como \texttt{test.fail()}.
+\end{casebox}
+
+\begin{casebox}{LEG - TC-LEG-BLG-004 · La paginación avanza y retrocede}
+\small
+\begin{tabularx}{\linewidth}{@{}>{\leavevmode\color{muted}}p{0.2\linewidth} X@{}}
+Prioridad / etiqueta & P1 / \texttt{@e2e} \\
+Decisión / estado & Automatizar / \texttt{test()} (pasa) \\
+Trazabilidad & RN-LEG-009; FL-LEG-003 \\
+Datos & Paginación de 10 artículos (RN-LEG-009) \\
+\end{tabularx}
+\textbf{Pasos}
+\begin{enumerate}
+  \item Navegar a \baseurl/blog/.
+  \item Hacer clic en ``Artículos antiguos''.
+  \item Verificar una página con artículos más antiguos que el último de \texttt{/blog/}.
+  \item Hacer clic en ``Artículos recientes''.
+  \item Verificar que se vuelve a \texttt{/blog/}.
+\end{enumerate}
+\textbf{Resultado esperado:} se muestra la página con artículos más antiguos y luego se vuelve a \texttt{/blog/}.
+\end{casebox}
+
+% ---------------------------------------------------------------- 13
+\section{Mapa de hallazgos}
+
+Los 22 hallazgos candidatos (HC-01 a HC-22) se clasificaron con el criterio de la sección 4.3:
+\textbf{5 defectos} a partir de 4 hallazgos (HC-03, HC-06, HC-07, HC-08) y \textbf{18 recomendaciones}.
+
+\subsection{Defectos (DEF)}
+
+{\footnotesize
+\begin{xltabular}{\textwidth}{@{}l X l >{\raggedright\arraybackslash}p{0.15\textwidth} >{\raggedright\arraybackslash}p{0.19\textwidth}@{}}
+\toprule
+ID / HC & Título & Sev. & Regla & Casos en \texttt{test.fail()} \\
+\midrule
+\endhead
+DEF-TCH-001 / HC-03 & Enlace interno ``Saber más de esta edición'' (2018) responde 404 & Media & RN-EVT-015 & TC-EVT-EDI-003 \\
+DEF-TCH-002 / HC-06 & 3 de 4 enlaces únicos ``Inscribirse'' de la Agenda Online responden 404 & Media & RN-EVT-009 & TC-EVT-TDY-007 \\
+DEF-TCH-003 / HC-07 & Logo de sponsor enlaza a un dominio inexistente y sitio de hotel sin respuesta & Baja & RN-EVT-009 & TC-EVT-TDY-009 \\
+DEF-TCH-004 / HC-08 & El logo del header no tiene texto alternativo en todo el sitio & Media & RN-HOME-012 & TC-HOME-NAV-012 \\
+DEF-TCH-005 / HC-08 & Imágenes informativas sin texto alternativo en páginas de contenido & Media & RN-HOME-012, RN-LEG-017 & TC-HOME-POR-006, TC-CAP-CAT-008, TC-EVT-EDI-009, TC-LEG-BLG-009, TC-LEG-GAL-006 \\
+\bottomrule
+\end{xltabular}
+}
+
+\subsection{Recomendaciones (REC)}
+
+{\footnotesize
+\begin{xltabular}{\textwidth}{@{}l l X l >{\raggedright\arraybackslash}p{0.27\textwidth}@{}}
+\toprule
+ID & HC & Título & Sev. & Casos \\
+\midrule
+\endfirsthead
+\toprule
+ID & HC & Título & Sev. & Casos \\
+\midrule
+\endhead
+REC-TCH-001 & HC-01 & Términos y Condiciones contiene solo el texto de ayuda de la plantilla Webnode & \textbf{Alta} & TC-LEG-LGL-002 \\
+REC-TCH-002 & HC-02 & Política de privacidad de plantilla sin completar y banner de cookies sin enlace & \textbf{Alta} & TC-LEG-LGL-003, TC-LEG-LGL-004, TC-LEG-LGL-006 \\
+REC-TCH-003 & HC-04 & Evento 2026 finalizado mantiene CTAs de compra e inscripción & Media & TC-EVT-TDY-010 \\
+REC-TCH-004 & HC-05 & Fecha de próximo inicio del Bootcamp vencida con CTAs activos & Media & TC-CAP-BTC-005 \\
+REC-TCH-005 & HC-09 & Jerarquía de H1 inválida: múltiples H1, H1 vacíos o ausentes & Baja & TC-HOME-POR-008, TC-CAP-CAT-007, TC-EVT-EDI-008, TC-EVT-TDY-012, TC-CON-FCO-006, TC-LEG-BLG-008, TC-LEG-GAL-007 \\
+REC-TCH-006 & HC-10 & Títulos de página con errores o poco descriptivos & Baja & TC-LEG-GAL-005, TC-EVT-EDI-004, TC-EVT-TDY-012, TC-CAP-CAT-007 \\
+REC-TCH-007 & HC-11 & Meta description vacía o no representativa & Baja & TC-EVT-TDY-012, TC-LEG-BLG-008, TC-LEG-LGL-007 \\
+REC-TCH-008 & HC-12 & La página ``Contacto'' no tiene formulario y los correos no son enlaces & Media & TC-CON-FCO-005, TC-CON-FCO-007 \\
+REC-TCH-009 & HC-13 & ``Número de personas'' acepta 0 y valores negativos & Baja & TC-CON-EMP-006 \\
+REC-TCH-010 & HC-14 & Errores de ortografía en etiquetas del formulario empresa & Baja & TC-CON-EMP-010 \\
+REC-TCH-011 & HC-15 & Campos obligatorios sin indicador visual & Baja & TC-CON-EMP-011 \\
+REC-TCH-012 & HC-16 & Formularios sin enlace a la política de privacidad ni consentimiento & Media & TC-CAP-CUR-009, TC-CON-EMP-009 \\
+REC-TCH-013 & HC-17 & Perfiles sociales inconsistentes entre páginas & Baja & TC-HOME-NAV-013, TC-CON-FCO-004 \\
+REC-TCH-014 & HC-18 & Número de WhatsApp distinto en el botón ``Hablemos'' del catálogo & Baja & TC-CAP-CAT-006 \\
+REC-TCH-015 & HC-19 & Errores tipográficos en la página Sponsors 2026 & Baja & Sin TC \\
+REC-TCH-016 & HC-20 & El título anuncia ``GRATUITO'' aunque la entrada presencial es pagada & Baja & TC-EVT-TDY-012 \\
+REC-TCH-017 & HC-21 & El autodiagnóstico del Bootcamp registra una conversión ``purchase'' sin compra & Media & TC-CAP-BTC-008 \\
+REC-TCH-018 & HC-22 & ``Ver detalles de la edición más reciente'' apunta a la edición 2022 & Baja & TC-EVT-EDI-007 \\
+\bottomrule
+\end{xltabular}
+}
+
+Una recomendación pasa a defecto solo si el responsable del sitio confirma la regla asociada o
+eleva el criterio editorial o SEO a regla de negocio (preguntas abiertas de la sección~\ref{sec:preguntas}).
+
+\begin{infobox}[Observación pasiva derivada a Seguridad]
+\raggedright
+Las respuestas del sitio no incluyen \texttt{Strict-Transport-Security} ni
+\texttt{Content-Security-Policy} (sí \texttt{X-Frame-Options: DENY}). No es defecto ni recomendación
+de QA y no se realizó ninguna prueba de seguridad: se deriva al proceso formal de seguridad.
+\end{infobox}
+
+% ---------------------------------------------------------------- 14
+\section{Preguntas abiertas}\label{sec:preguntas}
+
+Todas en estado \textbf{Abierta}. Las preguntas 1 a 10 provienen del análisis de pruebas; la 11 y la
+12 surgen de la clasificación de hallazgos de esta etapa.
+
+{\footnotesize
+\begin{xltabular}{\textwidth}{@{}r X >{\raggedright\arraybackslash}p{0.17\textwidth} >{\raggedright\arraybackslash}p{0.2\textwidth} >{\raggedright\arraybackslash}p{0.15\textwidth}@{}}
+\toprule
+\# & Pregunta & Reglas / hallazgos & Casos bloqueados & Responsable \\
+\midrule
+\endfirsthead
+\toprule
+\# & Pregunta & Reglas / hallazgos & Casos bloqueados & Responsable \\
+\midrule
+\endhead
+1 & ¿Qué debe mostrar \texttt{/testing-day-chile/} entre ediciones? & RN-EVT-010, HC-04 & TC-EVT-TDY-010 & Responsable del sitio \\
+2 & ¿La fecha ``próximo inicio'' del Bootcamp debe actualizarse u ocultarse al vencer? & RN-CAP-016, HC-05 & TC-CAP-BTC-005 & Responsable del sitio \\
+3 & ¿La página ``Contacto'' debe tener formulario? & RN-CON-005, HC-12 & TC-CON-FCO-005, TC-CON-FCO-007 & Responsable del sitio \\
+4 & ¿Rango válido de ``Número de personas''? & RN-CON-011, HC-13 & TC-CON-EMP-006 & Responsable del sitio \\
+5 & ¿Responsable del tratamiento y confirmación de RN-LEG-002 a RN-LEG-005? & HC-01, HC-02 & TC-LEG-LGL-002, TC-LEG-LGL-003, TC-LEG-LGL-004, TC-LEG-LGL-006 & Responsable del sitio y área legal \\
+6 & ¿El formulario B2B debe pedir consentimiento explícito? & RN-CON-013, RN-CAP-015, HC-16 & TC-CON-EMP-009, TC-CAP-CUR-009 & Responsable del sitio y área legal \\
+7 & ¿El número de WhatsApp del botón ``Hablemos'' (Sence) es intencional? & HC-18 & Ninguno (informativa) & Responsable del sitio \\
+8 & ¿La conversión ``purchase'' del autodiagnóstico es intencional? & HC-21 & TC-CAP-BTC-008 & Responsable del sitio \\
+9 & ¿Criterio del filtro ``Cursos'' del catálogo? & RN-CAP-002 & Ninguno (se aserta solo la reducción) & Responsable del sitio \\
+10 & ¿El tercer nivel del menú se despliega por hover o por clic en navegadores reales? & RN-HOME-003 & TC-HOME-NAV-004 & Responsable del sitio \\
+11 & ¿Se elevan a reglas de negocio los criterios editoriales y SEO (un H1, títulos, description, ortografía, indicador de obligatorios)? & HC-09, HC-10, HC-11, HC-14, HC-15, HC-20 & 11 casos \textit{Pendiente} PENDING-SPEC editoriales & Responsable del sitio \\
+12 & ¿Se confirman RN-HOME-013, RN-EVT-016 y RN-EVT-018? & HC-17, HC-10, HC-22 & TC-HOME-NAV-013, TC-EVT-EDI-004, TC-EVT-EDI-007 & Responsable del sitio \\
+\bottomrule
+\end{xltabular}
+}
+
+% ---------------------------------------------------------------- 15
+\needspace{20\baselineskip}
+\section{Aprobaciones}\label{sec:aprobaciones}
+
+\begin{warnbox}[Pendiente de aprobación humana]
+Este plan \textbf{no está aprobado}. Fue generado con \texttt{@keber/qa-framework} + Claude a partir
+de los artefactos del repositorio y requiere la revisión y firma de las personas responsables antes
+de iniciar la etapa 5 (criterio de entrada E2).
+\end{warnbox}
+
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}l X l l@{}}
+\toprule
+Rol & Nombre & Fecha & Decisión \\
+\midrule
+Líder QA & \texttt{<PENDIENTE>} & - & Pendiente \\
+Responsable del sitio & \texttt{<PENDIENTE>} & - & Pendiente \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection*{Historial de cambios}
+
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}l l X@{}}
+\toprule
+Versión & Fecha & Descripción \\
+\midrule
+1.0 & 21-11-2026 & Versión inicial: etapas 3 y 4 para los 5 módulos (116 casos), 5 defectos y 18 recomendaciones \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\vspace{1em}
+{\small\color{muted}Fuentes:
+\begin{itemize}
+  \item \texttt{qa/02-test-plans/Plan-Maestro-de-Pruebas-testingenchile.md}
+  \item \texttt{qa/02-test-plans/sprints/Sprint-1/} (planes por módulo)
+  \item \texttt{qa/06-defects/open/} y \texttt{qa/06-defects/recommendations/}
+  \item \texttt{qa/qa-framework.config.json}
+\end{itemize}\par}
+
+\end{document}
