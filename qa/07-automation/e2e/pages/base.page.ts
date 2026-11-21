@@ -91,6 +91,22 @@ export abstract class BasePage {
   }
 
   /**
+   * Origin of the site under test (from the current URL).
+   * @returns e.g. 'https://www.testingenchile.cl'
+   */
+  siteOrigin(): string {
+    return new URL(this.page.url()).origin;
+  }
+
+  /**
+   * Hostname of the site under test (from the current URL).
+   * @returns e.g. 'www.testingenchile.cl'
+   */
+  siteHost(): string {
+    return new URL(this.page.url()).hostname;
+  }
+
+  /**
    * Current pathname of the page.
    * @returns e.g. '/capacitaciones2/'
    */

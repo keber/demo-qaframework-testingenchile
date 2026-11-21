@@ -27,6 +27,7 @@ export enum CourseText {
 }
 
 export enum BootcampText {
+  HeroFragment = 'TESTING DE SOFTWARE',
   EvaluateCta = 'Quiero evaluar mi postulación',
   RouteCta = 'Ver la ruta de aprendizaje',
   SubmitQuiz = 'Ver mi orientación',
