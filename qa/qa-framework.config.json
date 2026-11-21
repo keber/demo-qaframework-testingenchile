@@ -15,35 +15,105 @@
       "name": "Inicio y navegación global",
       "description": "Página de inicio, menú principal, header, footer, redes sociales y enlaces globales",
       "specPath": "qa/01-specifications/module-home",
-      "automationPath": "qa/07-automation/e2e/tests/home"
+      "automationPath": "qa/07-automation/e2e/tests/home",
+      "submodules": [
+        {
+          "key": "navegacion",
+          "name": "Navegación global",
+          "code": "NAV"
+        },
+        {
+          "key": "portada",
+          "name": "Portada (página de inicio)",
+          "code": "POR"
+        }
+      ]
     },
     {
       "code": "CAP",
       "name": "Capacitaciones",
       "description": "Catálogo de cursos: Bootcamp de Testing, ISTQB, automatización Selenium Java, IA",
       "specPath": "qa/01-specifications/module-capacitaciones",
-      "automationPath": "qa/07-automation/e2e/tests/capacitaciones"
+      "automationPath": "qa/07-automation/e2e/tests/capacitaciones",
+      "submodules": [
+        {
+          "key": "catalogo",
+          "name": "Catálogo de capacitaciones",
+          "code": "CAT"
+        },
+        {
+          "key": "detalle-curso",
+          "name": "Detalle de curso",
+          "code": "CUR"
+        },
+        {
+          "key": "bootcamp",
+          "name": "Bootcamp de Testing",
+          "code": "BTC"
+        }
+      ]
     },
     {
       "code": "EVT",
       "name": "Eventos Testing Day",
       "description": "Páginas de Testing Day Chile, ediciones anteriores, agendas, speakers y sponsors",
       "specPath": "qa/01-specifications/module-eventos",
-      "automationPath": "qa/07-automation/e2e/tests/eventos"
+      "automationPath": "qa/07-automation/e2e/tests/eventos",
+      "submodules": [
+        {
+          "key": "testing-day",
+          "name": "Testing Day Chile (edición vigente)",
+          "code": "TDY"
+        },
+        {
+          "key": "ediciones",
+          "name": "Ediciones anteriores",
+          "code": "EDI"
+        }
+      ]
     },
     {
       "code": "CON",
       "name": "Contacto y formularios",
       "description": "Formulario de contacto y contacto empresa (validación sin envío real)",
       "specPath": "qa/01-specifications/module-contacto",
-      "automationPath": "qa/07-automation/e2e/tests/contacto"
+      "automationPath": "qa/07-automation/e2e/tests/contacto",
+      "submodules": [
+        {
+          "key": "formulario-contacto",
+          "name": "Página de contacto",
+          "code": "FCO"
+        },
+        {
+          "key": "contacto-empresa",
+          "name": "Contacto empresa (B2B)",
+          "code": "EMP"
+        }
+      ]
     },
     {
       "code": "LEG",
       "name": "Contenido legal y blog",
       "description": "Política de privacidad, términos y condiciones, blog y galería",
       "specPath": "qa/01-specifications/module-legal",
-      "automationPath": "qa/07-automation/e2e/tests/legal"
+      "automationPath": "qa/07-automation/e2e/tests/legal",
+      "submodules": [
+        {
+          "key": "legales",
+          "name": "Páginas legales",
+          "code": "LGL"
+        },
+        {
+          "key": "blog",
+          "name": "Blog",
+          "code": "BLG"
+        },
+        {
+          "key": "galeria",
+          "name": "Fotogalería",
+          "code": "GAL"
+        }
+      ]
     }
   ],
   "conventions": {
