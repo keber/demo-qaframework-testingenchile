@@ -46,6 +46,9 @@ test.describe('CAP - catálogo de capacitaciones', () => {
     '[TC-CAP-CAT-002] Todos los "Saber más" responden HTTP 200 @P1',
     { tag: '@sanity' },
     async ({ catalogPage, linkChecker }) => {
+      // Sequential checks of every course page: up to 23.1 s of the 30 s budget in the
+      // 2026-11-21 stress run (repeat-each=3), so the budget is tripled as in TDY-009.
+      test.slow();
       let hrefs: string[] = [];
       let broken: Array<{ url: string; status: number }> = [];
 

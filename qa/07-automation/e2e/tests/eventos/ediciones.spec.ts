@@ -53,6 +53,9 @@ test.describe('EVT - ediciones anteriores', () => {
     '[TC-EVT-EDI-002] Todas las páginas del submenú "Ediciones anteriores" responden 200 @P1',
     { tag: '@sanity' },
     async ({ homePage, linkChecker }) => {
+      // Sequential checks of every edition page: up to 27.7 s of the 30 s budget in the
+      // 2026-11-21 stress run (repeat-each=3), so the budget is tripled as in TDY-009.
+      test.slow();
       let hrefs: string[] = [];
       let results: LinkStatus[] = [];
 
