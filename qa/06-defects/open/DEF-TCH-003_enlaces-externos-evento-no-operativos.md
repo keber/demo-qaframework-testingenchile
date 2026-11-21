@@ -64,6 +64,7 @@ Según RN-EVT-009, cada enlace externo del evento resuelve y responde 2xx o 3xx 
 
 - 2026-11-21 (exploración etapas 1-2): NXDOMAIN y timeout
 - 2026-11-21 12:41 -03:00 (reverificación con curl): mismo resultado; ambos `href` siguen presentes en la página
+- 2026-11-21 14:36 -03:00 (etapa 5b, `DEFECTS_DIAG=1 npx playwright test`, misma red): `mendezdistribucion.com` sigue sin resolver (`getaddrinfo ENOTFOUND`); `www.hotelvegassantiago.com` ahora responde, pero con un certificado TLS vencido (`certificate has expired`), por lo que el enlace sigue sin estar operativo. Evidencia: `qa/05-test-execution/automated/evidence/2026-11-21/defects-diag-summary.json`. La reverificación desde otra red sigue pendiente
 - Captura: se generará en `qa/07-automation/e2e/diagnosis/` (no versionado) al automatizar el caso en la etapa 5
 
 ---
@@ -110,3 +111,4 @@ Cuando el sitio se corrija:
 | Versión | Fecha | Descripción |
 |---------|------|-------------|
 | 1.0 | 2026-11-21 | Defecto reportado en la etapa 3 a partir de HC-07, con reverificación de solo lectura |
+| 1.1 | 2026-11-21 | Etapa 5b: el sitio del hotel pasa de no responder a responder con certificado TLS vencido; el defecto se mantiene abierto |

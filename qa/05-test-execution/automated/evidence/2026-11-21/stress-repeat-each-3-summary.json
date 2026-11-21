@@ -1,0 +1,1186 @@
+{
+  "run": "stress repeat-each=3",
+  "command": "npx playwright test --repeat-each=3 --workers=2 (retries=1 del config)",
+  "startTime": "2026-11-21T17:06:06.764Z",
+  "wallClockMs": 1425148,
+  "playwrightStats": {
+    "startTime": "2026-11-21T17:06:06.764Z",
+    "duration": 1425148.2179999999,
+    "expected": 261,
+    "skipped": 96,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "totals": {
+    "total": 357,
+    "passed": 234,
+    "expected-fail": 27,
+    "failed": 0,
+    "flaky": 0,
+    "skipped": 96,
+    "durationMs": 2769535
+  },
+  "byModule": {
+    "CAP": {
+      "total": 81,
+      "passed": 60,
+      "expected-fail": 3,
+      "failed": 0,
+      "flaky": 0,
+      "skipped": 18,
+      "durationMs": 805535
+    },
+    "CON": {
+      "total": 60,
+      "passed": 33,
+      "expected-fail": 0,
+      "failed": 0,
+      "flaky": 0,
+      "skipped": 27,
+      "durationMs": 275484
+    },
+    "EVT": {
+      "total": 63,
+      "passed": 36,
+      "expected-fail": 12,
+      "failed": 0,
+      "flaky": 0,
+      "skipped": 15,
+      "durationMs": 607560
+    },
+    "HOME": {
+      "total": 78,
+      "passed": 63,
+      "expected-fail": 6,
+      "failed": 0,
+      "flaky": 0,
+      "skipped": 9,
+      "durationMs": 608615
+    },
+    "LEG": {
+      "total": 75,
+      "passed": 42,
+      "expected-fail": 6,
+      "failed": 0,
+      "flaky": 0,
+      "skipped": 27,
+      "durationMs": 472341
+    }
+  },
+  "bySubmodule": {
+    "CAP-BTC": {
+      "total": 24,
+      "passed": 18,
+      "expected-fail": 0,
+      "failed": 0,
+      "flaky": 0,
+      "skipped": 6,
+      "durationMs": 193018
+    },
+    "CAP-CAT": {
+      "total": 27,
+      "passed": 18,
+      "expected-fail": 3,
+      "failed": 0,
+      "flaky": 0,
+      "skipped": 6,
+      "durationMs": 206796
+    },
+    "CAP-CUR": {
+      "total": 30,
+      "passed": 24,
+      "expected-fail": 0,
+      "failed": 0,
+      "flaky": 0,
+      "skipped": 6,
+      "durationMs": 405721
+    },
+    "CON-EMP": {
+      "total": 36,
+      "passed": 21,
+      "expected-fail": 0,
+      "failed": 0,
+      "flaky": 0,
+      "skipped": 15,
+      "durationMs": 173292
+    },
+    "CON-FCO": {
+      "total": 24,
+      "passed": 12,
+      "expected-fail": 0,
+      "failed": 0,
+      "flaky": 0,
+      "skipped": 12,
+      "durationMs": 102192
+    },
+    "EVT-EDI": {
+      "total": 27,
+      "passed": 12,
+      "expected-fail": 6,
+      "failed": 0,
+      "flaky": 0,
+      "skipped": 9,
+      "durationMs": 234210
+    },
+    "EVT-TDY": {
+      "total": 36,
+      "passed": 24,
+      "expected-fail": 6,
+      "failed": 0,
+      "flaky": 0,
+      "skipped": 6,
+      "durationMs": 373350
+    },
+    "HOME-NAV": {
+      "total": 42,
+      "passed": 33,
+      "expected-fail": 3,
+      "failed": 0,
+      "flaky": 0,
+      "skipped": 6,
+      "durationMs": 330349
+    },
+    "HOME-POR": {
+      "total": 27,
+      "passed": 21,
+      "expected-fail": 3,
+      "failed": 0,
+      "flaky": 0,
+      "skipped": 3,
+      "durationMs": 217763
+    },
+    "HOME-SMOKE": {
+      "total": 9,
+      "passed": 9,
+      "expected-fail": 0,
+      "failed": 0,
+      "flaky": 0,
+      "skipped": 0,
+      "durationMs": 60503
+    },
+    "LEG-BLG": {
+      "total": 27,
+      "passed": 21,
+      "expected-fail": 3,
+      "failed": 0,
+      "flaky": 0,
+      "skipped": 3,
+      "durationMs": 273878
+    },
+    "LEG-GAL": {
+      "total": 24,
+      "passed": 12,
+      "expected-fail": 3,
+      "failed": 0,
+      "flaky": 0,
+      "skipped": 9,
+      "durationMs": 134040
+    },
+    "LEG-LGL": {
+      "total": 24,
+      "passed": 9,
+      "expected-fail": 0,
+      "failed": 0,
+      "flaky": 0,
+      "skipped": 15,
+      "durationMs": 64423
+    }
+  },
+  "byPriority": {
+    "P0": {
+      "total": 45,
+      "passed": 45,
+      "expected-fail": 0,
+      "failed": 0,
+      "flaky": 0,
+      "skipped": 0,
+      "durationMs": 613613
+    },
+    "P1": {
+      "total": 138,
+      "passed": 117,
+      "expected-fail": 3,
+      "failed": 0,
+      "flaky": 0,
+      "skipped": 18,
+      "durationMs": 1235164
+    },
+    "P2": {
+      "total": 105,
+      "passed": 66,
+      "expected-fail": 12,
+      "failed": 0,
+      "flaky": 0,
+      "skipped": 27,
+      "durationMs": 774381
+    },
+    "P3": {
+      "total": 69,
+      "passed": 6,
+      "expected-fail": 12,
+      "failed": 0,
+      "flaky": 0,
+      "skipped": 51,
+      "durationMs": 146377
+    }
+  },
+  "tests": [
+    {
+      "id": "TC-CAP-BTC-001",
+      "title": "La landing del Bootcamp carga con hero y CTAs",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 6864,
+      "maxMs": 11544,
+      "avgMs": 8630
+    },
+    {
+      "id": "TC-CAP-BTC-002",
+      "title": "Las anclas del hero llevan a su sección",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 9625,
+      "maxMs": 13458,
+      "avgMs": 11288
+    },
+    {
+      "id": "TC-CAP-BTC-003",
+      "title": "El autodiagnóstico sin respuestas no muestra resultado",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 8065,
+      "maxMs": 9956,
+      "avgMs": 9118
+    },
+    {
+      "id": "TC-CAP-BTC-004",
+      "title": "El autodiagnóstico clasifica según el puntaje",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 13513,
+      "maxMs": 14232,
+      "avgMs": 13853
+    },
+    {
+      "id": "TC-CAP-BTC-006",
+      "title": "Las preguntas frecuentes se expanden al hacer clic",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 8418,
+      "maxMs": 11357,
+      "avgMs": 10059
+    },
+    {
+      "id": "TC-CAP-BTC-007",
+      "title": "Los CTAs de WhatsApp y correo apuntan a destinos válidos",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 10767,
+      "maxMs": 11842,
+      "avgMs": 11143
+    },
+    {
+      "id": "TC-CAP-CAT-001",
+      "title": "El catálogo carga con tarjetas y enlaces \"Saber más\"",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 6401,
+      "maxMs": 8710,
+      "avgMs": 7523
+    },
+    {
+      "id": "TC-CAP-CAT-002",
+      "title": "Todos los \"Saber más\" responden HTTP 200",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 21925,
+      "maxMs": 23057,
+      "avgMs": 22385
+    },
+    {
+      "id": "TC-CAP-CAT-003",
+      "title": "El filtro \"Certificaciones\" muestra solo tarjetas con insignia \"Certificación\"",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 6964,
+      "maxMs": 7938,
+      "avgMs": 7349
+    },
+    {
+      "id": "TC-CAP-CAT-004",
+      "title": "Cada filtro reduce la lista y \"Todos\" la restaura",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 8535,
+      "maxMs": 10675,
+      "avgMs": 9528
+    },
+    {
+      "id": "TC-CAP-CAT-005",
+      "title": "Los enlaces \"Saber más\" abren en pestaña nueva",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 5861,
+      "maxMs": 8576,
+      "avgMs": 7491
+    },
+    {
+      "id": "TC-CAP-CAT-006",
+      "title": "El botón \"Hablemos\" apunta a WhatsApp",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 6387,
+      "maxMs": 8300,
+      "avgMs": 7437
+    },
+    {
+      "id": "TC-CAP-CAT-008",
+      "title": "Las imágenes del catálogo tienen texto alternativo",
+      "runs": 3,
+      "statuses": [
+        "expected-fail"
+      ],
+      "minMs": 6155,
+      "maxMs": 7890,
+      "avgMs": 6963
+    },
+    {
+      "id": "TC-CAP-CUR-001",
+      "title": "Las páginas de curso del catálogo cargan con título y H1",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 55963,
+      "maxMs": 59854,
+      "avgMs": 57865
+    },
+    {
+      "id": "TC-CAP-CUR-002",
+      "title": "El formulario de consulta muestra sus campos y obligatoriedad",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 9931,
+      "maxMs": 10418,
+      "avgMs": 10248
+    },
+    {
+      "id": "TC-CAP-CUR-003",
+      "title": "El formulario vacío es inválido sin enviarlo",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 8579,
+      "maxMs": 11164,
+      "avgMs": 9743
+    },
+    {
+      "id": "TC-CAP-CUR-004",
+      "title": "El formulario completo con datos sintéticos es válido en el cliente",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 11459,
+      "maxMs": 13464,
+      "avgMs": 12323
+    },
+    {
+      "id": "TC-CAP-CUR-005",
+      "title": "Un e-mail sin \"@\" es rechazado por la validación",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 11089,
+      "maxMs": 12159,
+      "avgMs": 11551
+    },
+    {
+      "id": "TC-CAP-CUR-006",
+      "title": "El celular rechaza letras",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 9945,
+      "maxMs": 11177,
+      "avgMs": 10407
+    },
+    {
+      "id": "TC-CAP-CUR-007",
+      "title": "En AiU el asunto es obligatorio y ofrece tres opciones",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 7368,
+      "maxMs": 7790,
+      "avgMs": 7630
+    },
+    {
+      "id": "TC-CAP-CUR-008",
+      "title": "El botón de pago apunta a la pasarela externa en pestaña nueva",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 14086,
+      "maxMs": 16784,
+      "avgMs": 15336
+    },
+    {
+      "id": "TC-CON-EMP-001",
+      "title": "El formulario empresa carga con su H1",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 6590,
+      "maxMs": 13938,
+      "avgMs": 9621
+    },
+    {
+      "id": "TC-CON-EMP-002",
+      "title": "El formulario muestra sus seis campos obligatorios",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 6198,
+      "maxMs": 8093,
+      "avgMs": 6930
+    },
+    {
+      "id": "TC-CON-EMP-003",
+      "title": "El formulario vacío es inválido sin enviarlo",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 6913,
+      "maxMs": 7706,
+      "avgMs": 7178
+    },
+    {
+      "id": "TC-CON-EMP-004",
+      "title": "Un email sin \"@\" es inválido",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 6329,
+      "maxMs": 8327,
+      "avgMs": 7480
+    },
+    {
+      "id": "TC-CON-EMP-005",
+      "title": "\"Número de personas\" no admite letras",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 6776,
+      "maxMs": 10487,
+      "avgMs": 8108
+    },
+    {
+      "id": "TC-CON-EMP-007",
+      "title": "Código Sence es obligatorio con tres opciones",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 7572,
+      "maxMs": 9631,
+      "avgMs": 8495
+    },
+    {
+      "id": "TC-CON-EMP-008",
+      "title": "El formulario completo con datos sintéticos es válido en el cliente",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 8705,
+      "maxMs": 9854,
+      "avgMs": 9178
+    },
+    {
+      "id": "TC-CON-FCO-001",
+      "title": "El ítem \"Contacto\" lleva a la página de contacto",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 7904,
+      "maxMs": 12438,
+      "avgMs": 10295
+    },
+    {
+      "id": "TC-CON-FCO-002",
+      "title": "El CTA de WhatsApp apunta a una conversación prellenada",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 5645,
+      "maxMs": 8599,
+      "avgMs": 7071
+    },
+    {
+      "id": "TC-CON-FCO-003",
+      "title": "Los correos por tipo de consulta están visibles",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 6702,
+      "maxMs": 10368,
+      "avgMs": 8674
+    },
+    {
+      "id": "TC-CON-FCO-004",
+      "title": "Las redes sociales de la página abren en pestaña nueva",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 7019,
+      "maxMs": 9254,
+      "avgMs": 7783
+    },
+    {
+      "id": "TC-EVT-EDI-001",
+      "title": "La página de ediciones anteriores carga con sus bloques",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 5651,
+      "maxMs": 10451,
+      "avgMs": 8221
+    },
+    {
+      "id": "TC-EVT-EDI-002",
+      "title": "Todas las páginas del submenú \"Ediciones anteriores\" responden 200",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 21693,
+      "maxMs": 27733,
+      "avgMs": 25233
+    },
+    {
+      "id": "TC-EVT-EDI-003",
+      "title": "Los enlaces internos de la página de ediciones no devuelven 404",
+      "runs": 3,
+      "statuses": [
+        "expected-fail"
+      ],
+      "minMs": 11104,
+      "maxMs": 12858,
+      "avgMs": 12038
+    },
+    {
+      "id": "TC-EVT-EDI-005",
+      "title": "La edición 2025 enlaza a sus sponsors y muestra el video",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 10839,
+      "maxMs": 14503,
+      "avgMs": 13158
+    },
+    {
+      "id": "TC-EVT-EDI-006",
+      "title": "Los enlaces externos de resumen de ediciones responden",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 6661,
+      "maxMs": 9729,
+      "avgMs": 8199
+    },
+    {
+      "id": "TC-EVT-EDI-009",
+      "title": "Las imágenes de las páginas de edición tienen texto alternativo",
+      "runs": 3,
+      "statuses": [
+        "expected-fail"
+      ],
+      "minMs": 9595,
+      "maxMs": 13813,
+      "avgMs": 11058
+    },
+    {
+      "id": "TC-EVT-TDY-001",
+      "title": "La página del evento carga con edición, fechas, sede y CTAs",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 8253,
+      "maxMs": 12757,
+      "avgMs": 9807
+    },
+    {
+      "id": "TC-EVT-TDY-002",
+      "title": "Los CTAs de entrada apuntan a ecopass en pestaña nueva",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 9522,
+      "maxMs": 12221,
+      "avgMs": 10477
+    },
+    {
+      "id": "TC-EVT-TDY-003",
+      "title": "\"Convertirse en Sponsor\" desplaza a la sección de sponsors",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 11747,
+      "maxMs": 11917,
+      "avgMs": 11805
+    },
+    {
+      "id": "TC-EVT-TDY-004",
+      "title": "La agenda presencial muestra bloques con horario y título",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 9606,
+      "maxMs": 11495,
+      "avgMs": 10643
+    },
+    {
+      "id": "TC-EVT-TDY-005",
+      "title": "\"Ver Agenda Completa e Inscribirse\" lleva a Agenda Online",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 11235,
+      "maxMs": 12668,
+      "avgMs": 11923
+    },
+    {
+      "id": "TC-EVT-TDY-006",
+      "title": "La Agenda Online lista sesiones con inscripción",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 6389,
+      "maxMs": 8253,
+      "avgMs": 7212
+    },
+    {
+      "id": "TC-EVT-TDY-007",
+      "title": "Los enlaces \"Inscribirse\" de la Agenda Online responden",
+      "runs": 3,
+      "statuses": [
+        "expected-fail"
+      ],
+      "minMs": 10733,
+      "maxMs": 12092,
+      "avgMs": 11232
+    },
+    {
+      "id": "TC-EVT-TDY-008",
+      "title": "Los sponsors se muestran por nivel y enlazan a la página de sponsors",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 12180,
+      "maxMs": 15623,
+      "avgMs": 14119
+    },
+    {
+      "id": "TC-EVT-TDY-009",
+      "title": "Los logos de sponsors, comunidades y hoteles enlazan a dominios operativos",
+      "runs": 3,
+      "statuses": [
+        "expected-fail"
+      ],
+      "minMs": 26706,
+      "maxMs": 32059,
+      "avgMs": 28594
+    },
+    {
+      "id": "TC-EVT-TDY-011",
+      "title": "El brochure de sponsors se solicita por correo con asunto",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 8138,
+      "maxMs": 8823,
+      "avgMs": 8538
+    },
+    {
+      "id": "TC-HOME-SMOKE-001",
+      "title": "La página de inicio carga con título, header y footer",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 5659,
+      "maxMs": 6637,
+      "avgMs": 6155
+    },
+    {
+      "id": "TC-HOME-SMOKE-002",
+      "title": "El menú principal muestra las secciones con su ruta",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 6169,
+      "maxMs": 7312,
+      "avgMs": 6691
+    },
+    {
+      "id": "TC-HOME-SMOKE-003",
+      "title": "El footer enlaza términos y condiciones y política de privacidad",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 6099,
+      "maxMs": 9159,
+      "avgMs": 7322
+    },
+    {
+      "id": "TC-HOME-NAV-001",
+      "title": "La página de inicio carga con header, menú y footer",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 6411,
+      "maxMs": 8624,
+      "avgMs": 7195
+    },
+    {
+      "id": "TC-HOME-NAV-002",
+      "title": "El menú principal muestra los seis ítems y cada uno navega a su ruta",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 28166,
+      "maxMs": 35265,
+      "avgMs": 30853
+    },
+    {
+      "id": "TC-HOME-NAV-003",
+      "title": "El submenú de Testing Day se despliega al pasar el puntero",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 7261,
+      "maxMs": 8477,
+      "avgMs": 7907
+    },
+    {
+      "id": "TC-HOME-NAV-006",
+      "title": "El banner de cookies acepta solo lo necesario y la elección persiste",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 8691,
+      "maxMs": 9756,
+      "avgMs": 9055
+    },
+    {
+      "id": "TC-HOME-NAV-007",
+      "title": "El enlace \"Cookies\" del footer reabre el banner",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 6528,
+      "maxMs": 7339,
+      "avgMs": 6878
+    },
+    {
+      "id": "TC-HOME-NAV-008",
+      "title": "El footer muestra contacto, redes y enlaces legales operativos",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 8083,
+      "maxMs": 10788,
+      "avgMs": 9358
+    },
+    {
+      "id": "TC-HOME-NAV-009",
+      "title": "Los enlaces de contacto rápido apuntan a destinos válidos",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 6033,
+      "maxMs": 6944,
+      "avgMs": 6480
+    },
+    {
+      "id": "TC-HOME-NAV-010",
+      "title": "Una ruta inexistente responde 404 con navegación",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 5325,
+      "maxMs": 6474,
+      "avgMs": 5825
+    },
+    {
+      "id": "TC-HOME-NAV-011",
+      "title": "Las variantes de dominio redirigen con 301 a la URL canónica",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 2754,
+      "maxMs": 2836,
+      "avgMs": 2799
+    },
+    {
+      "id": "TC-HOME-NAV-012",
+      "title": "El logo del header tiene texto alternativo",
+      "runs": 3,
+      "statuses": [
+        "expected-fail"
+      ],
+      "minMs": 7728,
+      "maxMs": 11211,
+      "avgMs": 9027
+    },
+    {
+      "id": "TC-HOME-NAV-005",
+      "title": "El menú móvil se abre, expande el submenú y se cierra",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 7207,
+      "maxMs": 8450,
+      "avgMs": 7647
+    },
+    {
+      "id": "TC-HOME-NAV-014",
+      "title": "La página de inicio no desborda horizontalmente en móvil",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 6107,
+      "maxMs": 8079,
+      "avgMs": 6825
+    },
+    {
+      "id": "TC-HOME-POR-001",
+      "title": "Los CTAs del hero llevan al catálogo y al Bootcamp",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 7951,
+      "maxMs": 9893,
+      "avgMs": 9042
+    },
+    {
+      "id": "TC-HOME-POR-002",
+      "title": "Los contadores muestran cifras mayores que cero tras hacer scroll",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 6263,
+      "maxMs": 7869,
+      "avgMs": 7060
+    },
+    {
+      "id": "TC-HOME-POR-003",
+      "title": "Los CTAs de \"Nuestros Servicios\" apuntan al destino correcto",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 9643,
+      "maxMs": 12453,
+      "avgMs": 11175
+    },
+    {
+      "id": "TC-HOME-POR-004",
+      "title": "Las capacitaciones destacadas enlazan a páginas de curso existentes",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 9811,
+      "maxMs": 14558,
+      "avgMs": 11941
+    },
+    {
+      "id": "TC-HOME-POR-005",
+      "title": "Las secciones de testimonios y partners están presentes",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 7317,
+      "maxMs": 12461,
+      "avgMs": 9237
+    },
+    {
+      "id": "TC-HOME-POR-006",
+      "title": "Los logos de partners tienen texto alternativo",
+      "runs": 3,
+      "statuses": [
+        "expected-fail"
+      ],
+      "minMs": 6262,
+      "maxMs": 11403,
+      "avgMs": 8524
+    },
+    {
+      "id": "TC-HOME-POR-007",
+      "title": "La portada declara metadatos SEO completos",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 6823,
+      "maxMs": 8628,
+      "avgMs": 7565
+    },
+    {
+      "id": "TC-HOME-POR-009",
+      "title": "Los CTAs del hero son visibles y operables en móvil",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 6920,
+      "maxMs": 8847,
+      "avgMs": 7982
+    },
+    {
+      "id": "TC-LEG-BLG-001",
+      "title": "El blog carga con al menos un artículo",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 9560,
+      "maxMs": 18930,
+      "avgMs": 13160
+    },
+    {
+      "id": "TC-LEG-BLG-002",
+      "title": "Cada artículo del listado muestra título enlazado, fecha y extracto",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 8705,
+      "maxMs": 10010,
+      "avgMs": 9243
+    },
+    {
+      "id": "TC-LEG-BLG-003",
+      "title": "Los artículos están en orden cronológico descendente",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 9478,
+      "maxMs": 11117,
+      "avgMs": 10069
+    },
+    {
+      "id": "TC-LEG-BLG-004",
+      "title": "La paginación avanza y retrocede",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 10556,
+      "maxMs": 15290,
+      "avgMs": 12503
+    },
+    {
+      "id": "TC-LEG-BLG-005",
+      "title": "Los artículos de la primera página responden 200",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 14903,
+      "maxMs": 19646,
+      "avgMs": 16624
+    },
+    {
+      "id": "TC-LEG-BLG-006",
+      "title": "El artículo muestra H1 igual al título del listado y su fecha",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 7334,
+      "maxMs": 18852,
+      "avgMs": 13410
+    },
+    {
+      "id": "TC-LEG-BLG-007",
+      "title": "El título de los artículos sigue el patrón del sitio",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 9076,
+      "maxMs": 10568,
+      "avgMs": 9804
+    },
+    {
+      "id": "TC-LEG-BLG-009",
+      "title": "Las imágenes del listado tienen texto alternativo",
+      "runs": 3,
+      "statuses": [
+        "expected-fail"
+      ],
+      "minMs": 5738,
+      "maxMs": 7594,
+      "avgMs": 6431
+    },
+    {
+      "id": "TC-LEG-GAL-001",
+      "title": "La galería carga con álbumes y miniaturas",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 8860,
+      "maxMs": 10387,
+      "avgMs": 9394
+    },
+    {
+      "id": "TC-LEG-GAL-002",
+      "title": "Una miniatura abre el visor y Escape lo cierra",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 9386,
+      "maxMs": 11126,
+      "avgMs": 9976
+    },
+    {
+      "id": "TC-LEG-GAL-003",
+      "title": "La flecha derecha avanza a la siguiente foto",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 7365,
+      "maxMs": 10256,
+      "avgMs": 8935
+    },
+    {
+      "id": "TC-LEG-GAL-004",
+      "title": "El álbum más reciente aparece primero",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 6615,
+      "maxMs": 8104,
+      "avgMs": 7446
+    },
+    {
+      "id": "TC-LEG-GAL-006",
+      "title": "Las fotos de la galería tienen texto alternativo",
+      "runs": 3,
+      "statuses": [
+        "expected-fail"
+      ],
+      "minMs": 8039,
+      "maxMs": 9803,
+      "avgMs": 8797
+    },
+    {
+      "id": "TC-LEG-LGL-001",
+      "title": "Los enlaces legales del footer abren páginas existentes en pestaña nueva",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 8819,
+      "maxMs": 11811,
+      "avgMs": 10086
+    },
+    {
+      "id": "TC-LEG-LGL-005",
+      "title": "La política de privacidad presenta sus secciones",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 4110,
+      "maxMs": 6552,
+      "avgMs": 5154
+    },
+    {
+      "id": "TC-LEG-LGL-008",
+      "title": "Las páginas legales declaran idioma y un único H1",
+      "runs": 3,
+      "statuses": [
+        "passed"
+      ],
+      "minMs": 5204,
+      "maxMs": 7120,
+      "avgMs": 5943
+    }
+  ]
+}
