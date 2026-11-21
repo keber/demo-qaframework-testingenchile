@@ -1,0 +1,776 @@
+% Informe de Ejecución de Pruebas - testingenchile.cl
+% Compilar con Tectonic (XeTeX): tectonic informe-ejecucion-de-pruebas.tex
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{fontspec}
+\setmainfont{IBMPlexSans}[Extension=.otf, UprightFont=*-Regular,
+  BoldFont=*-Bold, ItalicFont=*-Italic, BoldItalicFont=*-BoldItalic]
+\setmonofont{IBMPlexMono}[Extension=.otf, UprightFont=*-Regular,
+  BoldFont=*-Bold, Scale=MatchLowercase]
+\usepackage[spanish]{babel}
+\addto\captionsspanish{\renewcommand{\contentsname}{Contenido}}
+\usepackage[margin=2.2cm, headheight=14pt]{geometry}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\setlength{\cftsecnumwidth}{2em}
+\setlength{\cftsubsecindent}{2em}
+\setlength{\cftsubsecnumwidth}{2.6em}
+\renewcommand{\cftsecfont}{\bfseries\color{primary}}
+\renewcommand{\cftsecpagefont}{\bfseries}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,shapes.geometric,babel}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage[most]{tcolorbox}
+\usepackage{xurl}
+\usepackage{hyperref}
+
+% Neutral palette.
+\definecolor{primary}{RGB}{31,78,121}
+\definecolor{secondary}{RGB}{46,125,50}
+\definecolor{accent}{RGB}{230,126,34}
+\definecolor{muted}{RGB}{110,110,110}
+\definecolor{danger}{RGB}{183,28,28}
+\definecolor{skipc}{RGB}{150,160,170}
+\definecolor{rule}{RGB}{210,215,220}
+
+\hypersetup{colorlinks=true, linkcolor=primary, urlcolor=primary,
+  pdftitle={Informe de Ejecución de Pruebas - testingenchile.cl},
+  pdfauthor={@keber/qa-framework + Claude}}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\setlength{\emergencystretch}{3em}
+\renewcommand{\arraystretch}{1.18}
+\setlist{itemsep=2pt, topsep=3pt}
+
+\titleformat{\section}{\Large\bfseries\color{primary}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\large\bfseries\color{primary!85!black}}{\thesubsection}{0.6em}{}
+\titlespacing*{\section}{0pt}{14pt}{6pt}
+\titlespacing*{\subsection}{0pt}{10pt}{4pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{muted}Informe de Ejecución de Pruebas · testingenchile.cl}
+\fancyhead[R]{\small\color{muted}EXEC-E2E-20261121-001}
+\fancyfoot[L]{\small\color{muted}21-11-2026}
+\fancyfoot[R]{\small\color{muted}Página \thepage\ de \pageref*{LastPage}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\color{rule}\hrule height 0.4pt}
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \fancyhead[L]{\small\color{muted}Informe de Ejecución de Pruebas · testingenchile.cl}%
+  \fancyhead[R]{\small\color{muted}EXEC-E2E-20261121-001}%
+  \fancyfoot[L]{\small\color{muted}21-11-2026}%
+  \fancyfoot[R]{\small\color{muted}Página \thepage\ de \pageref*{LastPage}}}
+
+\pgfplotsset{every axis/.append style={font=\footnotesize}, /pgf/number format/assume math mode=true,
+  /pgf/number format/use comma, /pgf/number format/1000 sep={.}}
+
+% Status labels.
+\newcommand{\stdot}[1]{\tikz[baseline=-0.55ex]\fill[#1] (0,0) circle (2.3pt);\,}
+\newcommand{\stpass}{\stdot{secondary}Pasa}
+\newcommand{\stxf}{\stdot{accent}Fallo esperado}
+\newcommand{\stskip}{\stdot{skipc}Omitido}
+\newcommand{\sev}[1]{\textbf{#1}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+% KPI tile: value, label, color.
+\newtcolorbox{kpibox}[1]{enhanced, colback=#1!7, colframe=#1, boxrule=0pt,
+  leftrule=3pt, arc=2pt, left=7pt, right=4pt, top=11pt, bottom=8pt, halign=flush left, valign=top}
+\newcommand{\kpi}[3]{\begin{kpibox}{#3}%
+  {\fontsize{21}{24}\selectfont\bfseries\color{#3}#1}\par\vspace{1pt}%
+  {\footnotesize\color{muted}#2}\end{kpibox}}
+
+\newtcolorbox{infobox}[1][Nota]{colback=primary!5, colframe=primary,
+  fonttitle=\bfseries, title=#1, arc=2pt, boxrule=0.6pt}
+\newtcolorbox{verdictbox}[1]{colback=secondary!7, colframe=secondary,
+  fonttitle=\bfseries\large, title=#1, arc=2pt, boxrule=0.8pt}
+\newtcolorbox{warnbox}[1][Atención]{colback=accent!7, colframe=accent,
+  fonttitle=\bfseries, title=#1, arc=2pt, boxrule=0.6pt}
+
+\begin{document}
+
+% ---------------------------------------------------------------- Portada
+\begin{titlepage}
+\thispagestyle{empty}
+\begin{tikzpicture}[remember picture, overlay]
+  \fill[primary] (current page.north west) rectangle ([yshift=-7.2cm]current page.north east);
+  \fill[secondary] ([yshift=-7.2cm]current page.north west) rectangle ([yshift=-7.45cm]current page.north east);
+  \node[anchor=north west, text=white, align=left, text width=0.8\paperwidth]
+    at ([xshift=2.2cm, yshift=-2.3cm]current page.north west)
+    {{\small\bfseries INFORME QA · EJECUCIÓN AUTOMATIZADA}\\[10pt]
+     {\fontsize{30}{36}\selectfont\bfseries Informe de Ejecución\\de Pruebas}\\[10pt]
+     {\Large Sitio web testingenchile.cl}};
+\end{tikzpicture}
+
+\vspace*{7.4cm}
+
+{\large
+\begin{tabularx}{\textwidth}{@{}p{0.3\textwidth} X@{}}
+\textcolor{muted}{Fecha de ejecución} & 21-11-2026, 14:39 a 14:45 (America/Santiago) \\
+\textcolor{muted}{ID de ejecución} & \code{EXEC-E2E-20261121-001} \\
+\textcolor{muted}{Sitio bajo prueba} & \url{https://www.testingenchile.cl} \\
+\textcolor{muted}{Tipo} & Automatizada (Playwright 1.65.1, Chromium) \\
+\textcolor{muted}{Alcance} & Suite E2E completa: HOME, CAP, EVT, CON y LEG (119 tests) \\
+\textcolor{muted}{Ambiente} & Producción, pruebas de solo lectura \\
+\end{tabularx}}
+
+\vfill
+
+\begin{tcolorbox}[colback=secondary!7, colframe=secondary, boxrule=0pt, leftrule=3pt, arc=2pt]
+{\large\bfseries\color{secondary}Veredicto QA: APROBADO con observaciones}\par
+\small 0 fallos inesperados y 0 tests inestables; el sitio mantiene 5 defectos abiertos y 18 recomendaciones.
+\end{tcolorbox}
+
+\vspace{1.2cm}
+{\small\color{muted}Generado con \code{@keber/qa-framework} 1.14.0-rc.9 + Claude · Documento de demostración sobre un sitio público de terceros.}
+\end{titlepage}
+\setcounter{page}{2}
+
+% ---------------------------------------------------------------- Índice
+\tableofcontents
+\clearpage
+
+% ---------------------------------------------------------------- 1
+\section{Resumen ejecutivo}
+
+Se ejecutó la suite E2E completa del sitio público \url{https://www.testingenchile.cl} con Playwright: 116 casos del plan de pruebas más 3 smoke previos. La ejecución terminó con código de salida 0. Los 87 tests ejecutables obtuvieron su resultado esperado y los 32 omitidos tienen un motivo \code{PENDING-*} vigente.
+
+\begin{tcbraster}[raster columns=4, raster equal height, raster column skip=6pt, raster row skip=6pt, raster before skip=8pt, raster after skip=6pt]
+\kpi{119}{Tests totales}{primary}
+\kpi{78}{Pasan (\code{test()})}{secondary}
+\kpi{9}{Fallo esperado (\code{test.fail()})}{accent}
+\kpi{32}{Omitidos (\code{test.skip()})}{skipc}
+\kpi{0}{Fallan (inesperados)}{danger}
+\kpi{0}{Inestables (flaky)}{danger}
+\kpi{5:45}{Duración (min:s, reloj)}{primary}
+\kpi{100\%}{Éxito en ejecutables (87/87)}{secondary}
+\end{tcbraster}
+
+\begin{itemize}
+  \item \textbf{Cumplimiento de la especificación:} 89,7\% (78 de 87 ejecutables cumplen; 9 documentan defectos abiertos del sitio).
+  \item \textbf{Prioridad P0:} los 15 tests P0 pasan (13 del plan con etiqueta \code{@smoke} y 2 smoke previos).
+  \item \textbf{Estabilidad:} 0 tests inestables en 435 ejecuciones de tests ejecutables, sumando el estrés con \code{--repeat-each=3}, la corrida con \code{--retries=0} y la ejecución final. Ninguno necesitó reintento.
+  \item \textbf{Defectos del sitio:} 5 defectos abiertos (4 de severidad media y 1 baja) y 18 recomendaciones registradas.
+\end{itemize}
+
+\begin{verdictbox}{Veredicto QA: APROBADO con observaciones}
+El sprint 1 de automatización cumple los criterios de salida: 0 fallos inesperados, 0 inestables y todos los casos en un estado válido (pasa, fallo esperado con defecto o omitido con motivo). Los 9 fallos esperados son defectos reales del sitio, no fallos de la suite. Quedan fuera de este veredicto la pista manual, los 4 casos \code{PENDING-BROWSER} y la aprobación humana del plan maestro con sus 12 preguntas abiertas.
+\end{verdictbox}
+
+% ---------------------------------------------------------------- 2
+\section{Ambiente de ejecución}
+
+\begin{center}\small
+\begin{tabularx}{\textwidth}{@{}>{\bfseries}p{0.27\textwidth} X@{}}
+\toprule
+Parámetro & Valor \\
+\midrule
+URL base (\code{QA\_BASE\_URL}) & \url{https://www.testingenchile.cl} (único ambiente: producción) \\
+Navegador & Chromium 159.0.8154.6, headless, perfil Desktop Chrome \\
+Viewport y locale & 1366x900, \code{es-CL}, zona horaria America/Santiago \\
+Playwright & 1.65.1 \\
+Node.js & v22.16.0 \\
+Framework QA & \code{@keber/qa-framework} 1.14.0-rc.9 + harness agentic-playwright \\
+Sistema operativo & Windows 11 Pro 10.0.26200 \\
+Workers & 2 (tope del proyecto, regla S7) \\
+Reintentos & 1 (configuración por defecto) \\
+Inicio y fin & 2026-11-21 14:39:10 a 14:45:00 (-03:00) / 17:39 a 17:45 UTC \\
+Duración (reloj) & 345,2 s (5 min 45 s); tiempo acumulado de tests 673,9 s \\
+Comando & \code{npx playwright test} (desde \code{qa/07-automation/e2e}) \\
+Autenticación & No aplica: sitio público sin login; el informe no contiene secretos \\
+Restricciones & Solo lectura, rastreadores bloqueados, sin envío de formularios \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+% ---------------------------------------------------------------- 3
+\section{Resultados globales}
+
+\subsection{Distribución por estado}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[xbar, bar shift=0pt, width=0.82\textwidth, height=5.2cm, bar width=13pt,
+  xmin=0, xmax=95, axis x line*=bottom, axis y line*=left,
+  symbolic y coords={Inestables,Fallan,Omitidos,Fallo esperado,Pasan},
+  ytick={Inestables,Fallan,Omitidos,Fallo esperado,Pasan}, y tick label style={font=\small},
+  xlabel={Número de tests}, enlarge y limits=0.15,
+  nodes near coords, nodes near coords style={font=\small\bfseries, anchor=west},
+  xmajorgrids, grid style={rule}]
+  \addplot[fill=secondary, draw=none] coordinates {(78,Pasan)};
+  \addplot[fill=accent, draw=none] coordinates {(9,Fallo esperado)};
+  \addplot[fill=skipc, draw=none] coordinates {(32,Omitidos)};
+  \addplot[fill=danger, draw=none] coordinates {(0,Fallan)};
+  \addplot[fill=danger, draw=none] coordinates {(0,Inestables)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection{Resultados por módulo}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[xbar stacked, width=0.82\textwidth, height=5.6cm, bar width=13pt,
+  xmin=0, xmax=30, axis x line*=bottom, axis y line*=left,
+  symbolic y coords={LEG,CON,EVT,CAP,HOME}, ytick=data,
+  xlabel={Número de tests}, enlarge y limits=0.15,
+  point meta=explicit symbolic,
+  nodes near coords, nodes near coords style={font=\scriptsize\bfseries, text=white},
+  xmajorgrids, grid style={rule},
+  legend style={at={(0.5,-0.3)}, anchor=north, legend columns=-1, draw=none,
+    font=\footnotesize, /tikz/every even column/.append style={column sep=8pt}}]
+  \addplot[fill=secondary, draw=none] coordinates
+    {(21,HOME) [21] (20,CAP) [20] (12,EVT) [12] (11,CON) [11] (14,LEG) [14]};
+  \addplot[fill=accent, draw=none] coordinates
+    {(2,HOME) [2] (1,CAP) [1] (4,EVT) [4] (0,CON) [] (2,LEG) [2]};
+  \addplot[fill=skipc, draw=none] coordinates
+    {(3,HOME) [3] (6,CAP) [6] (5,EVT) [5] (9,CON) [9] (9,LEG) [9]};
+  \legend{Pasan, Fallo esperado, Omitidos}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\begin{center}\small
+\begin{tabular}{@{}l r r r r r r@{}}
+\toprule
+Módulo & Total & Pasan & Fallo esperado & Fallan & Omitidos & Duración acumulada \\
+\midrule
+HOME · Inicio y navegación & 26 & 21 & 2 & 0 & 3 & 146,9 s \\
+CAP · Capacitaciones & 27 & 20 & 1 & 0 & 6 & 211,9 s \\
+EVT · Eventos Testing Day & 21 & 12 & 4 & 0 & 5 & 149,7 s \\
+CON · Contacto & 20 & 11 & 0 & 0 & 9 & 58,2 s \\
+LEG · Legales, blog y galería & 25 & 14 & 2 & 0 & 9 & 107,2 s \\
+\midrule
+\textbf{Total} & \textbf{119} & \textbf{78} & \textbf{9} & \textbf{0} & \textbf{32} & \textbf{673,9 s} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Resultados por prioridad}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[ybar stacked, width=0.7\textwidth, height=6cm, bar width=24pt,
+  ymin=0, ymax=50, axis x line*=bottom, axis y line*=left,
+  symbolic x coords={P0,P1,P2,P3}, xtick=data, enlarge x limits=0.18,
+  ylabel={Número de tests}, point meta=explicit symbolic,
+  nodes near coords, nodes near coords style={font=\scriptsize\bfseries, text=white},
+  ymajorgrids, grid style={rule},
+  legend cell align=left, legend style={at={(1.03,0.5)}, anchor=west, draw=none, font=\footnotesize}]
+  \addplot[fill=secondary, draw=none] coordinates
+    {(P0,15) [15] (P1,39) [39] (P2,22) [22] (P3,2) []};
+  \addplot[fill=accent, draw=none] coordinates
+    {(P0,0) [] (P1,1) [] (P2,4) [4] (P3,4) [4]};
+  \addplot[fill=skipc, draw=none] coordinates
+    {(P0,0) [] (P1,6) [6] (P2,9) [9] (P3,17) [17]};
+  \legend{Pasan, Fallo esperado, Omitidos}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\begin{center}\small
+\begin{tabular}{@{}l r r r r r r@{}}
+\toprule
+Prioridad & Total & Pasan & Fallo esperado & Fallan & Omitidos & Duración acumulada \\
+\midrule
+P0 & 15 & 15 & 0 & 0 & 0 & 147,2 s \\
+P1 & 46 & 39 & 1 & 0 & 6 & 301,5 s \\
+P2 & 35 & 22 & 4 & 0 & 9 & 190,3 s \\
+P3 & 23 & 2 & 4 & 0 & 17 & 34,8 s \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+La concentración de omitidos en P3 (17 de 23) refleja criterios SEO y editoriales que aún no están confirmados como reglas de negocio.
+
+% ---------------------------------------------------------------- 4
+\section{Resultados por módulo y submódulo}
+
+\begin{center}\small
+\begin{tabularx}{\textwidth}{@{}l r r r r r Y@{}}
+\toprule
+Submódulo & Total & Pasan & F.\,esp. & Fallan & Omit. & Defecto / nota \\
+\midrule
+HOME › navegación (NAV) & 14 & 11 & 1 & 0 & 2 & DEF-TCH-004 \\
+HOME › portada (POR) & 9 & 7 & 1 & 0 & 1 & DEF-TCH-005 \\
+HOME › smoke previo (SMOKE) & 3 & 3 & 0 & 0 & 0 & Fuera del plan (decisión pendiente) \\
+\addlinespace
+CAP › catálogo (CAT) & 9 & 6 & 1 & 0 & 2 & DEF-TCH-005 \\
+CAP › detalle de curso (CUR) & 10 & 8 & 0 & 0 & 2 & \\
+CAP › bootcamp (BTC) & 8 & 6 & 0 & 0 & 2 & \\
+\addlinespace
+EVT › Testing Day (TDY) & 12 & 8 & 2 & 0 & 2 & \mbox{DEF-TCH-002,} \mbox{DEF-TCH-003} \\
+EVT › ediciones (EDI) & 9 & 4 & 2 & 0 & 3 & \mbox{DEF-TCH-001,} \mbox{DEF-TCH-005} \\
+\addlinespace
+CON › formulario de contacto (FCO) & 8 & 4 & 0 & 0 & 4 & \\
+CON › contacto empresa (EMP) & 12 & 7 & 0 & 0 & 5 & \\
+\addlinespace
+LEG › legales (LGL) & 8 & 3 & 0 & 0 & 5 & \\
+LEG › blog (BLG) & 9 & 7 & 1 & 0 & 1 & DEF-TCH-005 \\
+LEG › galería (GAL) & 8 & 4 & 1 & 0 & 3 & DEF-TCH-005 \\
+\midrule
+\textbf{Total} & \textbf{119} & \textbf{78} & \textbf{9} & \textbf{0} & \textbf{32} & \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+{\footnotesize\color{muted}F.\,esp.: fallo esperado (\code{test.fail()} con defecto abierto). Omit.: omitido (\code{test.skip()} con motivo \code{PENDING-*}).}
+
+% ---------------------------------------------------------------- 5
+\section{Fallos esperados con defecto asociado}
+
+Los 9 tests marcados con \code{test.fail()} se verificaron con \code{DEFECTS\_DIAG=1} en la etapa 5b: todos fallan en la aserción de la especificación y ninguno por infraestructura, selector o tiempo.
+
+\begin{center}\small
+\begin{tabularx}{\textwidth}{@{}l c l r Y@{}}
+\toprule
+TC-ID & Prio. & Defecto & Duración & Qué observa la prueba \\
+\midrule
+TC-EVT-EDI-003 & P1 & DEF-TCH-001 & 8,9 s & \code{/testing-day-en-latam-2018/} responde 404 \\
+TC-EVT-TDY-007 & P2 & DEF-TCH-002 & 9,2 s & 3 enlaces ``Inscribirse'' (StreamYard) responden 404 \\
+TC-EVT-TDY-009 & P2 & DEF-TCH-003 & 23,3 s & Dominio de sponsor inexistente; hotel con certificado TLS vencido \\
+TC-HOME-NAV-012 & P2 & DEF-TCH-004 & 6,7 s & Logo del header con \code{alt} vacío \\
+TC-HOME-POR-006 & P2 & DEF-TCH-005 & 5,5 s & 4 logos de partners sin \code{alt} \\
+TC-CAP-CAT-008 & P3 & DEF-TCH-005 & 5,6 s & 4 imágenes del catálogo sin \code{alt} \\
+TC-EVT-EDI-009 & P3 & DEF-TCH-005 & 7,6 s & Imágenes sin \code{alt} en \code{/testing-day-chile-2025/} \\
+TC-LEG-BLG-009 & P3 & DEF-TCH-005 & 4,9 s & Imágenes del listado del blog sin \code{alt} \\
+TC-LEG-GAL-006 & P3 & DEF-TCH-005 & 5,3 s & 558 fotos de la galería sin \code{alt} \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+No hubo fallos inesperados.
+
+% ---------------------------------------------------------------- 6
+\section{Pruebas omitidas y motivo}
+
+Se omitieron 32 tests, cada uno con un motivo \code{PENDING-*} y su referencia (recomendación, pregunta abierta o regla). Se agrupan en tres motivos:
+
+\begin{center}\small
+\begin{tabularx}{\textwidth}{@{}l r X@{}}
+\toprule
+Motivo & Tests & Significado \\
+\midrule
+\code{PENDING-SPEC} & 25 & Regla pendiente de confirmación o criterio que no es regla de negocio \\
+\code{PENDING-BROWSER} & 4 & Vista no observada en navegador real o en móvil \\
+\code{PENDING-CODE} & 3 & 2 casos \code{@destructive} que enviarían datos a producción y 1 de la pista manual \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+{\footnotesize
+\setlength{\tabcolsep}{5pt}
+\begin{longtable}{@{}p{0.2\textwidth} c >{\raggedright\arraybackslash}p{0.66\textwidth}@{}}
+\toprule
+TC-ID & Prio. & Motivo detallado \\
+\midrule
+\endfirsthead
+\toprule
+TC-ID & Prio. & Motivo detallado \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\multicolumn{3}{@{}l}{\textbf{\color{primary}PENDING-CODE (3)}} \\
+TC-CAP-CUR-010 & P3 & \code{@destructive}: envío real prohibido en producción (S7, W9) y protegido por reCAPTCHA \\
+TC-CON-EMP-012 & P3 & \code{@destructive}: envío real prohibido en producción (S7, W9) y protegido por reCAPTCHA \\
+TC-CAP-BTC-008 & P3 & Pista manual (REC-TCH-017): dispara una conversión real de Google Ads \\
+\addlinespace
+\multicolumn{3}{@{}l}{\textbf{\color{primary}PENDING-BROWSER (4)}} \\
+TC-HOME-NAV-004 & P2 & El tercer nivel del menú no se despliega con hover en Chromium headless (pregunta abierta 10) \\
+TC-CAP-CAT-009 & P2 & Vista móvil del catálogo no observada \\
+TC-CON-FCO-008 & P2 & Vista móvil de contacto no observada \\
+TC-LEG-GAL-008 & P2 & Vista móvil de la galería no observada \\
+\addlinespace
+\multicolumn{3}{@{}l}{\textbf{\color{primary}PENDING-SPEC (25)}} \\
+TC-CAP-BTC-005 & P1 & REC-TCH-004, RN-CAP-016 pendiente de confirmación (pregunta abierta 2) \\
+TC-EVT-TDY-010 & P1 & REC-TCH-003, RN-EVT-010 pendiente de confirmación (pregunta abierta 1) \\
+TC-CON-FCO-005 & P1 & REC-TCH-008, RN-CON-005 pendiente de confirmación (pregunta abierta 3) \\
+TC-LEG-LGL-002 & P1 & REC-TCH-001, RN-LEG-002 pendiente de confirmación (pregunta abierta 5) \\
+TC-LEG-LGL-003 & P1 & REC-TCH-002, RN-LEG-003 y RN-LEG-004 pendientes de confirmación \\
+TC-LEG-LGL-004 & P1 & Pista manual (REC-TCH-002): revisión de contenido con criterio legal \\
+TC-CAP-CUR-009 & P2 & REC-TCH-012, RN-CAP-015 pendiente de confirmación \\
+TC-EVT-EDI-004 & P2 & REC-TCH-006, RN-EVT-016 pendiente de confirmación \\
+TC-CON-EMP-006 & P2 & REC-TCH-009, RN-CON-011 pendiente de confirmación (pregunta abierta 4) \\
+TC-CON-EMP-009 & P2 & REC-TCH-012, RN-CON-013 pendiente de confirmación (pregunta abierta 6) \\
+TC-LEG-LGL-006 & P2 & REC-TCH-002, RN-LEG-005 pendiente de confirmación \\
+TC-HOME-NAV-013 & P3 & REC-TCH-013, RN-HOME-013 pendiente de confirmación \\
+TC-HOME-POR-008 & P3 & REC-TCH-005, criterio SEO no confirmado como regla \\
+TC-CAP-CAT-007 & P3 & REC-TCH-005 y REC-TCH-006, criterio SEO no confirmado \\
+TC-EVT-TDY-012 & P3 & REC-TCH-005, 006, 007 y 016, criterio editorial y SEO no confirmado \\
+TC-EVT-EDI-007 & P3 & REC-TCH-018, RN-EVT-018 pendiente de confirmación \\
+TC-EVT-EDI-008 & P3 & REC-TCH-005, criterio SEO no confirmado \\
+TC-CON-FCO-006 & P3 & REC-TCH-005, criterio SEO no confirmado \\
+TC-CON-FCO-007 & P3 & REC-TCH-008, ninguna regla exige el enlace \code{mailto} \\
+TC-CON-EMP-010 & P3 & REC-TCH-010, criterio editorial no confirmado \\
+TC-CON-EMP-011 & P3 & REC-TCH-011, buena práctica, no regla de negocio \\
+TC-LEG-LGL-007 & P3 & REC-TCH-007, criterio SEO no confirmado \\
+TC-LEG-BLG-008 & P3 & REC-TCH-005 y REC-TCH-007, criterio SEO no confirmado \\
+TC-LEG-GAL-005 & P3 & REC-TCH-006, criterio editorial no confirmado \\
+TC-LEG-GAL-007 & P3 & REC-TCH-005, criterio SEO no confirmado \\
+\end{longtable}}
+
+% ---------------------------------------------------------------- 7
+\section{Estabilidad y healing}
+
+\subsection{Ejecuciones de estrés}
+
+Todas las ejecuciones usaron \code{workers=2} y la configuración real del proyecto. Las cifras provienen del reporter JSON de Playwright (resúmenes en \nolinkurl{qa/05-test-execution/automated/evidence/2026-11-21/}).
+
+\begin{center}\small
+\setlength{\tabcolsep}{4.5pt}
+\begin{tabularx}{\textwidth}{@{}X r r r r r r r@{}}
+\toprule
+Ejecución & Ejec. & Pasan & F.\,esp. & Fallan & Inest. & Omit. & Duración \\
+\midrule
+\code{--repeat-each=3} (retries=1) & 357 & 234 & 27 & 0 & 0 & 96 & 23,8 min \\
+\code{--retries=0} & 119 & 78 & 9 & 0 & 0 & 32 & 6,0 min \\
+Final (este informe, config por defecto) & 119 & 78 & 9 & 0 & 0 & 32 & 5,8 min \\
+\code{DEFECTS\_DIAG=1} (solo los 9 \code{test.fail()}) & 9 & 0 & 0 & 9\textsuperscript{*} & 0 & 0 & 1,1 min \\
+\bottomrule
+\end{tabularx}
+\end{center}
+{\footnotesize\color{muted}\textsuperscript{*} Fallo esperado en modo diagnóstico: el marcador de defecto se desactiva para confirmar que cada prueba falla en la aserción de la especificación.}
+
+\begin{infobox}[Tasa de inestabilidad: 0\%]
+0 de 435 ejecuciones de tests ejecutables fueron inestables (261 del estrés, 87 sin reintentos y 87 de la ejecución final). Ningún test necesitó reintento (\code{attempts = 1} en todos) y los 87 ejecutables quedaron en el mismo estado en las 4 repeticiones.
+\end{infobox}
+
+\subsection{Acciones de healing (etapa 5b)}
+
+No hubo fallos reales que sanar. El único hallazgo fue un riesgo latente de tiempo (categoría D, tiempo frágil): dos pruebas consumían más del 75\% de su presupuesto de 30 s.
+
+\begin{center}\small
+\begin{tabularx}{\textwidth}{@{}l >{\raggedright\arraybackslash}p{0.17\textwidth} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{0.2\textwidth}@{}}
+\toprule
+TC & Línea base & Corrección y causa raíz & Resultado final \\
+\midrule
+TC-EVT-EDI-002 & Pasa, máx. 27,7 s de 30 s (92\%) & \code{test.slow()} (presupuesto x3); consulta en secuencia cada página de ``Ediciones anteriores''. Aserción sin cambios & Pasa, 19,1 s de 90 s; confianza alta (95/100) \\
+\addlinespace
+TC-CAP-CAT-002 & Pasa, máx. 23,1 s de 30 s (77\%) & \code{test.slow()}; consulta en secuencia cada destino ``Saber más'' del catálogo. Aserción sin cambios & Pasa, 17,8 s de 90 s; confianza alta (95/100) \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+Adicionalmente, DEF-TCH-003 se actualizó con el nuevo síntoma del sitio del hotel (de sin respuesta a certificado TLS vencido). No se crearon defectos ni recomendaciones nuevas.
+
+\subsection{Riesgo de tiempo: pruebas más lentas}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[xbar, width=0.8\textwidth, height=8.2cm, bar width=6pt,
+  xmin=0, xmax=68, axis x line*=bottom, axis y line*=left,
+  symbolic y coords={TC-LEG-BLG-006,TC-LEG-BLG-001,TC-LEG-BLG-005,TC-CAP-CAT-002,TC-EVT-EDI-002,TC-EVT-TDY-009,TC-HOME-NAV-002,TC-CAP-CUR-001},
+  ytick=data, y tick label style={font=\scriptsize},
+  xlabel={Duración (s). Línea roja: límite por defecto de 30 s}, enlarge y limits=0.07,
+  extra x ticks={30}, extra x tick labels={}, extra x tick style={grid=major, major grid style={danger, dashed, thick}},
+  nodes near coords, nodes near coords style={font=\tiny, anchor=west},
+  nodes near coords={\pgfmathprintnumber[fixed, precision=1]{\pgfplotspointmeta}},
+  xmajorgrids, grid style={rule},
+  legend style={at={(0.5,-0.16)}, anchor=north, legend columns=-1, draw=none,
+    font=\footnotesize, /tikz/every even column/.append style={column sep=8pt}}]
+  \addplot[fill=primary, draw=none] coordinates {
+    (10.8,TC-LEG-BLG-006) (6.2,TC-LEG-BLG-001) (12.6,TC-LEG-BLG-005)
+    (17.8,TC-CAP-CAT-002) (19.1,TC-EVT-EDI-002) (23.3,TC-EVT-TDY-009)
+    (21.6,TC-HOME-NAV-002) (46.9,TC-CAP-CUR-001)};
+  \addplot[fill=accent!80, draw=none] coordinates {
+    (18.9,TC-LEG-BLG-006) (18.9,TC-LEG-BLG-001) (19.6,TC-LEG-BLG-005)
+    (23.1,TC-CAP-CAT-002) (27.7,TC-EVT-EDI-002) (32.1,TC-EVT-TDY-009)
+    (35.3,TC-HOME-NAV-002) (59.9,TC-CAP-CUR-001)};
+  \legend{Ejecución final, Máximo en estrés (\code{--repeat-each=3})}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\begin{center}\small
+\begin{tabular}{@{}l r r r@{}}
+\toprule
+Test & Máx. estrés & Presupuesto & Uso \\
+\midrule
+TC-CAP-CUR-001 (15 páginas en una prueba) & 59,9 s & 240 s & 25\% \\
+TC-HOME-NAV-002 & 35,3 s & 90 s & 39\% \\
+TC-EVT-TDY-009 (dominios externos) & 32,1 s & 90 s & 36\% \\
+TC-EVT-EDI-002 (endurecido) & 27,7 s & 30 s $\to$ 90 s & 92\% $\to$ 31\% \\
+TC-CAP-CAT-002 (endurecido) & 23,1 s & 30 s $\to$ 90 s & 77\% $\to$ 26\% \\
+TC-LEG-BLG-005 & 19,6 s & 30 s & 65\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+La duración de TC-CAP-CAT-002, TC-EVT-EDI-002 y TC-CAP-CUR-001 crece con la cantidad de enlaces que recorren; conviene volver a medirlas cuando cambie la cantidad de cursos o ediciones.
+
+% ---------------------------------------------------------------- 8
+\clearpage
+\section{Defectos abiertos y recomendaciones}
+
+\subsection{Defectos abiertos}
+
+\begin{center}\small
+\begin{tabularx}{\textwidth}{@{}l l >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{0.3\textwidth}@{}}
+\toprule
+DEF-ID & Sev. & Resumen y regla violada & Evidencia \\
+\midrule
+DEF-TCH-001 & \sev{Media} & Enlace interno ``Saber más de esta edición'' (2018) responde 404. RN-EVT-015 & \nolinkurl{/testing-day-en-latam-2018/} con HTTP 404 (curl 12:41 y \code{DEFECTS\_DIAG}). TC-EVT-EDI-003 \\
+\addlinespace
+DEF-TCH-002 & \sev{Media} & 3 de 4 enlaces únicos ``Inscribirse'' de la Agenda Online responden 404. RN-EVT-009, RN-EVT-008 & Mismos 3 enlaces (StreamYard) con 404; el cuarto con 200. TC-EVT-TDY-007 \\
+\addlinespace
+DEF-TCH-003 & \sev{Baja} & Logo de sponsor enlaza a un dominio inexistente y sitio de hotel no operativo. RN-EVT-009 & \code{getaddrinfo ENOTFOUND} y \code{certificate has expired} (14:36, misma red). TC-EVT-TDY-009 \\
+\addlinespace
+DEF-TCH-004 & \sev{Media} & El logo del header no tiene texto alternativo en todo el sitio. RN-HOME-012 (WCAG 2.1, 1.1.1, nivel A) & \code{alt} vacío (\code{alt=\textquotedbl\textquotedbl}) en las 17 páginas inspeccionadas. TC-HOME-NAV-012 \\
+\addlinespace
+DEF-TCH-005 & \sev{Media} & Imágenes informativas sin texto alternativo en páginas de contenido. RN-HOME-012, RN-LEG-017 (WCAG 2.1, 1.1.1) & Conteos por página; 558 fotos de la galería sin \code{alt}. 5 TCs: HOME-POR-006, CAP-CAT-008, EVT-EDI-009, LEG-BLG-009, LEG-GAL-006 \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\subsection{Recomendaciones (REC-TCH)}
+
+Las 18 recomendaciones son hallazgos que no violan una regla confirmada: nunca justifican un \code{test.fail()}. Al confirmarse la regla correspondiente, varias desbloquean casos hoy omitidos como \code{PENDING-SPEC}.
+
+\begin{tcbraster}[raster columns=4, raster equal height, raster column skip=6pt, raster before skip=8pt, raster after skip=8pt]
+\kpi{18}{Recomendaciones}{primary}
+\kpi{2}{Severidad sugerida alta}{danger}
+\kpi{5}{Severidad sugerida media}{accent}
+\kpi{11}{Severidad sugerida baja}{skipc}
+\end{tcbraster}
+
+{\footnotesize
+\begin{longtable}{@{}l l >{\raggedright\arraybackslash}p{0.7\textwidth}@{}}
+\toprule
+REC-ID & Sev. & Tema \\
+\midrule
+\endfirsthead
+\toprule
+REC-ID & Sev. & Tema \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+REC-TCH-001 & Alta & Términos y Condiciones contiene solo el texto de ayuda de la plantilla Webnode \\
+REC-TCH-002 & Alta & Política de privacidad de plantilla sin completar y banner de cookies sin enlace \\
+REC-TCH-003 & Media & Evento 2026 finalizado mantiene CTAs de compra e inscripción \\
+REC-TCH-004 & Media & Fecha de próximo inicio del Bootcamp vencida con CTAs activos \\
+REC-TCH-008 & Media & La página ``Contacto'' no tiene formulario y los correos no son enlaces \\
+REC-TCH-012 & Media & Formularios sin enlace a la política de privacidad ni consentimiento \\
+REC-TCH-017 & Media & El autodiagnóstico del Bootcamp registra una conversión ``purchase'' sin compra \\
+REC-TCH-005 & Baja & Jerarquía de H1 inválida: múltiples H1, H1 vacíos o ausentes \\
+REC-TCH-006 & Baja & Títulos de página con errores o poco descriptivos \\
+REC-TCH-007 & Baja & Meta description vacía o no representativa \\
+REC-TCH-009 & Baja & ``Número de personas'' acepta 0 y valores negativos \\
+REC-TCH-010 & Baja & Errores de ortografía en etiquetas del formulario empresa \\
+REC-TCH-011 & Baja & Campos obligatorios sin indicador visual \\
+REC-TCH-013 & Baja & Perfiles sociales inconsistentes entre páginas \\
+REC-TCH-014 & Baja & Número de WhatsApp distinto en el botón ``Hablemos'' del catálogo \\
+REC-TCH-015 & Baja & Errores tipográficos en la página Sponsors 2026 \\
+REC-TCH-016 & Baja & El título anuncia ``GRATUITO'' aunque la entrada presencial es pagada \\
+REC-TCH-018 & Baja & ``Ver detalles de la edición más reciente'' apunta a la edición 2022 \\
+\end{longtable}}
+
+% ---------------------------------------------------------------- 9
+\section{Criterios de salida (regla 8 del framework)}
+
+\begin{center}\small
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}X c >{\raggedright\arraybackslash}p{0.36\textwidth}@{}}
+\toprule
+Criterio & Estado & Evidencia \\
+\midrule
+(a) \code{test()} que pasa: el sitio cumple la especificación & \textcolor{secondary}{\bfseries Cumple} & 78 tests en la ejecución final \\
+(b) \code{test.fail()} con archivo \code{DEF-TCH-NNN} que documenta la regla violada & \textcolor{secondary}{\bfseries Cumple} & 9 tests, 5 archivos DEF; los 9 verificados con \code{DEFECTS\_DIAG=1} \\
+(c) \code{test.skip()} con motivo PENDING y referencia & \textcolor{secondary}{\bfseries Cumple}\textsuperscript{†} & 32 tests con \code{PENDING-CODE}, \code{PENDING-SPEC} o \code{PENDING-BROWSER} \\
+Ningún test falla sin \code{test.fail()} & \textcolor{secondary}{\bfseries Cumple} & 0 fallos inesperados (final y estrés) \\
+Ningún \code{test.fail()} sin defecto & \textcolor{secondary}{\bfseries Cumple} & \code{expectOpenDefect} exige el ID; los 5 archivos existen \\
+Ningún \code{test.skip()} sin motivo & \textcolor{secondary}{\bfseries Cumple} & \code{skipPending(kind, reason)} exige ambos \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+{\footnotesize\raggedright\color{muted}\textsuperscript{†} La regla 8 (c) del framework nombra solo \code{PENDING-CODE}; el proyecto acepta además \code{PENDING-SPEC} y \code{PENDING-BROWSER} (AGENTS.md, sección 3). Los 32 omitidos tienen motivo y referencia, por lo que el criterio se considera cumplido con esa extensión documentada.\par}
+
+% ---------------------------------------------------------------- 10
+\section{Veredicto y próximos pasos}
+
+\begin{verdictbox}{APROBADO con observaciones}
+La suite cumple todos los criterios de salida. El sitio, en cambio, mantiene 5 defectos abiertos (4 de severidad media y 1 baja) y 18 recomendaciones que requieren acción del responsable del sitio.
+\end{verdictbox}
+
+\begin{enumerate}
+  \item \textbf{Corregir DEF-TCH-005} (media): completar el texto alternativo de las imágenes cierra 5 fallos esperados de una vez.
+  \item \textbf{Aprobar el plan maestro}: confirmar las reglas pendientes reactivaría hasta 25 casos \code{PENDING-SPEC}, como \code{test()} o como \code{test.fail()} con su defecto.
+  \item \textbf{Repetir el estrés desde otra red y otro día} antes de declarar la suite libre de inestabilidad; vigilar TC-EVT-TDY-009 (dominios externos) y las pruebas de enlaces secuenciales.
+  \item \textbf{Reverificar DEF-TCH-003} desde otra red antes de cerrarlo o mantenerlo.
+  \item Si TC-EVT-TDY-009 supera 60 s, revisar el límite de 20 s por dominio en lugar de ampliar el presupuesto de la prueba.
+  \item Completar la pista manual y observar las 4 vistas \code{PENDING-BROWSER} en navegador real y móvil.
+\end{enumerate}
+
+% ---------------------------------------------------------------- 11
+\section{Limitaciones}
+
+\begin{warnbox}[Alcance de los resultados]
+Los resultados describen el estado del sitio en un momento y desde un punto de observación. No deben leerse como certeza sobre su comportamiento general.
+\end{warnbox}
+
+\begin{itemize}
+  \item \textbf{Una sola red:} las cuatro ejecuciones salieron de la misma red en una ventana de unos 40 minutos; la ausencia de inestabilidad no está confirmada desde otras redes ni otros horarios.
+  \item \textbf{Fotografía puntual:} los resultados corresponden al 21-11-2026. El contenido de un sitio en producción cambia (por ejemplo, el síntoma de DEF-TCH-003 cambió durante el mismo día).
+  \item \textbf{Sitio en producción:} es el único ambiente disponible; no hay staging ni datos controlados, por lo que la latencia y los servicios externos influyen en los tiempos.
+  \item \textbf{Solo lectura:} no se enviaron formularios, se bloquearon los rastreadores y se omitieron los casos marcados como \code{@destructive}; los flujos de envío no están verificados de extremo a extremo.
+  \item \textbf{Un navegador:} solo Chromium headless con perfil de escritorio (más emulación móvil puntual); no se cubrieron Firefox, WebKit ni dispositivos reales.
+  \item \textbf{Cobertura parcial:} 32 de 119 tests (27\%) están omitidos a la espera de reglas confirmadas, observación en navegador real o ejecución manual.
+\end{itemize}
+
+% ---------------------------------------------------------------- Anexo
+\clearpage
+\appendix
+\section{Anexo: estado por test}
+
+Fuente: \nolinkurl{qa/05-test-execution/execution-summary.json} (ejecución final). Los tests omitidos no registran duración.
+
+{\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}l >{\raggedright\arraybackslash}p{0.46\textwidth} c l r@{}}
+\toprule
+ID & Título & Prio. & Estado & Duración \\
+\midrule
+\endfirsthead
+\toprule
+ID & Título & Prio. & Estado & Duración \\
+\midrule
+\endhead
+\midrule
+\multicolumn{5}{r}{\color{muted}Continúa en la página siguiente} \\
+\endfoot
+\bottomrule
+\endlastfoot
+TC-CAP-BTC-001 & La landing del Bootcamp carga con hero y CTAs & P0 & \stpass & 7,2 s \\
+TC-CAP-BTC-002 & Las anclas del hero llevan a su sección & P2 & \stpass & 9,0 s \\
+TC-CAP-BTC-003 & El autodiagnóstico sin respuestas no muestra resultado & P1 & \stpass & 7,0 s \\
+TC-CAP-BTC-004 & El autodiagnóstico clasifica según el puntaje & P1 & \stpass & 10,7 s \\
+TC-CAP-BTC-005 & La fecha de próximo inicio no está vencida & P1 & \stskip & - \\
+TC-CAP-BTC-006 & Las preguntas frecuentes se expanden al hacer clic & P2 & \stpass & 7,3 s \\
+TC-CAP-BTC-007 & Los CTAs de WhatsApp y correo apuntan a destinos válidos & P2 & \stpass & 9,2 s \\
+TC-CAP-BTC-008 & El autodiagnóstico no dispara conversiones de compra & P3 & \stskip & - \\
+TC-CAP-CAT-001 & El catálogo carga con tarjetas y enlaces ``Saber más'' & P0 & \stpass & 5,1 s \\
+TC-CAP-CAT-002 & Todos los ``Saber más'' responden HTTP 200 & P1 & \stpass & 17,8 s \\
+TC-CAP-CAT-003 & El filtro ``Certificaciones'' muestra solo tarjetas con insignia ``Certificación'' & P1 & \stpass & 5,2 s \\
+TC-CAP-CAT-004 & Cada filtro reduce la lista y ``Todos'' la restaura & P1 & \stpass & 5,7 s \\
+TC-CAP-CAT-005 & Los enlaces ``Saber más'' abren en pestaña nueva & P2 & \stpass & 4,9 s \\
+TC-CAP-CAT-006 & El botón ``Hablemos'' apunta a WhatsApp & P2 & \stpass & 5,6 s \\
+TC-CAP-CAT-007 & El catálogo tiene un H1 y un título descriptivo & P3 & \stskip & - \\
+TC-CAP-CAT-008 & Las imágenes del catálogo tienen texto alternativo & P3 & \stxf & 5,6 s \\
+TC-CAP-CAT-009 & Filtros y tarjetas son usables en móvil & P2 & \stskip & - \\
+TC-CAP-CUR-001 & Las páginas de curso del catálogo cargan con título y H1 & P0 & \stpass & 46,9 s \\
+TC-CAP-CUR-002 & El formulario de consulta muestra sus campos y obligatoriedad & P1 & \stpass & 9,0 s \\
+TC-CAP-CUR-003 & El formulario vacío es inválido sin enviarlo & P1 & \stpass & 8,4 s \\
+TC-CAP-CUR-004 & El formulario completo con datos sintéticos es válido en el cliente & P1 & \stpass & 9,9 s \\
+TC-CAP-CUR-005 & Un e-mail sin ``@'' es rechazado por la validación & P1 & \stpass & 9,1 s \\
+TC-CAP-CUR-006 & El celular rechaza letras & P2 & \stpass & 8,9 s \\
+TC-CAP-CUR-007 & En AiU el asunto es obligatorio y ofrece tres opciones & P1 & \stpass & 6,6 s \\
+TC-CAP-CUR-008 & El botón de pago apunta a la pasarela externa en pestaña nueva & P1 & \stpass & 12,5 s \\
+TC-CAP-CUR-009 & El consentimiento enlaza a la política de privacidad & P2 & \stskip & - \\
+TC-CAP-CUR-010 & El envío real del formulario de consulta muestra confirmación & P3 & \stskip & - \\
+TC-CON-EMP-001 & El formulario empresa carga con su H1 & P0 & \stpass & 5,6 s \\
+TC-CON-EMP-002 & El formulario muestra sus seis campos obligatorios & P1 & \stpass & 5,9 s \\
+TC-CON-EMP-003 & El formulario vacío es inválido sin enviarlo & P1 & \stpass & 6,0 s \\
+TC-CON-EMP-004 & Un email sin ``@'' es inválido & P1 & \stpass & 4,5 s \\
+TC-CON-EMP-005 & ``Número de personas'' no admite letras & P2 & \stpass & 4,4 s \\
+TC-CON-EMP-006 & ``Número de personas'' rechaza cero y negativos & P2 & \stskip & - \\
+TC-CON-EMP-007 & Código Sence es obligatorio con tres opciones & P1 & \stpass & 4,5 s \\
+TC-CON-EMP-008 & El formulario completo con datos sintéticos es válido en el cliente & P1 & \stpass & 6,8 s \\
+TC-CON-EMP-009 & El formulario informa la política de privacidad & P2 & \stskip & - \\
+TC-CON-EMP-010 & Las etiquetas del formulario tienen ortografía correcta & P3 & \stskip & - \\
+TC-CON-EMP-011 & Los campos obligatorios tienen indicador visual & P3 & \stskip & - \\
+TC-CON-EMP-012 & El envío real muestra una confirmación & P3 & \stskip & - \\
+TC-CON-FCO-001 & El ítem ``Contacto'' lleva a la página de contacto & P0 & \stpass & 7,3 s \\
+TC-CON-FCO-002 & El CTA de WhatsApp apunta a una conversación prellenada & P1 & \stpass & 4,7 s \\
+TC-CON-FCO-003 & Los correos por tipo de consulta están visibles & P1 & \stpass & 3,9 s \\
+TC-CON-FCO-004 & Las redes sociales de la página abren en pestaña nueva & P2 & \stpass & 4,4 s \\
+TC-CON-FCO-005 & La página de contacto ofrece un formulario & P1 & \stskip & - \\
+TC-CON-FCO-006 & La página de contacto declara metadatos y un único H1 & P3 & \stskip & - \\
+TC-CON-FCO-007 & Los correos del footer son enlaces mailto & P3 & \stskip & - \\
+TC-CON-FCO-008 & La página de contacto es usable en móvil & P2 & \stskip & - \\
+TC-EVT-EDI-001 & La página de ediciones anteriores carga con sus bloques & P0 & \stpass & 3,7 s \\
+TC-EVT-EDI-002 & Todas las páginas del submenú ``Ediciones anteriores'' responden 200 & P1 & \stpass & 19,1 s \\
+TC-EVT-EDI-003 & Los enlaces internos de la página de ediciones no devuelven 404 & P1 & \stxf & 8,9 s \\
+TC-EVT-EDI-004 & El título de cada página de edición contiene su año & P2 & \stskip & - \\
+TC-EVT-EDI-005 & La edición 2025 enlaza a sus sponsors y muestra el video & P2 & \stpass & 6,6 s \\
+TC-EVT-EDI-006 & Los enlaces externos de resumen de ediciones responden & P3 & \stpass & 7,0 s \\
+TC-EVT-EDI-007 & ``Ver detalles de la edición más reciente'' apunta a la última edición & P3 & \stskip & - \\
+TC-EVT-EDI-008 & Las páginas de edición tienen un único H1 con texto & P3 & \stskip & - \\
+TC-EVT-EDI-009 & Las imágenes de las páginas de edición tienen texto alternativo & P3 & \stxf & 7,6 s \\
+TC-EVT-TDY-001 & La página del evento carga con edición, fechas, sede y CTAs & P0 & \stpass & 8,1 s \\
+TC-EVT-TDY-002 & Los CTAs de entrada apuntan a ecopass en pestaña nueva & P1 & \stpass & 8,2 s \\
+TC-EVT-TDY-003 & ``Convertirse en Sponsor'' desplaza a la sección de sponsors & P2 & \stpass & 8,8 s \\
+TC-EVT-TDY-004 & La agenda presencial muestra bloques con horario y título & P1 & \stpass & 7,8 s \\
+TC-EVT-TDY-005 & ``Ver Agenda Completa e Inscribirse'' lleva a Agenda Online & P1 & \stpass & 8,8 s \\
+TC-EVT-TDY-006 & La Agenda Online lista sesiones con inscripción & P1 & \stpass & 5,6 s \\
+TC-EVT-TDY-007 & Los enlaces ``Inscribirse'' de la Agenda Online responden & P2 & \stxf & 9,2 s \\
+TC-EVT-TDY-008 & Los sponsors se muestran por nivel y enlazan a la página de sponsors & P2 & \stpass & 9,3 s \\
+TC-EVT-TDY-009 & Los logos de sponsors, comunidades y hoteles enlazan a dominios operativos & P2 & \stxf & 23,3 s \\
+TC-EVT-TDY-010 & Tras el evento no se ofrecen CTAs de compra & P1 & \stskip & - \\
+TC-EVT-TDY-011 & El brochure de sponsors se solicita por correo con asunto & P2 & \stpass & 7,6 s \\
+TC-EVT-TDY-012 & Las páginas del evento tienen título, description y H1 coherentes & P3 & \stskip & - \\
+TC-HOME-NAV-001 & La página de inicio carga con header, menú y footer & P0 & \stpass & 5,1 s \\
+TC-HOME-NAV-002 & El menú principal muestra los seis ítems y cada uno navega a su ruta & P0 & \stpass & 21,6 s \\
+TC-HOME-NAV-003 & El submenú de Testing Day se despliega al pasar el puntero & P1 & \stpass & 5,4 s \\
+TC-HOME-NAV-004 & El tercer nivel de ``Ediciones anteriores'' muestra las ediciones pasadas & P2 & \stskip & - \\
+TC-HOME-NAV-005 & El menú móvil se abre, expande el submenú y se cierra & P1 & \stpass & 6,2 s \\
+TC-HOME-NAV-006 & El banner de cookies acepta solo lo necesario y la elección persiste & P1 & \stpass & 7,9 s \\
+TC-HOME-NAV-007 & El enlace ``Cookies'' del footer reabre el banner & P2 & \stpass & 5,1 s \\
+TC-HOME-NAV-008 & El footer muestra contacto, redes y enlaces legales operativos & P1 & \stpass & 7,2 s \\
+TC-HOME-NAV-009 & Los enlaces de contacto rápido apuntan a destinos válidos & P1 & \stpass & 5,5 s \\
+TC-HOME-NAV-010 & Una ruta inexistente responde 404 con navegación & P1 & \stpass & 4,5 s \\
+TC-HOME-NAV-011 & Las variantes de dominio redirigen con 301 a la URL canónica & P2 & \stpass & 2,4 s \\
+TC-HOME-NAV-012 & El logo del header tiene texto alternativo & P2 & \stxf & 6,7 s \\
+TC-HOME-NAV-013 & Los perfiles sociales son consistentes entre páginas & P3 & \stskip & - \\
+TC-HOME-NAV-014 & La página de inicio no desborda horizontalmente en móvil & P2 & \stpass & 5,2 s \\
+TC-HOME-POR-001 & Los CTAs del hero llevan al catálogo y al Bootcamp & P0 & \stpass & 7,3 s \\
+TC-HOME-POR-002 & Los contadores muestran cifras mayores que cero tras hacer scroll & P1 & \stpass & 5,3 s \\
+TC-HOME-POR-003 & Los CTAs de ``Nuestros Servicios'' apuntan al destino correcto & P1 & \stpass & 7,7 s \\
+TC-HOME-POR-004 & Las capacitaciones destacadas enlazan a páginas de curso existentes & P1 & \stpass & 7,5 s \\
+TC-HOME-POR-005 & Las secciones de testimonios y partners están presentes & P2 & \stpass & 5,8 s \\
+TC-HOME-POR-006 & Los logos de partners tienen texto alternativo & P2 & \stxf & 5,5 s \\
+TC-HOME-POR-007 & La portada declara metadatos SEO completos & P1 & \stpass & 5,2 s \\
+TC-HOME-POR-008 & La portada tiene un único H1 & P3 & \stskip & - \\
+TC-HOME-POR-009 & Los CTAs del hero son visibles y operables en móvil & P2 & \stpass & 5,3 s \\
+TC-HOME-SMOKE-001 & La página de inicio carga con título, header y footer & P0 & \stpass & 4,6 s \\
+TC-HOME-SMOKE-002 & El menú principal muestra las secciones con su ruta & P0 & \stpass & 4,8 s \\
+TC-HOME-SMOKE-003 & El footer enlaza términos y condiciones y política de privacidad & P1 & \stpass & 5,0 s \\
+TC-LEG-BLG-001 & El blog carga con al menos un artículo & P0 & \stpass & 6,2 s \\
+TC-LEG-BLG-002 & Cada artículo del listado muestra título enlazado, fecha y extracto & P1 & \stpass & 4,0 s \\
+TC-LEG-BLG-003 & Los artículos están en orden cronológico descendente & P1 & \stpass & 6,0 s \\
+TC-LEG-BLG-004 & La paginación avanza y retrocede & P1 & \stpass & 7,5 s \\
+TC-LEG-BLG-005 & Los artículos de la primera página responden 200 & P1 & \stpass & 12,6 s \\
+TC-LEG-BLG-006 & El artículo muestra H1 igual al título del listado y su fecha & P2 & \stpass & 10,8 s \\
+TC-LEG-BLG-007 & El título de los artículos sigue el patrón del sitio & P2 & \stpass & 8,4 s \\
+TC-LEG-BLG-008 & El listado del blog tiene H1 y description & P3 & \stskip & - \\
+TC-LEG-BLG-009 & Las imágenes del listado tienen texto alternativo & P3 & \stxf & 4,9 s \\
+TC-LEG-GAL-001 & La galería carga con álbumes y miniaturas & P0 & \stpass & 6,9 s \\
+TC-LEG-GAL-002 & Una miniatura abre el visor y Escape lo cierra & P1 & \stpass & 7,4 s \\
+TC-LEG-GAL-003 & La flecha derecha avanza a la siguiente foto & P2 & \stpass & 7,7 s \\
+TC-LEG-GAL-004 & El álbum más reciente aparece primero & P2 & \stpass & 5,6 s \\
+TC-LEG-GAL-005 & El título de la galería no tiene errores tipográficos & P3 & \stskip & - \\
+TC-LEG-GAL-006 & Las fotos de la galería tienen texto alternativo & P3 & \stxf & 5,3 s \\
+TC-LEG-GAL-007 & La galería tiene un único H1 & P3 & \stskip & - \\
+TC-LEG-GAL-008 & La galería es usable en móvil & P2 & \stskip & - \\
+TC-LEG-LGL-001 & Los enlaces legales del footer abren páginas existentes en pestaña nueva & P0 & \stpass & 6,9 s \\
+TC-LEG-LGL-002 & Términos y Condiciones no contiene texto de plantilla & P1 & \stskip & - \\
+TC-LEG-LGL-003 & La política de privacidad no contiene marcadores sin completar & P1 & \stskip & - \\
+TC-LEG-LGL-004 & La política identifica al responsable y el canal para ejercer derechos & P1 & \stskip & - \\
+TC-LEG-LGL-005 & La política de privacidad presenta sus secciones & P2 & \stpass & 2,8 s \\
+TC-LEG-LGL-006 & El banner de cookies enlaza a la información de cookies & P2 & \stskip & - \\
+TC-LEG-LGL-007 & Las páginas legales tienen description representativa & P3 & \stskip & - \\
+TC-LEG-LGL-008 & Las páginas legales declaran idioma y un único H1 & P3 & \stpass & 3,9 s \\
+\end{longtable}}
+
+\end{document}

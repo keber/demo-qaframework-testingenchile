@@ -1,44 +1,17 @@
-# ✅ @keber/qa-framework installed successfully
+# Próximos pasos del agente
 
-> This file was generated automatically by the postinstall script.
-> Read it and follow the steps below, then delete this file.
+> La configuración inicial y las etapas 1-5 y 5b están completadas (ver `## Sprint History` en `qa/README.md`).
+> Este archivo contiene solo la siguiente etapa activa.
 
-## What was scaffolded
+## Sprint 2 - Pista manual, casos PENDING y aprobación humana
 
-- `qa/` folder structure with spec templates and agent instructions
-- `.github/instructions/qa-framework.instructions.md` with QA agent behavior rules (framework-owned, safe to upgrade)
-- `.claude/rules/qa-framework.md` and `.claude/commands/qa-*.md` - equivalent Claude Code artifacts (framework-owned, safe to upgrade)
+Punto de partida (informe `qa/05-test-execution/automated/2026-11-21-EXEC-E2E-20261121-001.md`): 119 tests, 87 esperados (78 pasan + 9 `test.fail()`), 32 omitidos con PENDING-*, 0 fallos inesperados y 0 inestables en 435 ejecuciones de estrés. La suite automatizada está estable; lo pendiente depende de personas o de otra red.
 
-## Required next steps
-
-### 1. Configure your project modules
-Edit `qa/qa-framework.config.json` and add your project modules under the `"modules"` array.
-
-### 2. Optional integrations
-
-**Azure DevOps integration:**
-```bash
-npm install @keber/ado-qa
-```
-
-**Playwright E2E automation:**
-```bash
-npm install @playwright/test
-cd qa/07-automation/e2e && npm install && npx playwright install chromium
-```
-
-**Playwright API/integration automation:**
-```bash
-cd qa/07-automation/integration && npm install
-```
-
-### 3. Credentials
-- Copy `qa/07-automation/e2e/.env.example` -> `qa/07-automation/e2e/.env` and fill in credentials
-- Copy `qa/07-automation/integration/.env.example` -> `qa/07-automation/integration/.env` and fill in credentials
-- Add both `.env` files and both `.auth/` folders to `.gitignore`
-
-### 4. Optional: review rulebook (AGENTS.md)
-If the repository has no `AGENTS.md` at its root, copy `qa/00-standards/agents-md-template.md`
-to `AGENTS.md` and fill in its placeholders with the user. It gives reviewers rule IDs to cite,
-a register of tracked exceptions and a list of what NOT to report. If an `AGENTS.md` already
-exists, do not replace it: offer to merge the sections it lacks. The framework never edits it.
+- [ ] Aprobación humana del plan maestro (`qa/02-test-plans/Plan-Maestro-de-Pruebas-testingenchile.md`, sección 16) y respuesta a las 12 preguntas abiertas; al confirmarse una regla `PENDIENTE-CONFIRMACIÓN`, reactivar su caso (`test()` si pasa, `test.fail()` + DEF si falla). Afecta hasta 25 casos PENDING-SPEC
+- [ ] Ejecutar la pista manual (TC-CAP-BTC-008 con aprobación del responsable, TC-LEG-LGL-004 y casos PENDING-SPEC que el responsable quiera revisar) y registrar la evidencia en `qa/05-test-execution/manual/`
+- [ ] Observar en navegador real o móvil los casos PENDING-BROWSER (TC-HOME-NAV-004, TC-CAP-CAT-009, TC-CON-FCO-008, TC-LEG-GAL-008) y automatizarlos
+- [ ] Repetir la ejecución completa desde otra red y otro día (las ejecuciones de estrés del 2026-11-21 salieron de una sola red) y registrar cualquier inestable en `qa/README.md` (sección Flaky Tests); clasificar todo fallo con `/qa-test-stabilization`
+- [ ] Reverificar DEF-TCH-003 desde otra red (el hotel pasó de no responder a responder con certificado TLS vencido) antes de cerrarlo o mantenerlo
+- [ ] Decidir si se conserva `tests/home/home-smoke.spec.ts` (TC-HOME-SMOKE-001..003, previos a la etapa 5 y fuera del plan) o se retira por duplicar TC-HOME-NAV-001/002 y TC-LEG-LGL-001
+- [ ] Revisar manualmente `qa/07-automation/e2e/.env.example` (pendiente desde la etapa 0)
+- [ ] Verificar: `npm run lint`, `npm run typecheck`, `npm run check:constitution`, `npx playwright test` y los dos verificadores de codificación

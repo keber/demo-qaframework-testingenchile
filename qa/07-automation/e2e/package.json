@@ -1,27 +1,39 @@
 {
-  "name": "{{PROJECT_NAME}}-qa-e2e",
+  "name": "testingenchile-qa-e2e",
   "version": "1.0.0",
   "private": true,
-  "description": "E2E Playwright test suite for {{PROJECT_NAME}}",
+  "description": "E2E Playwright test suite for testingenchile (public site, read-only)",
   "scripts": {
-    "test": "playwright test",
-    "test:headed": "playwright test --headed",
+    "test": "playwright test --grep-invert @destructive",
+    "test:smoke": "playwright test --grep @smoke",
+    "test:sanity": "playwright test --grep @sanity",
+    "test:regression": "playwright test --grep @regression --grep-invert @destructive",
+    "test:e2e": "playwright test --grep @e2e --grep-invert @destructive",
+    "test:destructive": "playwright test --grep @destructive",
+    "test:p0": "playwright test --grep @P0 --grep-invert @destructive",
+    "test:p1": "playwright test --grep \"@P0|@P1\" --grep-invert @destructive",
+    "test:headed": "playwright test --headed --grep-invert @destructive",
     "test:debug": "playwright test --debug",
     "test:ui": "playwright test --ui",
-    "test:p0": "playwright test --grep @P0",
-    "test:p1": "playwright test --grep \"@P0|@P1\"",
-    "test:module": "playwright test --grep {{MODULE_PATTERN}}",
-    "test:login-flow": "node scripts/run-opt-in.js login-flow",
-    "test:writes": "node scripts/run-opt-in.js writes",
-    "test:slow": "node scripts/run-opt-in.js slow",
+    "lint": "eslint . --max-warnings 0",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "report": "playwright show-report",
-    "validate": "npx keber/qa-framework validate"
+    "validate": "npx qa-framework validate"
   },
   "devDependencies": {
-    "@playwright/test": "^1.40.0",
-    "dotenv": "^16.0.0"
-  },
-  "optionalDependencies": {
-    "@alex_neo/playwright-azure-reporter": "^1.20.0"
+    "@faker-js/faker": "^10.6.0",
+    "@playwright/test": "^1.65.1",
+    "@types/node": "^26.6.6",
+    "dotenv": "^18.0.10",
+    "eslint": "^10.15.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-playwright": "^2.12.2",
+    "prettier": "^3.10.1",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.73.0",
+    "zod": "^4.6.7"
   }
 }

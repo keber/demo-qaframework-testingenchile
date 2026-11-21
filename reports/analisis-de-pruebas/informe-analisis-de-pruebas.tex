@@ -1,0 +1,719 @@
+% Informe de Análisis de Pruebas - testingenchile.cl
+% Compilar con Tectonic (XeTeX): tectonic informe-analisis-de-pruebas.tex
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{fontspec}
+\usepackage[spanish,es-noshorthands,es-tabla]{babel}
+\addto\extrasspanish{\def\%{\char37\relax}}
+\usepackage[margin=2.2cm,headheight=14pt]{geometry}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,shapes.geometric,babel}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18, /pgf/number format/assume math mode=true}
+\usepackage{tocloft}
+\setlength{\cftsecnumwidth}{2.2em}
+\renewcommand{\cfttoctitlefont}{\Large\bfseries\color{primary}}
+\tocloftpagestyle{fancy}
+\usepackage[most]{tcolorbox}
+\usepackage{xurl}
+\usepackage{hyperref}
+
+% Fuentes del bundle de Tectonic, por nombre de archivo (reproducible).
+\setmainfont{IBMPlexSans}[
+  Extension=.otf,
+  UprightFont=*-Regular,
+  BoldFont=*-Bold,
+  ItalicFont=*-Italic,
+  BoldItalicFont=*-BoldItalic]
+\setmonofont{IBMPlexMono}[
+  Extension=.otf,
+  UprightFont=*-Regular,
+  BoldFont=*-Bold,
+  ItalicFont=*-Italic,
+  BoldItalicFont=*-BoldItalic,
+  Scale=0.92]
+
+% Paleta neutral.
+\definecolor{primary}{RGB}{31,78,121}
+\definecolor{secondary}{RGB}{46,125,50}
+\definecolor{accent}{RGB}{230,126,34}
+\definecolor{muted}{RGB}{110,110,110}
+\definecolor{p0c}{RGB}{31,78,121}
+\definecolor{p1c}{RGB}{74,128,178}
+\definecolor{p2c}{RGB}{140,179,214}
+\definecolor{p3c}{RGB}{200,218,235}
+
+\hypersetup{colorlinks=true,linkcolor=primary,urlcolor=primary,
+  pdftitle={Informe de Análisis de Pruebas - testingenchile.cl},
+  pdfauthor={Generado con @keber/qa-framework + Claude}}
+
+\titleformat{\section}{\Large\bfseries\color{primary}}{\thesection}{0.8em}{}
+\titleformat{\subsection}{\large\bfseries\color{primary}}{\thesubsection}{0.8em}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{muted}Informe de Análisis de Pruebas}
+\fancyhead[R]{\small\color{muted}testingenchile.cl}
+\fancyfoot[L]{\small\color{muted}Observación del 21-11-2026}
+\fancyfoot[R]{\small\color{muted}\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{3em}
+\renewcommand{\arraystretch}{1.18}
+\setlist{itemsep=0.2em,topsep=0.3em}
+
+\tikzset{
+  box/.style={rectangle, rounded corners, draw=primary, fill=primary!8,
+    text width=0.17\textwidth, align=center, minimum height=1.2cm, font=\small},
+  boxhi/.style={box, draw=secondary, fill=secondary!12},
+  arrow/.style={-{Stealth}, thick, color=muted},
+}
+
+\newtcolorbox{infobox}[1][Nota]{colback=primary!5, colframe=primary,
+  fonttitle=\bfseries, title=#1}
+\newtcolorbox{warnbox}[1][Advertencia]{colback=accent!6, colframe=accent,
+  fonttitle=\bfseries, title=#1}
+
+\newcommand{\stat}[2]{%
+  \begin{tcolorbox}[colback=primary!6, colframe=primary!40, boxrule=0.5pt,
+    nobeforeafter, box align=top, width=0.235\linewidth, halign=center, left=2pt, right=2pt, top=4pt, bottom=4pt]
+  {\LARGE\bfseries\color{primary}#1}\par\smallskip
+  {\footnotesize\color{muted}#2}
+  \end{tcolorbox}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\upath}[1]{\nolinkurl{#1}}
+
+\begin{document}
+
+% ---------------------------------------------------------------- Portada
+\begin{titlepage}
+\begin{tikzpicture}[remember picture, overlay]
+  \fill[primary] (current page.north west) rectangle
+    ([yshift=-5.2cm]current page.north east);
+  \fill[accent] ([yshift=-5.2cm]current page.north west) rectangle
+    ([yshift=-5.45cm]current page.north east);
+\end{tikzpicture}
+\vspace*{0.4cm}
+{\color{white}\small\bfseries INFORME TÉCNICO DE QA\par}
+\vspace{5.2cm}
+
+{\fontsize{30}{36}\selectfont\bfseries\color{primary}Informe de Análisis\\[0.2em] de Pruebas\par}
+\vspace{0.6cm}
+{\LARGE\color{muted}Sitio web testingenchile.cl\par}
+\vspace{1.4cm}
+
+\begin{tabularx}{0.85\textwidth}{@{}>{\bfseries}l >{\raggedright\arraybackslash}X@{}}
+\toprule
+Fecha & \mbox{21-11-2026} \\
+Versión & 1.0 \\
+Sitio bajo prueba & \url{https://www.testingenchile.cl} (producción, Webnode CMS) \\
+Framework & \code{@keber/qa-framework} 1.14.0-rc.9 + arnés agentic-playwright \\
+Etapas cubiertas & Análisis de módulos y generación de especificaciones \\
+Rol cubierto & Visitante anónimo (sin credenciales, solo lectura) \\
+\bottomrule
+\end{tabularx}
+
+\vfill
+{\small\color{muted}Generado con @keber/qa-framework + Claude\par}
+{\footnotesize\color{muted}Documento de demostración sobre un sitio público de terceros. Los
+resultados reflejan una observación puntual del \mbox{21-11-2026} y no constituyen una
+evaluación jurídica ni de seguridad.\par}
+\end{titlepage}
+
+\tableofcontents
+\clearpage
+
+% ---------------------------------------------------------------- 1
+\section{Resumen ejecutivo}
+
+Se aplicaron las etapas de análisis y especificación de \code{@keber/qa-framework}
+(1.14.0-rc.9) al sitio público \url{https://www.testingenchile.cl}. La exploración se
+realizó en vivo con Playwright (Chromium headless, escritorio y emulación móvil) y con
+solicitudes HTTP de solo lectura, el \mbox{21-11-2026}. El sitio declara 182 URLs en
+\code{sitemap.xml}; se inspeccionaron en detalle 17 páginas y se verificó el estado HTTP de
+57 URLs internas y 71 externas.
+
+\begin{center}
+\stat{5 / 12}{módulos / submódulos}\hfill
+\stat{116}{casos de prueba (TCs)}\hfill
+\stat{108}{TCs automatizables}\hfill
+\stat{22}{hallazgos candidatos}
+\end{center}
+
+\begin{itemize}
+  \item \textbf{Universo de pruebas}: 93 reglas de negocio, 27 flujos y 116 casos de prueba
+    (13 P0, 45 P1, 35 P2, 23 P3). 110 casos se basan en comportamiento observado
+    (\code{UI-OBSERVED}) y 6 quedan \code{PENDING-BROWSER}.
+  \item \textbf{Automatización}: 108 casos automatizables, 2 parcialmente y 6 pendientes.
+    La factibilidad es alta en la mayoría de los módulos; Contacto es media por depender
+    solo de validación en el cliente.
+  \item \textbf{Hallazgos}: 22 hallazgos candidatos (2 de severidad alta, 8 media y 12 baja).
+    Tras la clasificación posterior derivaron en 5 defectos (\code{DEF-TCH-001} a
+    \code{DEF-TCH-005}, originados en 4 hallazgos) y 18 recomendaciones
+    (\code{REC-TCH-001} a \code{REC-TCH-018}).
+  \item \textbf{Riesgos principales}: volatilidad del contenido de eventos, producción como
+    único entorno, contaminación de analítica por el autodiagnóstico del Bootcamp y posible
+    incumplimiento de privacidad y condiciones (pendiente de validación legal).
+\end{itemize}
+
+\begin{infobox}[Lectura recomendada]
+Los hallazgos de severidad alta (\mbox{HC-01} y \mbox{HC-02}, páginas legales de plantilla) se registraron
+como recomendaciones y no como defectos, porque las reglas que incumplen están marcadas
+\code{PENDIENTE-CONFIRMACIÓN}. Requieren validación del responsable del sitio y del área legal.
+\end{infobox}
+
+% ---------------------------------------------------------------- 2
+\section{Alcance y objetivos}
+
+\textbf{Objetivo}: caracterizar el sitio público, delimitar sus módulos funcionales, definir
+reglas de negocio y escenarios de prueba trazables, y registrar con evidencia las anomalías
+observadas, como base del plan de pruebas y de la automatización de regresión.
+
+\subsection{Dentro del alcance}
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+Área & Qué se cubre \\
+\midrule
+Navegación global & Menú de escritorio y móvil, submenús, header, footer, botón flotante de
+  WhatsApp, página 404, redirecciones canónicas \\
+Contenido & Portada, catálogo de capacitaciones, páginas de curso, Bootcamp, Testing Day
+  (edición vigente y anteriores), blog, galería, páginas legales \\
+Formularios & Presencia de campos y validación en el cliente (\code{required}, tipo, patrón,
+  \code{checkValidity()}) con datos sintéticos, \textbf{sin envío} \\
+Integraciones & Destino de enlaces externos (WhatsApp, Flow, ecopass, StreamYard, sponsors)
+  verificado por \code{href} o solicitud HTTP, sin ejecutar acciones \\
+Calidad transversal & Estado HTTP de enlaces, metadatos SEO, jerarquía de encabezados, texto
+  alternativo, consentimiento de cookies, responsividad básica \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Fuera del alcance}
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.36\textwidth} X@{}}
+\toprule
+Área & Motivo \\
+\midrule
+Envío real de formularios, pagos (Flow), compra de entradas (ecopass), WhatsApp o correo &
+  Único entorno disponible es producción; las pruebas son de solo lectura \\
+Panel de administración de Webnode & No es parte del sitio público; sin credenciales \\
+Pruebas de carga, estrés o rendimiento & Prohibidas contra producción; \code{robots.txt}
+  declara \code{Crawl-delay: 10} \\
+Pruebas de seguridad ofensivas & Política de la organización: se derivan al proceso formal de
+  seguridad \\
+Auditoría WCAG completa y evaluación legal & Solo controles puntuales; el cumplimiento legal
+  lo valida el área legal \\
+Navegadores distintos de Chromium y dispositivos reales & Configuración actual del proyecto
+  (\code{browsers: ["chromium"]}) \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Supuestos}
+\begin{itemize}
+  \item \textbf{Sitio público}: no hay usuarios ni área privada; se cubre un único rol,
+    visitante anónimo.
+  \item \textbf{Sin credenciales}: no se usó ninguna cuenta; los casos de acceso por rol y
+    redirección a login no aplican.
+  \item \textbf{Solo lectura}: ningún formulario enviado, ningún pago, ninguna conversación
+    iniciada. Los caminos exitosos de envío quedan como \code{PENDING-BROWSER @destructive}.
+  \item \textbf{Sin documentación funcional}: las reglas se basan en lo observado
+    (\code{OBSERVADO}), en estándares (\code{ESTÁNDAR}) o en expectativas razonables
+    (\code{PENDIENTE-CONFIRMACIÓN}).
+\end{itemize}
+
+% ---------------------------------------------------------------- 3
+\section{Metodología}
+
+El análisis sigue el pipeline de \code{@keber/qa-framework}. Cada etapa produce artefactos
+versionados en la carpeta \code{qa/} que alimentan la siguiente. Este informe cubre las
+etapas de \textbf{Análisis} y \textbf{Especificación} (resaltadas); la clasificación final de
+los hallazgos (DEF/REC) proviene de las etapas posteriores.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=0.9cm and 0.75cm]
+  \node[boxhi] (a) {\textbf{Análisis}\\[-0.1em]{\footnotesize módulos}};
+  \node[boxhi, right=of a] (b) {\textbf{Especificación}\\[-0.1em]{\footnotesize RN, FL, TCs}};
+  \node[box, right=of b] (c) {\textbf{Plan}\\[-0.1em]{\footnotesize por módulo}};
+  \node[box, right=of c] (d) {\textbf{Casos}\\[-0.1em]{\footnotesize detallados}};
+  \node[box, below=of d] (e) {\textbf{Automatización}\\[-0.1em]{\footnotesize Playwright + TS}};
+  \node[box, left=of e] (f) {\textbf{Healing}\\[-0.1em]{\footnotesize clasificación}};
+  \node[box, left=of f] (g) {\textbf{Reporte}\\[-0.1em]{\footnotesize DEF / REC}};
+  \draw[arrow] (a) -- (b);
+  \draw[arrow] (b) -- (c);
+  \draw[arrow] (c) -- (d);
+  \draw[arrow] (d) -- (e);
+  \draw[arrow] (e) -- (f);
+  \draw[arrow] (f) -- (g);
+\end{tikzpicture}
+\caption{Etapas del pipeline de \code{@keber/qa-framework}.}
+\end{figure}
+
+\subsection{La UI como fuente de verdad}
+Al no existir documentación funcional ni responsable consultado, la interfaz publicada es la
+fuente de verdad. Cada caso de prueba declara su origen:
+\begin{itemize}
+  \item \code{UI-OBSERVED}: elemento y comportamiento observados en la sesión.
+  \item \code{PENDING-BROWSER}: elemento observado, comportamiento no ejercido (por ejemplo,
+    envíos reales marcados \code{@destructive}).
+\end{itemize}
+Las reglas \code{PENDIENTE-CONFIRMACIÓN} nunca justifican un defecto ni un
+\code{test.fail()} hasta que el responsable las confirme; mientras tanto, el hallazgo se
+registra como recomendación.
+
+\subsection{Herramientas y controles}
+Exploración con Playwright (Chromium headless; escritorio 1366$\times$900 y 1920$\times$1000;
+móvil Pixel 5) y solicitudes HTTP secuenciales de baja tasa. La automatización prevista usa
+Playwright + TypeScript en \code{qa/07-automation/e2e/}, con a lo sumo 2 workers, sin
+reintentos locales y en modo de solo lectura. Los teléfonos visibles en el sitio se
+enmascaran (por ejemplo, \code{569XXXX0587}) y no se versionan nombres de personas.
+
+% ---------------------------------------------------------------- 4
+\section{Mapa del sitio y módulos}
+
+{\raggedright
+Cada submódulo contiene los seis archivos del framework (de \upath{00-inventory.md} a \upath{05-test-scenarios.md}) y está registrado en \upath{qa/qa-framework.config.json}.
+Rutas destacadas fuera del menú principal: el catálogo enlaza a 15 páginas de curso con
+formulario o pago Flow; la edición vigente de Testing Day enlaza a \upath{/agenda-online/}
+(StreamYard), \upath{/nuestros-sponsors-2026/} y ecopass; las ediciones anteriores cubren
+2020--2025 en 16 páginas; el footer enlaza a \upath{/terminos-y-condiciones/} y
+\upath{/politica-de-privacidad/}.\par}
+
+
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}l l X >{\raggedright\arraybackslash}p{0.33\textwidth}@{}}
+\toprule
+Módulo & Código & Submódulo (código) & Ruta principal \\
+\midrule
+Inicio y navegación & HOME & Navegación global (NAV) & \upath{/} \\
+ & & Portada (POR) & \upath{/} \\
+\midrule
+Capacitaciones & CAP & Catálogo (CAT) & \upath{/capacitaciones2/} \\
+ & & Detalle de curso (CUR) & 15 páginas de curso, p.\,ej. \upath{/new-curso-istqb/} \\
+ & & Bootcamp de Testing (BTC) & \upath{/bootcamp-de-testing/} \\
+\midrule
+Eventos Testing Day & EVT & Edición vigente (TDY) & \upath{/testing-day-chile/} \\
+ & & Ediciones anteriores (EDI) & \upath{/testing-day-chile-ediciones-anteriores/} \\
+\midrule
+Contacto y formularios & CON & Página de contacto (FCO) & \upath{/formulario-contacto/} \\
+ & & Contacto empresa B2B (EMP) & \upath{/contacto-empresa/} \\
+\midrule
+Legal y blog & LEG & Páginas legales (LGL) & \upath{/politica-de-privacidad/} \\
+ & & Blog (BLG) & \upath{/blog/} \\
+ & & Fotogalería (GAL) & \upath{/galeria/} \\
+\bottomrule
+\end{tabularx}
+\caption{Módulos y submódulos especificados (12 submódulos en 5 módulos).}
+\end{table}
+
+% ---------------------------------------------------------------- 5
+\section{Universo de pruebas}
+
+\subsection{Casos por módulo y prioridad}
+\begin{table}[H]
+\centering\small
+\begin{tabular}{@{}l r r r r r r r r@{}}
+\toprule
+Módulo & Submód. & RN & FL & P0 & P1 & P2 & P3 & Total TCs \\
+\midrule
+HOME & 2 & 21 & 6 & 3 & 10 & 8 & 2 & 23 \\
+CAP  & 3 & 21 & 7 & 3 & 12 & 8 & 4 & 27 \\
+EVT  & 2 & 18 & 4 & 2 & 7 & 7 & 5 & 21 \\
+CON  & 2 & 16 & 4 & 2 & 8 & 5 & 5 & 20 \\
+LEG  & 3 & 17 & 6 & 3 & 8 & 7 & 7 & 25 \\
+\midrule
+\textbf{Total} & \textbf{12} & \textbf{93} & \textbf{27} & \textbf{13} & \textbf{45} &
+  \textbf{35} & \textbf{23} & \textbf{116} \\
+\bottomrule
+\end{tabular}
+\caption{RN: reglas de negocio; FL: flujos; P0--P3: casos por prioridad.}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  xbar stacked, width=0.82\textwidth, height=6.2cm, bar width=14pt,
+  symbolic y coords={LEG,CON,EVT,CAP,HOME}, ytick=data, y dir=normal,
+  xmin=0, xmax=30, xlabel={Casos de prueba},
+  enlarge y limits=0.15, axis x line*=bottom, axis y line*=left,
+  legend style={at={(0.5,-0.25)}, anchor=north, legend columns=-1,
+    draw=none, font=\small, /tikz/every even column/.append style={column sep=0.4cm}},
+  tick label style={font=\small}, label style={font=\small},
+  nodes near coords, nodes near coords style={font=\scriptsize, color=white},
+  every node near coord/.append style={xshift=0pt}]
+  \addplot[fill=p0c, draw=white] coordinates {(3,HOME) (3,CAP) (2,EVT) (2,CON) (3,LEG)};
+  \addplot[fill=p1c, draw=white] coordinates {(10,HOME) (12,CAP) (7,EVT) (8,CON) (8,LEG)};
+  \addplot[fill=p2c, draw=white, nodes near coords style={color=black}]
+    coordinates {(8,HOME) (8,CAP) (7,EVT) (5,CON) (7,LEG)};
+  \addplot[fill=p3c, draw=white, nodes near coords style={color=black}]
+    coordinates {(2,HOME) (4,CAP) (5,EVT) (5,CON) (7,LEG)};
+  \legend{P0, P1, P2, P3}
+\end{axis}
+\end{tikzpicture}
+\caption{Casos de prueba por módulo, apilados por prioridad (total 116).}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  ybar, width=0.47\textwidth, height=5.4cm, bar width=18pt,
+  symbolic x coords={HOME,CAP,EVT,CON,LEG}, xtick=data,
+  ymin=0, ymax=32, ylabel={TCs}, axis x line*=bottom, axis y line*=left,
+  tick label style={font=\small}, label style={font=\small},
+  nodes near coords, nodes near coords style={font=\scriptsize},
+  title={\small Total por módulo}, enlarge x limits=0.15]
+  \addplot[fill=primary, draw=none] coordinates
+    {(HOME,23) (CAP,27) (EVT,21) (CON,20) (LEG,25)};
+\end{axis}
+\end{tikzpicture}\hfill
+\begin{tikzpicture}
+\begin{axis}[
+  ybar, width=0.47\textwidth, height=5.4cm, bar width=22pt,
+  symbolic x coords={P0,P1,P2,P3}, xtick=data,
+  ymin=0, ymax=52, ylabel={TCs}, axis x line*=bottom, axis y line*=left,
+  tick label style={font=\small}, label style={font=\small},
+  nodes near coords, nodes near coords style={font=\scriptsize},
+  title={\small Total por prioridad}, enlarge x limits=0.2]
+  \addplot[fill=p1c, draw=none] coordinates {(P0,13) (P1,45) (P2,35) (P3,23)};
+\end{axis}
+\end{tikzpicture}
+\caption{Distribución de los 116 casos por módulo y por prioridad.}
+\end{figure}
+
+\subsection{Casos por submódulo}
+\begin{table}[H]
+\centering\small
+\begin{tabular}{@{}l r r r r r @{\hspace{1.4cm}} l r r r r r@{}}
+\toprule
+Submódulo & P0 & P1 & P2 & P3 & Total & Submódulo & P0 & P1 & P2 & P3 & Total \\
+\midrule
+HOME-NAV & 2 & 6 & 5 & 1 & 14 & EVT-EDI & 1 & 2 & 2 & 4 & 9 \\
+HOME-POR & 1 & 4 & 3 & 1 & 9  & CON-FCO & 1 & 3 & 2 & 2 & 8 \\
+CAP-CAT  & 1 & 3 & 3 & 2 & 9  & CON-EMP & 1 & 5 & 3 & 3 & 12 \\
+CAP-CUR  & 1 & 6 & 2 & 1 & 10 & LEG-LGL & 1 & 3 & 2 & 2 & 8 \\
+CAP-BTC  & 1 & 3 & 3 & 1 & 8  & LEG-BLG & 1 & 4 & 2 & 2 & 9 \\
+EVT-TDY  & 1 & 5 & 5 & 1 & 12 & LEG-GAL & 1 & 1 & 3 & 3 & 8 \\
+\bottomrule
+\end{tabular}
+\caption{Todos los submódulos están dentro del objetivo configurado de 8 a 20 casos
+(\code{tc\_per\_submodule\_target}).}
+\end{table}
+
+\subsection{Casos por origen y por tipo}
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}l r X@{}}
+\toprule
+Origen & Casos & Significado \\
+\midrule
+\code{UI-OBSERVED} & 110 & Elemento y comportamiento observados en la sesión \\
+\code{PENDING-BROWSER} & 6 & Observado pero no ejercido: tercer nivel del menú por hover (1),
+  vistas móviles no observadas (3), envíos reales \code{@destructive} (2) \\
+\code{PENDING-CODE} / \code{BLOCKED-PERMISSIONS} & 0 & No aplica \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{@{}l r @{\hspace{1.4cm}} l r@{}}
+\toprule
+Tipo & Casos & Tipo & Casos \\
+\midrule
+Funcional & 50 & Accesibilidad & 7 \\
+Contenido y vigencia & 13 & Cumplimiento & 6 \\
+SEO y SEO / accesibilidad & 13 & Responsivo & 5 \\
+Integración & 11 & Usabilidad & 1 \\
+Negativo & 10 & \textbf{Total} & \textbf{116} \\
+\bottomrule
+\end{tabular}
+\caption{Casos por tipo de prueba.}
+\end{table}
+
+\subsection{Criterio de prioridad}
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+Prioridad & Criterio aplicado \\
+\midrule
+P0 & Disponibilidad de la página o del flujo principal del submódulo (smoke) \\
+P1 & Funcionalidad principal: navegación, filtros, validaciones obligatorias, destinos de CTAs,
+  vigencia de fechas, contenido legal \\
+P2 & Funcionalidad secundaria, integridad de enlaces externos, responsividad, accesibilidad
+  relevante \\
+P3 & SEO, ortografía, consistencia y mejoras de baja severidad \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ---------------------------------------------------------------- 6
+\section{Factibilidad de automatización}
+
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}l c c >{\raggedright\arraybackslash}p{0.17\textwidth} X@{}}
+\toprule
+Módulo & Sí / Parcial & Pend. & Factibilidad & Consideraciones \\
+\midrule
+HOME & 22 / 0 & 1 & Alta & Page object del banner de cookies; hover del tercer nivel no
+  reproducido en headless; redirecciones con el fixture \code{request} \\
+CAP & 24 / 1 & 2 & Alta (catálogo, Bootcamp); media (curso) & Formularios solo con
+  \code{checkValidity()}; envío imposible por reCAPTCHA; botones de pago nunca se pulsan;
+  bloquear etiquetas de Google (\mbox{HC-21}) \\
+EVT & 21 / 0 & 0 & Alta; mantenimiento alto & Contenido muy volátil: aserciones estructurales
+  y textos en \code{enums/} o \code{test-data/static/}; bloqueos anti-bot en enlaces externos \\
+CON & 18 / 0 & 2 & Media & Solo validación en el cliente; formulario empresa renderizado tras
+  la carga; mensajes nativos dependen del idioma del navegador \\
+LEG & 23 / 1 & 1 & Alta & Detección de texto de plantilla por cadenas curadas; revisión de
+  contenido legal parcialmente manual \\
+\midrule
+\textbf{Total} & \textbf{108 / 2} & \textbf{6} & & \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  ybar stacked, width=0.7\textwidth, height=5.6cm, bar width=22pt,
+  symbolic x coords={HOME,CAP,EVT,CON,LEG}, xtick=data,
+  ymin=0, ymax=30, ylabel={TCs}, axis x line*=bottom, axis y line*=left,
+  tick label style={font=\small}, label style={font=\small},
+  enlarge x limits=0.15,
+  legend style={at={(0.5,-0.18)}, anchor=north, legend columns=-1, draw=none,
+    font=\small, /tikz/every even column/.append style={column sep=0.4cm}}]
+  \addplot[fill=secondary, draw=white] coordinates
+    {(HOME,22) (CAP,24) (EVT,21) (CON,18) (LEG,23)};
+  \addplot[fill=secondary!45, draw=white] coordinates
+    {(HOME,0) (CAP,1) (EVT,0) (CON,0) (LEG,1)};
+  \addplot[fill=accent, draw=white] coordinates
+    {(HOME,1) (CAP,2) (EVT,0) (CON,2) (LEG,1)};
+  \legend{Automatizable, Parcial, Pendiente}
+\end{axis}
+\end{tikzpicture}
+\caption{Automatizabilidad de los 116 casos por módulo.}
+\end{figure}
+
+Los 6 casos pendientes corresponden a los \code{PENDING-BROWSER}: requieren navegador real o
+un envío que no puede ejecutarse en producción. Si se requiere cobertura de los caminos
+exitosos de formularios, es necesario un entorno de staging.
+
+% ---------------------------------------------------------------- 7
+\section{Hallazgos candidatos}
+
+Observaciones con evidencia del \mbox{21-11-2026}. En la etapa de análisis se registraron como
+candidatos; la columna \emph{Resultado} indica su clasificación posterior en
+\code{qa/06-defects/}: defecto (\code{DEF-TCH-NNN}, regla \code{OBSERVADO} o \code{ESTÁNDAR}
+incumplida) o recomendación (\code{REC-TCH-NNN}, sin regla confirmada). Las rutas son
+relativas a \url{https://www.testingenchile.cl}.
+
+{\small
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{1.05cm}
+  >{\raggedright\arraybackslash}p{1.8cm}
+  >{\raggedright\arraybackslash}p{5.4cm}
+  >{\raggedright\arraybackslash}p{4.1cm}
+  >{\raggedright\arraybackslash}p{2.4cm}@{}}
+\caption{Hallazgos candidatos y su resultado.}\\
+\toprule
+ID & Área & Descripción breve & Evidencia & Resultado \\
+\midrule
+\endfirsthead
+\toprule
+ID & Área & Descripción breve & Evidencia & Resultado \\
+\midrule
+\endhead
+\midrule
+\multicolumn{5}{r}{\footnotesize\color{muted}Continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\mbox{HC-01} & LEG & Términos y Condiciones solo con el texto de ayuda de la plantilla Webnode
+  (severidad alta) & \upath{/terminos-y-condiciones/} & \mbox{REC-TCH-001} \\
+\mbox{HC-02} & LEG & Política de privacidad de plantilla sin completar; banner de cookies sin
+  enlace (severidad alta) & \upath{/politica-de-privacidad/} & \mbox{REC-TCH-002} \\
+\mbox{HC-03} & EVT & Enlace interno roto ``Saber más de esta edición'' (2018) responde 404 &
+  \upath{/testing-day-en-latam-2018/} & \textbf{DEF-TCH-001} \\
+\mbox{HC-04} & EVT & Evento 2026 finalizado mantiene CTAs de compra e inscripción &
+  \upath{/testing-day-chile/} & \mbox{REC-TCH-003} \\
+\mbox{HC-05} & CAP & Fecha de inicio del Bootcamp vencida con CTAs de postulación activos &
+  \upath{/bootcamp-de-testing/} & \mbox{REC-TCH-004} \\
+\mbox{HC-06} & EVT & 3 de 4 enlaces ``Inscribirse'' de la agenda (StreamYard) responden 404 &
+  \upath{/agenda-online/} & \textbf{DEF-TCH-002} \\
+\mbox{HC-07} & EVT & Logo de sponsor a dominio inexistente; sitio de hotel sin respuesta &
+  \upath{/testing-day-chile/} & \textbf{DEF-TCH-003} \\
+\mbox{HC-08} & Transversal & Imágenes sin texto alternativo, incluido el logo del header &
+  \upath{/galeria/} (558 de 572) y logo en todo el sitio & \mbox{\textbf{DEF-TCH-004},}\newline \mbox{\textbf{DEF-TCH-005}} \\
+\mbox{HC-09} & Transversal & Jerarquía de H1 inválida: múltiples, vacíos o ausentes &
+  \upath{/} (5 H1), \upath{/blog/} (sin H1) & \mbox{REC-TCH-005} \\
+\mbox{HC-10} & Transversal & Títulos de página con errores o poco descriptivos &
+  \upath{/galeria/}, \upath{/entrevistas-sponsors-2021/} & \mbox{REC-TCH-006} \\
+\mbox{HC-11} & Transversal & Meta description vacía o no representativa &
+  \upath{/agenda-online/}, \upath{/blog/} & \mbox{REC-TCH-007} \\
+\mbox{HC-12} & CON & Página ``Contacto'' sin formulario; correos sin \code{mailto:} &
+  \upath{/formulario-contacto/} & \mbox{REC-TCH-008} \\
+\mbox{HC-13} & CON & ``Número de personas'' acepta 0 y negativos &
+  \upath{/contacto-empresa/} & \mbox{REC-TCH-009} \\
+\mbox{HC-14} & CON & Ortografía en etiquetas del formulario empresa &
+  \upath{/contacto-empresa/} & \mbox{REC-TCH-010} \\
+\mbox{HC-15} & CAP, CON & Campos obligatorios sin indicador visual &
+  Formularios de curso y empresa & \mbox{REC-TCH-011} \\
+\mbox{HC-16} & CAP, CON & Consentimiento sin enlace a la política de privacidad &
+  \upath{/aiugenaia/}, \upath{/contacto-empresa/} & \mbox{REC-TCH-012} \\
+\mbox{HC-17} & HOME, CON & Perfiles sociales inconsistentes (LinkedIn, Twitter y X) &
+  Footer y \upath{/formulario-contacto/} & \mbox{REC-TCH-013} \\
+\mbox{HC-18} & CAP & Número de WhatsApp distinto en el botón ``Hablemos'' &
+  \upath{/capacitaciones2/} & \mbox{REC-TCH-014} \\
+\mbox{HC-19} & EVT & Errores tipográficos en Sponsors 2026 &
+  \upath{/nuestros-sponsors-2026/} & \mbox{REC-TCH-015} \\
+\mbox{HC-20} & EVT & El título anuncia ``GRATUITO'' aunque la entrada presencial es pagada &
+  \upath{/testing-day-chile/} & \mbox{REC-TCH-016} \\
+\mbox{HC-21} & CAP & El autodiagnóstico registra una conversión de Google Ads ``purchase'' sin
+  compra & \upath{/bootcamp-de-testing/} & \mbox{REC-TCH-017} \\
+\mbox{HC-22} & EVT & ``Ver detalles de la edición más reciente'' apunta a la edición 2022 &
+  \upath{/testing-day-chile-ediciones-anteriores/} & \mbox{REC-TCH-018} \\
+\end{longtable}
+}
+
+\begin{infobox}[Balance de hallazgos]
+22 hallazgos candidatos: 2 de severidad alta, 8 media y 12 baja. Cuatro (\mbox{HC-03}, \mbox{HC-06}, \mbox{HC-07}
+y \mbox{HC-08}) incumplen reglas \code{OBSERVADO} o \code{ESTÁNDAR} y derivaron en 5 defectos
+(\mbox{HC-08} se dividió entre el logo del header y las imágenes de contenido). Los 18 restantes son
+recomendaciones: una recomendación nunca justifica un \code{test.fail()} y puede convertirse
+en defecto si una fuente confirma la regla.
+\end{infobox}
+
+\begin{warnbox}[Observación derivada al proceso formal de seguridad]
+Las respuestas HTTP no incluyen las cabeceras \code{Strict-Transport-Security} ni
+\code{Content-Security-Policy} (sí \code{X-Frame-Options: DENY}). No se realizó ninguna
+prueba de seguridad; se informa como observación pasiva para que el proceso formal de
+seguridad evalúe su relevancia en un sitio alojado por un tercero.
+\end{warnbox}
+
+% ---------------------------------------------------------------- 8
+\clearpage
+\section{Riesgos}
+
+{\small
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.7cm}
+  >{\raggedright\arraybackslash}p{4.2cm}
+  >{\raggedright\arraybackslash}p{3.2cm}
+  >{\raggedright\arraybackslash}p{1.8cm}
+  >{\raggedright\arraybackslash}p{5.4cm}@{}}
+\toprule
+ID & Riesgo & Impacto & Prob. & Mitigación \\
+\midrule
+\endfirsthead
+\toprule
+ID & Riesgo & Impacto & Prob. & Mitigación \\
+\midrule
+\endhead
+\midrule
+\multicolumn{5}{r}{\footnotesize\color{muted}Continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+R1 & Volatilidad del contenido de marketing y eventos & Falsos negativos y mantenimiento
+  frecuente & Alta & Aserciones de estructura y rutas; textos en \code{enums/} y
+  \code{test-data/static/}; el healer lo clasifica como deriva de datos \\
+R2 & Producción como único entorno: envío accidental de formularios, compras o mensajes &
+  Datos basura, cargos reales & Media & \code{@destructive} + \code{test.skip()}; nunca clic
+  en enviar o pagar; revisión de PR \\
+R3 & El autodiagnóstico dispara una conversión ``purchase'' de Google Ads & Métricas
+  comerciales distorsionadas & Alta (observado) & Abortar dominios de Google Ads y Tag Manager
+  con \code{page.route} en el fixture base \\
+R4 & Bloqueos anti-bot en enlaces externos (999, 400, 403) & Falsos positivos de enlace roto
+  & Alta & Clasificar como ``no verificable''; reverificar manualmente \\
+R5 & Cambios del CMS de terceros sin aviso & Deriva de selectores & Media & Selectores por rol
+  y etiqueta; smoke programado \\
+R6 & reCAPTCHA y ausencia de entorno de pruebas & Caminos exitosos no verificables & Cierta &
+  \code{PENDING-BROWSER @destructive}; solicitar staging si se requiere cobertura \\
+R7 & Posible incumplimiento de privacidad y condiciones (\mbox{HC-01}, \mbox{HC-02}, \mbox{HC-16}) & Riesgo legal
+  y reputacional & Alta (observado) & Escalar a negocio y área legal \\
+R8 & Límite de tasa del sitio (\code{Crawl-delay: 10}) & Bloqueo o degradación & Baja &
+  2 workers como máximo; ejecución secuencial en CI \\
+R9 & Diferencias entre Chromium headless y navegadores reales & Casos no reproducibles &
+  Media & Casos \code{PENDING-BROWSER}; confirmar en navegador real \\
+\end{longtable}
+}
+
+% ---------------------------------------------------------------- 9
+\section{Preguntas abiertas}
+
+Preguntas para el responsable del sitio. Sus respuestas confirman o descartan reglas
+\code{PENDIENTE-CONFIRMACIÓN} y pueden reclasificar recomendaciones como defectos.
+
+\begin{enumerate}[itemsep=0.1em, parsep=0pt]
+  \item ¿Qué debe mostrar \upath{/testing-day-chile/} entre ediciones? (\mbox{RN-EVT-010}, \mbox{HC-04})
+  \item ¿La fecha ``próximo inicio'' del Bootcamp debe actualizarse u ocultarse al vencer?
+    (\mbox{RN-CAP-016}, \mbox{HC-05})
+  \item ¿La página ``Contacto'' debe tener formulario? (\mbox{RN-CON-005}, \mbox{HC-12})
+  \item ¿Cuál es el rango válido de ``Número de personas'' en el formulario empresa?
+    (\mbox{RN-CON-011}, \mbox{HC-13})
+  \item ¿Quién es el responsable del tratamiento de datos y se confirman \mbox{RN-LEG-002} a
+    \mbox{RN-LEG-005}? (\mbox{HC-01}, \mbox{HC-02})
+  \item ¿El formulario B2B debe pedir consentimiento explícito? (\mbox{RN-CON-013}, \mbox{HC-16})
+  \item ¿El número de WhatsApp del botón ``Hablemos'' es intencional? (\mbox{HC-18})
+  \item ¿La conversión ``purchase'' del autodiagnóstico es intencional? (\mbox{HC-21})
+  \item ¿Cuál es el criterio del filtro ``Cursos'' del catálogo?
+  \item ¿El tercer nivel del menú se despliega por hover o por clic en navegadores reales?
+\end{enumerate}
+
+% ---------------------------------------------------------------- 10
+\section{Limitaciones del análisis}
+
+\begin{warnbox}[Observación puntual]
+Todos los resultados de este informe dependen de una única observación del sitio realizada
+el \mbox{21-11-2026} (America/Santiago), desde una sola red corporativa y con un solo motor de
+navegador. No deben interpretarse como un estado permanente del sitio ni como certeza
+absoluta: el contenido puede haber cambiado después de esa fecha.
+\end{warnbox}
+
+\begin{itemize}
+  \item \textbf{Calidad de los datos}: no existe documentación funcional ni se consultó al
+    responsable. Las reglas \code{PENDIENTE-CONFIRMACIÓN} son expectativas razonables, no
+    requisitos; los conteos de casos y hallazgos dependen de ese supuesto.
+  \item \textbf{Cobertura parcial}: se inspeccionaron en detalle 17 de las 182 URLs del
+    sitemap, priorizando las alcanzables desde el menú, el footer y los CTAs. La tasa de
+    solicitudes fue baja y secuencial.
+  \item \textbf{Volatilidad}: eventos, sponsors, agenda, fechas, cursos y contadores cambian
+    con frecuencia. Los valores observados valen para el \mbox{21-11-2026}; las pruebas aseguran
+    estructura, no literales.
+  \item \textbf{Red y fecha únicas}: los enlaces externos se verificaron por HTTP desde una red
+    corporativa. Bloqueos anti-bot (999, 400, 403) y fallas transitorias (por ejemplo, el
+    timeout de \mbox{HC-07}) requieren reverificación manual.
+  \item \textbf{Motor de navegador}: Chromium headless en escritorio y emulación Pixel 5. El
+    hover, las animaciones y los paneles temporizados pueden diferir en navegadores reales;
+    las vistas móviles de catálogo, contacto y galería no se observaron.
+  \item \textbf{Mensajes nativos}: la validación del navegador se mostró en inglés; no se
+    aseguran textos de error, solo \code{validity} y un \code{validationMessage} no vacío.
+  \item \textbf{Alcance no jurídico ni de seguridad}: el análisis de páginas legales es de
+    calidad de contenido (\mbox{HC-01} y \mbox{HC-02} deben validarse con el área legal) y no se
+    ejecutaron pruebas de seguridad.
+  \item \textbf{Datos personales}: los nombres de docentes y speakers y los teléfonos visibles
+    en el sitio no se versionan; las especificaciones usan descripciones genéricas y
+    números enmascarados.
+\end{itemize}
+
+\end{document}
