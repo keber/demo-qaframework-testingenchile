@@ -1,0 +1,97 @@
+{
+  "schema": "verdict/v2",
+  "repo": "demo_testingenchile",
+  "evidenceDigest": "7903e5254367782e824b994af9fc321637f009469b77f29c178cc3f4a4ee6f71",
+  "suiteType": {
+    "type": "regression",
+    "citations": ["D0.suite-type-signals", "D1.tc-id-coverage", "D1.spec-linkage"],
+    "reasoning": "D0.suite-type-signals no registra ids de defecto ni test.fail declarados, y 119 de 128 tests llevan un id de caso que nace de 05-test-scenarios.md; los valores esperados salen de la especificación (p. ej. AIU_SUBJECT_OPTIONS replica RN-CAP-012 en detalle-curso.spec.ts:217). Existe un componente minoritario de arnés de defectos: 9 tests envuelven sus asserts en expectOpenDefect() (fixtures/defects.ts), que llama a test.fail en tiempo de ejecución y por eso no aparece en las señales; no basta para declarar ningún directorio como defect-harness. Los directorios de integration (., security, write) son ejemplos del scaffold y guardas de seguridad del propio harness, también de tipo regresión."
+  },
+  "levels": [
+    {
+      "dimension": 1,
+      "level": 2,
+      "confidence": "medium",
+      "citations": ["D1.tc-id-coverage", "D1.ext-id-coverage", "D1.spec-linkage", "D5.covered-rules", "D1.risk-inventory"],
+      "observations": [
+        "qa/07-automation/e2e/tests/home/navegacion.spec.ts:68",
+        "qa/07-automation/e2e/tests/capacitaciones/detalle-curso.spec.ts:217"
+      ],
+      "reasoning": "En la muestra leída los valores esperados codifican la regla y no la salida del sistema: navegacion.spec.ts:68 compara el menú contra MAIN_MENU_LOOKUP/MAIN_MENU_ARIA, que reproducen los seis ítems y rutas de RN-HOME-001, y detalle-curso.spec.ts:217 exige required y las tres opciones literales de RN-CAP-012. Sin embargo D1.spec-linkage muestra que solo 18 de 116 casos declaran la regla que los respalda (15,5%) y D5.covered-rules enlaza 18 de 120 reglas, de modo que para la mayoría de los tests no queda registro de qué regla respalda cada valor, que es justo lo que separa 2 de 3. Además, muchas reglas tienen Origen: OBSERVADO (relevadas del sitio en producción), lo que acerca parte del oráculo a una caracterización documentada; no hay registro de riesgos (D1.risk-inventory ausente) ni ids externos (D1.ext-id-coverage 0)."
+    },
+    {
+      "dimension": 2,
+      "level": 0,
+      "confidence": "high",
+      "citations": ["D2.assertless-tests", "D2.indirect-assertions", "D2.weak-assertions", "D2.skipped-tests", "D2.expected-failures", "D2.mutation-config"],
+      "observations": [
+        "qa/07-automation/e2e/tests/legal/legales.spec.ts:46",
+        "qa/07-automation/e2e/tests/capacitaciones/bootcamp.spec.ts:144",
+        "qa/07-automation/e2e/tests/contacto/contacto-empresa.spec.ts:236"
+      ],
+      "reasoning": "Nivel determinado en 0 por el umbral calibrado D2.systemic-assertless (assertless 25%, límite 5%); se respeta. Verificado leyendo el código: los 32 tests de D2.assertless-tests son exactamente los 32 tests cuyo cuerpo solo llama a skipPending() (p. ej. legales.spec.ts:46 con la llamada en la línea 50, bootcamp.spec.ts:144 en la 148, contacto-empresa.spec.ts:236 en la 240), un helper de fixtures/pending.ts que ejecuta test.skip(true, motivo) con una anotación PENDING-*. Son tests omitidos en ejecución, no tests sin assert que pasen en verde: el extractor no reconoce el skip envuelto en un helper, por lo que D2.skipped-tests reporta 0 cuando la proporción real de omitidos es 25% (32/128). Descontándolos quedan 0 de 96 tests activos sin assert y 4 de 96 solo con asserts débiles (D2.weak-assertions); aun así, 32 tests que no pueden fallar siguen siendo una característica de la suite bajo cualquiera de las dos lecturas, y no hay configuración de mutation testing (D2.mutation-config vacío)."
+    },
+    {
+      "dimension": 3,
+      "level": 1,
+      "confidence": "medium",
+      "citations": ["D3.fixed-waits", "D3.conditional-waits", "D3.retries-config", "D3.flaky-markers", "D3.serial-mode"],
+      "observations": [
+        "qa/07-automation/e2e/tests/capacitaciones/detalle-curso.spec.ts:33"
+      ],
+      "reasoning": "La única espera fija de D3.fixed-waits (detalle-curso.spec.ts:33) es un artefacto: el cuerpo llama a test.setTimeout(COURSE_PAGES_TIMEOUT_MS), que amplía el presupuesto del test y no duerme; la sincronización real usa asserts web-first con auto-espera, por eso D3.conditional-waits es 0, y no hay marcadores de flakiness (D3.flaky-markers 0). En contra, el config e2e fija retries: 1 sin condición ni comentario que lo explique (D3.retries-config), contra el sitio público de producción, lo que es un reintento automático no justificado. El README del repositorio menciona una corrida con --repeat-each=3 y --retries=0 sin flaky, pero es una afirmación puntual y no una medición versionada, así que el nivel 2 (flakiness medida y controlada) no queda atestiguado."
+    },
+    {
+      "dimension": 4,
+      "level": 2,
+      "confidence": "high",
+      "citations": ["D4.failure-context", "D4.trace-config", "D4.reporter-config", "D1.test-inventory"],
+      "observations": [
+        "qa/07-automation/e2e/tests/contacto/contacto-empresa.spec.ts:75",
+        "qa/07-automation/e2e/tests/capacitaciones/bootcamp.spec.ts:144"
+      ],
+      "reasoning": "La suite e2e configura trace, video retain-on-failure y screenshot only-on-failure (D4.trace-config) y D4.failure-context registra 261 test.step en 87 tests, con pasos GIVEN/WHEN/THEN que dicen qué se verificaba. Los títulos nombran comportamiento de negocio (contacto-empresa.spec.ts:75 'El formulario vacío es inválido sin enviarlo') y los omitidos exponen el motivo PENDING-* con el REC asociado (bootcamp.spec.ts:144). No llega a 3: el título lleva el id de caso, no el id de regla, y solo el 15,5% de los casos enlaza una regla, así que para saber qué regla se rompió hay que ir a la especificación; además la suite de integración no configura trace, screenshot ni video."
+    },
+    {
+      "dimension": 5,
+      "level": 2,
+      "confidence": "medium",
+      "citations": ["D5.rule-catalogue", "D5.covered-rules", "D5.uncovered-rules", "D5.orphan-tests", "D5.risk-coverage", "D5.negative-tests"],
+      "observations": [
+        "qa/07-automation/e2e/tests/contacto/contacto-empresa.spec.ts:75",
+        "qa/07-automation/e2e/tests/capacitaciones/detalle-curso.spec.ts:94"
+      ],
+      "reasoning": "Hay casos negativos y de límite reales, no solo happy paths: D5.negative-tests marca 11 negativos y 4 de límite, y los leídos (contacto-empresa.spec.ts:75, detalle-curso.spec.ts:94) asertan checkValidity() false y un mensaje de validación por cada control obligatorio. La cobertura enlazada es baja, 18 de 120 reglas (D5.covered-rules) con 102 sin test enlazado (D5.uncovered-rules) y 3 casos huérfanos TC-HOME-SMOKE-* (D5.orphan-tests); no existe registro de riesgos (D5.risk-coverage 0 de 0). Algunas especificaciones marcan flujos como 'fuera de ejecución' (FL-CAP-005, FL-CON-004), pero nada en el repositorio declara de forma explícita qué reglas se excluyen a propósito, y el nivel 3 está fuera de alcance por techo."
+    },
+    {
+      "dimension": 6,
+      "level": 0,
+      "confidence": "medium",
+      "citations": ["D6.pipeline-present", "D6.suite-invocation", "D6.pipeline-triggers", "D6.result-publication"],
+      "observations": [],
+      "reasoning": "Nivel determinado en 0 por el umbral literal D6.runs-the-suite: D6.suite-invocation reporta 0 pipelines que invoquen el runner y apunten a la suite; se respeta. Leyendo .github/workflows/qa.yml, el job e2e sí ejecuta npm test (que el package.json expande a playwright test --grep-invert @destructive) con working-directory ${{ env.E2E_DIR }} = qa/07-automation/e2e, pero solo en workflow_dispatch y schedule semanal, y publica el reporte HTML y JSON como artefacto (D6.result-publication). El extractor no resuelve el directorio pasado por variable de entorno, por lo que el 0 parece un artefacto de extracción; se deja registrado como objeción sin mover el nivel."
+    },
+    {
+      "dimension": 7,
+      "level": 2,
+      "confidence": "medium",
+      "citations": ["D7.selector-mix", "D7.file-size", "D7.page-object-usage"],
+      "observations": [
+        "qa/07-automation/e2e/tests/contacto/contacto-empresa.spec.ts:75",
+        "qa/07-automation/e2e/tests/capacitaciones/detalle-curso.spec.ts:94"
+      ],
+      "reasoning": "Los nombres describen comportamiento de negocio en español con id de caso y prioridad, y las capas están separadas: page objects y componentes (coursePage.form, homePage.nav), fixtures, factories y datos estáticos curados desde las reglas (D7.page-object-usage, 0 tests inline, 0 imports sin resolver). D7.selector-mix da 100% semántico en los tests porque los selectores viven en los page objects, y D7.file-size es moderado (máximo 14 tests por archivo, mediana 8). Persiste duplicación estructural: contacto-empresa.spec.ts:75 y detalle-curso.spec.ts:94 repiten casi línea por línea el patrón del formulario vacío, lo que encaja en el nivel 2; el 3 queda fuera por techo."
+    }
+  ],
+  "obtained": 9,
+  "attainable": 16,
+  "eliminated": true,
+  "eliminatedBy": [2],
+  "thresholdObjections": [
+    "D2.systemic-assertless (no se objeta el límite del 5%, sino la medición que lo alimenta): los 32 tests contados como assertless son tests omitidos en ejecución mediante skipPending(), helper de qa/07-automation/e2e/fixtures/pending.ts que llama a test.skip(true, motivo). El extractor no reconoce test.skip envuelto en un helper, de modo que D2.assertless-tests sobrestima (25% en vez de 0%) y D2.skipped-tests / D5.skip-ratio subestiman (0% en vez de 25%). El nivel 0 se mantendría igual bajo la lectura correcta, porque un 25% de tests omitidos tampoco puede fallar, pero el motivo reportado es otro.",
+    "D2.expected-failures: 9 tests usan expectOpenDefect() (qa/07-automation/e2e/fixtures/defects.ts), que llama a test.fail en tiempo de ejecución para defectos abiertos; el extractor solo cuenta test.fail declarado y reporta 0.",
+    "D3.fixed-waits: la única espera fija detectada (detalle-curso.spec.ts:33) es test.setTimeout(...), que fija el presupuesto de tiempo del test y no es una espera.",
+    "D6.runs-the-suite: el job e2e de .github/workflows/qa.yml ejecuta npm test (-> playwright test) con working-directory ${{ env.E2E_DIR }}, y E2E_DIR vale qa/07-automation/e2e en el bloque env del propio workflow. El extractor no resuelve el directorio pasado por variable y determina 0; con la resolución correcta el nivel 1 sería alcanzable (corre en CI, solo manual y semanal, sin bloquear el merge)."
+  ],
+  "notes": "Total 9 de 16 alcanzables; la suite queda eliminada porque D2 (eliminatoria) es 0, determinado por el umbral calibrado D2.systemic-assertless. Ese umbral es una calibración, no una lectura literal, y aquí la medición que lo dispara es un artefacto: los 32 tests 'sin assert' son los 32 tests pendientes que llaman a skipPending() (12 archivos e2e, p. ej. legales.spec.ts:46/50, bootcamp.spec.ts:144/148, contacto-empresa.spec.ts:236/240). Aun corrigiendo la lectura, el 25% de tests omitidos no puede fallar, por lo que el resultado de D2 no cambiaría; sí cambia el diagnóstico: el problema es la proporción de casos pendientes de confirmación de reglas (PENDING-SPEC, PENDING-BROWSER, PENDING-CODE), no asserts ausentes. D6 también quedó determinado en 0 por un posible artefacto de extracción (directorio pasado por variable de entorno); ambos casos se registran en thresholdObjections sin mover los niveles. Techos aplicados: D3 hasta 2, D5 hasta 2, D6 hasta 1 y D7 hasta 2, por evidencia que el repositorio no puede atestiguar. Las preguntas al equipo (D3.flakiness-measured, D5.deliberate-exclusions, D6.external-pipeline, D7.review-retirement) se dejan sin responder según el protocolo."
+}

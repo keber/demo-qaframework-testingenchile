@@ -18,6 +18,7 @@
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
-    "@keber/qa-framework": "^1.14.0-rc.9"
+    "@keber/qa-framework": "^1.14.0-rc.9",
+    "@keber/qa-suite-audit": "^0.1.0"
   }
 }
